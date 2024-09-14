@@ -35,6 +35,10 @@ Bước 3: Kích hoạt môi trường ảo:
 ```bash 
 venv\Scripts\activate
 ```
+Hoặc
+```bash 
+.\Scripts\Activate.ps1   
+```
 - Trên macOS/Linux:
 
 ```bash 
