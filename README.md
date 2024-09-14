@@ -94,6 +94,7 @@ Bước 3: Chạy server phát triển Vue.js:
 ```bash 
 npm run dev
 ```
+- front end chạy trên port 127.0.0.1:8080
 
 ### 5. Cấu hình .gitignore
 Đảm bảo rằng file .gitignore đã được cấu hình để bỏ qua các thư mục và file không cần thiết.
