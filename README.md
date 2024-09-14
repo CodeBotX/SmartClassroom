@@ -5,7 +5,7 @@ Dự án **SmartClassroom** là hệ thống "Lớp học thông minh" sử dụ
 ### Thành Viên
 - **Lê Minh Tiến**
 - **Nguyễn Tuấn Anh**
-- **Nguyễn Văn Hiếu**
+- **Nguyễn Minh Hiếu**
 
 
 ## Cấu trúc thư mục dự án
