@@ -3,6 +3,6 @@ from .views import *
 
 
 urlpatterns = [
-    path('dangnhap/', LoginView.as_view(), name='api-dangnhap'),
+    path('login/', LoginView.as_view(), name='api-dangnhap'),
 ]
 
