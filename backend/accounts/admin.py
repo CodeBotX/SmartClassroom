@@ -1,33 +1,19 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
-from .forms import CustomUserCreationForm, CustomUserChangeForm
 
-class CustomUserAdmin(UserAdmin):
-    form = CustomUserChangeForm
-    add_form = CustomUserCreationForm
-    model = CustomUser
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'username', 'user_id', 'role', 'phone_number', 'date_of_birth')
+    search_fields = ('full_name', 'username', 'user_id', 'phone_number')
+    list_filter = ('role',)
+    ordering = ('-date_of_birth',)
 
-    # Các trường hiển thị trong trang chỉnh sửa
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('full_name', 'email', 'phone_number', 'role')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),  # Để hiển thị trường không thể chỉnh sửa
-    )
-    readonly_fields = ('date_joined', 'last_login')  # Đặt các trường không thể chỉnh sửa vào readonly_fields
+    # Tùy chỉnh các trường hiển thị trong form tạo/sửa
+    fields = ('full_name', 'username', 'user_id', 'role', 'phone_number', 'date_of_birth')
+    readonly_fields = ('user_id',)
 
-    # Các trường hiển thị trong trang thêm người dùng mới
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'full_name', 'email', 'phone_number', 'role', 'password1', 'password2'),
-        }),
-    )
-
-    # Cấu hình các trường hiển thị trong trang danh sách
-    list_display = ('username', 'full_name', 'email', 'role', 'is_active', 'is_staff')
-    search_fields = ('username', 'full_name', 'email')
-    ordering = ('username',)
-
-admin.site.register(CustomUser, CustomUserAdmin)
+    # Tùy chỉnh giao diện admin nếu cần
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # Nếu là sửa đổi đối tượng hiện có
+            return self.readonly_fields + ('user_id',)
+        return self.readonly_fields

@@ -44,7 +44,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, blank=True, null=True)  # Số điện thoại
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)  # Vai trò
     full_name = models.CharField(max_length=255)  # Họ và tên
-    password = models.CharField(max_length=255)  # Mật khẩu
+    date_of_birth = models.DateField(null=True, blank=True)
+    # password = models.CharField(max_length=255)  # Mật khẩu
 
     # User permissions
     is_active = models.BooleanField(default=True)
@@ -76,37 +77,28 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     @property
     def is_parent(self):
         return self.role == 'parent'
+    
     def save(self, *args, **kwargs):
+    # Kiểm tra vai trò và đặt giá trị cho user_id, username, password
+        if self.role in ['teacher', 'admin', 'student']:
             if not self.user_id:
-                if self.role == 'student':
-                    current_year = timezone.now().year
-                    prefix = str(current_year)
-                elif self.role == 'teacher':
-                    prefix = '100'
-                elif self.role == 'admin':
-                    prefix = '111'
-                elif self.role == 'parent':
-                    prefix = '101'
-                else:
-                    raise ValueError('Vai trò không hợp lệ!')
+                raise ValueError('Mã định danh Bộ GD&ĐT không được bỏ trống.')
 
-                # Đếm số lượng người dùng đã tạo với vai trò này để làm phần tự động tăng
-                last_user = CustomUser.objects.filter(role=self.role).order_by('id').last()
-                if last_user and last_user.user_id:
-                    # Lấy 4 chữ số cuối của user_id để auto-increment
-                    auto_id = int(last_user.user_id[-4:]) + 1
-                else:
-                    auto_id = 1
-                # Tạo user_id với phần tự động tăng gồm 4 chữ số (zero-padded)
-                self.user_id = f"{prefix}{str(auto_id).zfill(4)}"
             if not self.username:
-                self.username = self.user_id
-
+                self.username = self.user_id  
             if not self.password:
-                # Mật khẩu ban đầu là user_id và được mã hóa
-                self.password = make_password(self.user_id)
-            super().save(*args, **kwargs)
+                self.password = make_password(self.user_id) 
+            
+        elif self.role == 'parent':
+            if not self.phone_number:
+                raise ValueError('Số điện thoại không được bỏ trống đối với phụ huynh.')
 
+            if not self.username:
+                self.username = self.phone_number
+            if not self.password:
+                self.password = make_password(self.phone_number)  
+
+        super().save(*args, **kwargs)
 #--------------------------------------------------------------------------------------
 # # Bảng học kỳ
 # class Semester(models.Model):
