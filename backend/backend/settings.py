@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jws0d7!db@mj42q-*n7cqn@^+guao$@rgf3o_@@al5ailinfdr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -137,7 +137,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
+        'rest_framework.authentication.SessionAuthentication',  # Session Authentication
+        'rest_framework.authentication.BasicAuthentication',  # Basic Auth
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -154,3 +156,7 @@ SIMPLE_JWT = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://d118-2405-4802-491-7680-7136-b7cf-890c-f45e.ngrok-free.app',
+# ]

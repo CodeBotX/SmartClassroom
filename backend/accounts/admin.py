@@ -3,13 +3,13 @@ from .models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'username', 'user_id', 'role', 'phone_number', 'date_of_birth')
+    list_display = ('full_name', 'username', 'user_id', 'role', 'phone_number','email', 'date_of_birth')
     search_fields = ('full_name', 'username', 'user_id', 'phone_number')
     list_filter = ('role',)
     ordering = ('-date_of_birth',)
 
     # Tùy chỉnh các trường hiển thị trong form tạo/sửa
-    fields = ('full_name', 'username', 'user_id', 'role', 'phone_number', 'date_of_birth')
+    fields = ('full_name', 'username', 'user_id', 'role','phone_number','email', 'date_of_birth')
     readonly_fields = ('user_id',)
 
     # Tùy chỉnh giao diện admin nếu cần

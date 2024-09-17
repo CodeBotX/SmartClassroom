@@ -12,5 +12,7 @@ urlpatterns = [
     path('register/', APIRegisterView.as_view(), name='api-register'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('detail/', UserDetailView.as_view(), name='user-detail'),
+    path('update/', UserUpdateView.as_view(), name='user-update'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
