@@ -66,16 +66,21 @@ class APIRegisterView(APIView):
 
             for row in sheet.iter_rows(min_row=2, values_only=True):
                 if sheet.title == 'Danh sách giáo viên':
-                    ma_dinh_danh = row[1]
-                    full_name = row[2]
-                    ngay_sinh = row[3]
-                    dien_thoai = row[7]
-                    vi_tri = row[8]
-                    # ma_dinh_danh = row[1] if len(row) > 1 else None
-                    # full_name = row[2] if len(row) > 2 else None
-                    # ngay_sinh = row[3] if len(row) > 3 else None
-                    # dien_thoai = row[7] if len(row) > 7 else None
-                    # vi_tri = row[8] if len(row) > 8 else None
+                    ma_dinh_danh = None
+                    full_name = None
+                    ngay_sinh = None
+                    dien_thoai = None
+                    vi_tri = None
+                    # ma_dinh_danh = row[1]
+                    # full_name = row[2]
+                    # ngay_sinh = row[3]
+                    # dien_thoai = row[7]
+                    # vi_tri = row[8]
+                    ma_dinh_danh = row[1] if len(row) > 1 else None
+                    full_name = row[2] if len(row) > 2 else None
+                    ngay_sinh = row[3] if len(row) > 3 else None
+                    dien_thoai = row[7] if len(row) > 7 else None
+                    vi_tri = row[8] if len(row) > 8 else None
 
                     if not ma_dinh_danh or not full_name:
                         continue
