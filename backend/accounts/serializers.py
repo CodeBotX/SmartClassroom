@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
+from django.contrib.auth.password_validation import validate_password
 
 
 
@@ -26,3 +27,22 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'phone_number': {'required': False},
             'date_of_birth': {'required': False}
         }
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, validators=[validate_password])
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Mật khẩu cũ không chính xác.")
+        return value
+
+    def validate_new_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("Mật khẩu mới phải có ít nhất 8 ký tự.")
+        return value
+
+class AdminPasswordResetSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)

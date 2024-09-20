@@ -13,7 +13,7 @@ from datetime import datetime
 from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
-from rest_framework.authentication import BasicAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # API đăng nhập
@@ -27,24 +27,24 @@ class ApiLoginView(APIView):
         if request.user.is_authenticated:
             return Response({"error": "Bạn đã đăng nhập"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Lấy thông tin username và password từ request
         username = request.data.get('username')
         password = request.data.get('password')
-
-        # Xác thực người dùng
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Đăng nhập người dùng
             login(request, user)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
             return Response({
                 "message": "Đăng nhập thành công",
+                "access_token": access_token,  
+                "refresh_token": refresh_token  
             }, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Tên đăng nhập hoặc mật khẩu không chính xác"}, status=status.HTTP_401_UNAUTHORIZED)
 
 #  API đăng ký
-
 class APIRegisterView(APIView):
     authentication_classes = [JWTAuthentication]  #JWTAuthentication 
     permission_classes = [IsAuthenticated, IsAdmin]  # IsAuthenticated, IsAdmin
@@ -89,23 +89,17 @@ class APIRegisterView(APIView):
                     full_name = row[3]
                     ngay_sinh = row[4]
 
-
                     if not ma_dinh_danh or not full_name:
                         continue
-                    
                     role = 'student'
-
                 elif sheet.title == 'Danh sách phụ huynh':
                     ma_dinh_danh = None
                     full_name = row[1]
                     dien_thoai = row[2]
-
                     if not full_name or not dien_thoai:
                         continue
-                    
                     role = 'parent'
                     ma_dinh_danh = dien_thoai
-                
                 # Định dạng ngày sinh
                 if ngay_sinh:
                     try:
@@ -113,12 +107,9 @@ class APIRegisterView(APIView):
                     except ValueError:
                         continue  # Bỏ qua nếu định dạng ngày sinh không hợp lệ
 
-                # Kiểm tra nếu mã định danh đã tồn tại
                 if CustomUser.objects.filter(user_id=ma_dinh_danh).exists():
                     existing_users += 1
                     continue
-
-                # Tạo user
                 user = CustomUser(
                     full_name=full_name,
                     username=ma_dinh_danh if ma_dinh_danh else None,
@@ -132,21 +123,17 @@ class APIRegisterView(APIView):
                     created_users += 1
                 except ValidationError as e:
                     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
             if created_users > 0:
                 return Response({"detail": f"Tài khoản đã được tạo thành công. Số tài khoản mới: {created_users}."}, status=status.HTTP_200_OK)
             else:
                 return Response({"detail": "Không có tài khoản mới được tạo."}, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UserDetailView(APIView):
-    authentication_classes = [JWTAuthentication]  # không yêu cầu xác thực
+    authentication_classes = [JWTAuthentication]  
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
-        # Lấy người dùng từ request.user (người đã đăng nhập)
         user = request.user
-        # Bạn có thể dùng serializer để định dạng thông tin người dùng nếu cần
         serializer = UserSerializer(user)
         return Response(serializer.data, status=200)
 
@@ -156,9 +143,39 @@ class UserUpdateView(APIView):
     def patch(self, request, *args, **kwargs):
         user = request.user
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)  # Partial update
-
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"detail": "Mật khẩu đã được thay đổi thành công."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminPasswordResetView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.role == 'admin':
+            return Response({"detail": "Bạn không có quyền thực hiện thao tác này."}, status=status.HTTP_403_FORBIDDEN)
+        serializer = AdminPasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            user_id = serializer.validated_data['user_id']
+            try:
+                user = CustomUser.objects.get(user_id=user_id)
+                new_password = user.user_id  
+                user.set_password(new_password)
+                user.save()
+                return Response({"detail": f"Mật khẩu của người dùng {user.full_name} đã được reset thành công."}, status=status.HTTP_200_OK)
+            except CustomUser.DoesNotExist:
+                return Response({"error": "Người dùng không tồn tại."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

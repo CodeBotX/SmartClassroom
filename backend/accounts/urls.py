@@ -14,5 +14,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('detail/', UserDetailView.as_view(), name='user-detail'),
     path('update/', UserUpdateView.as_view(), name='user-update'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('admin-reset-password/', AdminPasswordResetView.as_view(), name='admin-reset-password'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
