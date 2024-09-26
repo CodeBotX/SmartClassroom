@@ -1,21 +1,20 @@
-# from django.db import models
+from django.db import models
+from accounts.models import CustomUser
 
-# # Create your models here.
-
-# # Bảng lớp học
-# class Classes(models.Model):
-#     class_name = models.CharField(max_length=127,unique=True) 
-#     homeroom_teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'teacher'}, related_name='homeroom_classes')
-#     def save(self, *args, **kwargs):
-#         if self.homeroom_teacher.role != 'teacher':
-#             raise ValueError("Giáo viên chủ nhiệm phải là giáo viên.")
-#         super().save(*args, **kwargs)
-#     def __str__(self):
-#         return self.class_name
-#     class Meta:
-#         db_table = 'classes'
-#         verbose_name = 'Lớp học'
-#         verbose_name_plural = 'Các Lớp học'
+# Bảng lớp học
+class Room(models.Model):
+    room_name = models.CharField(max_length=127,unique=True) 
+    homeroom_teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'teacher'}, related_name='homeroom_classes')
+    def save(self, *args, **kwargs):
+        if self.homeroom_teacher.role != 'teacher':
+            raise ValueError("Giáo viên chủ nhiệm phải là giáo viên.")
+        super().save(*args, **kwargs)
+    def __str__(self):
+        return self.room_name
+    class Meta:
+        db_table = 'rooms'
+        verbose_name = 'Lớp học'
+        verbose_name_plural = 'Các Lớp học'
 
 # # Bảng bài giảng (tiết học)
 # class Lessons(models.Model):
