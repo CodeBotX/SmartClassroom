@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     sex = models.CharField(max_length=32, null=True, blank=True)
     nation = models.CharField(max_length=32, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True, null=True, blank=True) 
-    phone_number = models.CharField(max_length=32, null=True, blank=True)
+    phone_number = models.CharField(max_length=32,unique=True, null=True, blank=True)
     day_of_birth = models.DateField(null=True, blank=True)
     
     # Vai trò

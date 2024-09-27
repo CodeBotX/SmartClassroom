@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import CustomUser
 from django.contrib.auth.password_validation import validate_password
 from .models import *
@@ -49,11 +50,11 @@ class ExcelUploadSerializer(serializers.Serializer):
 
 
 # update thông tin user
-class UserUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth']
-        read_only_fields = ['user_id','username']
+# class UserUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CustomUser
+#         fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth']
+#         read_only_fields = ['user_id','username']
 
 class TeacherUpdateSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source='user.full_name')
@@ -67,9 +68,27 @@ class TeacherUpdateSerializer(serializers.ModelSerializer):
         model = Teacher
         fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'active_status', 'contract_types', 'expertise_levels', 'subjects']
 
+    # def update(self, instance, validated_data):
+    #     user_data = validated_data.pop('user', None)
+    #     if user_data:
+    #         for attr, value in user_data.items():
+    #             setattr(instance.user, attr, value)
+    #         instance.user.save()
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
+        
+        # Kiểm tra trùng lặp email và số điện thoại trước khi lưu
         if user_data:
+            email = user_data.get('email')
+            phone_number = user_data.get('phone_number')
+
+            if email and CustomUser.objects.filter(email=email).exclude(user_id=instance.user.user_id).exists():
+                raise ValidationError({'email': 'Email đã tồn tại.'})
+
+            if phone_number and CustomUser.objects.filter(phone_number=phone_number).exclude(user_id=instance.user.user_id).exists():
+                raise ValidationError({'phone_number': 'Số điện thoại đã tồn tại.'})
+
+            # Cập nhật thông tin người dùng
             for attr, value in user_data.items():
                 setattr(instance.user, attr, value)
             instance.user.save()
