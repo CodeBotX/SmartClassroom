@@ -91,6 +91,10 @@ class Teacher(models.Model):
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     subjects = models.TextField(null=True, blank=True)
+    class Meta:
+        db_table = 'Teacher'
+        verbose_name = 'Teacher'
+        verbose_name_plural = 'Teachers'
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='admin')
@@ -98,10 +102,18 @@ class Admin(models.Model):
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     description = models.CharField(max_length=32, null=True, blank=True)
+    class Meta:
+        db_table = 'Admin'
+        verbose_name = 'Admin'
+        verbose_name_plural = 'Admins'
 
 class Parent(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='parent')
     address = models.CharField(max_length=255, null=True, blank=True)
+    class Meta:
+        db_table = 'Parent'
+        verbose_name = 'Parent'
+        verbose_name_plural = 'Parents'
 
   
 class Student(models.Model):
@@ -109,6 +121,10 @@ class Student(models.Model):
     room = models.ForeignKey('rooms.Room',null=True, blank=True, default=None,related_name='students', on_delete=models.SET_NULL)
     parent = models.ForeignKey(Parent, null=True, blank=True, default=None, on_delete=models.SET_NULL,related_name='students')   
     active_status = models.CharField(max_length=355, null=True, blank=True)
+    class Meta:
+        db_table = 'Student'
+        verbose_name = 'Student'
+        verbose_name_plural = 'Students'
 
 
 #--------------------------------------------------------------------------------------

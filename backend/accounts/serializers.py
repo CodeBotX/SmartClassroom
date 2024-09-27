@@ -56,11 +56,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['user_id','username']
 
 class TeacherUpdateSerializer(serializers.ModelSerializer):
-    user = UserUpdateSerializer()  # Serializer lồng ghép để cập nhật thông tin user
+    full_name = serializers.CharField(source='user.full_name')
+    sex = serializers.CharField(source='user.sex', allow_null=True)
+    nation = serializers.CharField(source='user.nation', allow_null=True)
+    email = serializers.EmailField(source='user.email', allow_null=True)
+    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
+    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
 
     class Meta:
         model = Teacher
-        fields = ['user', 'active_status', 'contract_types', 'expertise_levels', 'subjects']
+        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'active_status', 'contract_types', 'expertise_levels', 'subjects']
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
@@ -68,14 +73,22 @@ class TeacherUpdateSerializer(serializers.ModelSerializer):
             for attr, value in user_data.items():
                 setattr(instance.user, attr, value)
             instance.user.save()
+
         return super().update(instance, validated_data)
 
+
+
 class AdminUpdateSerializer(serializers.ModelSerializer):
-    user = UserUpdateSerializer()  # Serializer lồng ghép
+    full_name = serializers.CharField(source='user.full_name')
+    sex = serializers.CharField(source='user.sex', allow_null=True)
+    nation = serializers.CharField(source='user.nation', allow_null=True)
+    email = serializers.EmailField(source='user.email', allow_null=True)
+    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
+    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
 
     class Meta:
         model = Admin
-        fields = ['user', 'active_status', 'contract_types', 'expertise_levels', 'description']
+        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'active_status', 'contract_types', 'expertise_levels', 'description']
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
@@ -83,14 +96,21 @@ class AdminUpdateSerializer(serializers.ModelSerializer):
             for attr, value in user_data.items():
                 setattr(instance.user, attr, value)
             instance.user.save()
+
         return super().update(instance, validated_data)
 
+
 class ParentUpdateSerializer(serializers.ModelSerializer):
-    user = UserUpdateSerializer()
+    full_name = serializers.CharField(source='user.full_name')
+    sex = serializers.CharField(source='user.sex', allow_null=True)
+    nation = serializers.CharField(source='user.nation', allow_null=True)
+    email = serializers.EmailField(source='user.email', allow_null=True)
+    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
+    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
 
     class Meta:
         model = Parent
-        fields = ['user', 'address']
+        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'address']
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
@@ -98,22 +118,33 @@ class ParentUpdateSerializer(serializers.ModelSerializer):
             for attr, value in user_data.items():
                 setattr(instance.user, attr, value)
             instance.user.save()
+
         return super().update(instance, validated_data)
 
+
 class StudentUpdateSerializer(serializers.ModelSerializer):
-    user = UserUpdateSerializer()
+    full_name = serializers.CharField(source='user.full_name')
+    sex = serializers.CharField(source='user.sex', allow_null=True)
+    nation = serializers.CharField(source='user.nation', allow_null=True)
+    email = serializers.EmailField(source='user.email', allow_null=True)
+    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
+    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
 
     class Meta:
         model = Student
-        fields = ['user', 'room', 'parent', 'active_status']
+        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'room', 'parent', 'active_status']
 
     def update(self, instance, validated_data):
+        # Update the related CustomUser fields
         user_data = validated_data.pop('user', None)
         if user_data:
             for attr, value in user_data.items():
                 setattr(instance.user, attr, value)
             instance.user.save()
+
+        # Update Student fields
         return super().update(instance, validated_data)
+
 
 
 

@@ -12,22 +12,11 @@ class Room(models.Model):
     def __str__(self):
         return self.room_name
     class Meta:
-        db_table = 'rooms'
-        verbose_name = 'Lớp học'
-        verbose_name_plural = 'Các Lớp học'
+        db_table = 'room'
+        verbose_name = 'room'
+        verbose_name_plural = 'rooms'
 
-# # Bảng bài giảng (tiết học)
-# class Lessons(models.Model):
-#     class_id = models.ForeignKey(Classes, on_delete=models.CASCADE, related_name='lessons')
-#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-#     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE)
-#     teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'teacher'}, related_name='lessons')
-#     name_lesson = models.CharField(max_length=255)
-#     period_number = models.IntegerField()
-#     comment = models.TextField()
 
-#     class Meta:
-#         db_table = 'lessons'
 
 # # Bảng thời khóa biểu
 # class Timetables(models.Model):

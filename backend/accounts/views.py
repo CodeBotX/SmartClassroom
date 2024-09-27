@@ -350,13 +350,35 @@ class UserDetailView(APIView):
 
 # ---------------------------------------------------------------------------------------------
 
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+#     def patch(self, request, *args, **kwargs):
+#         user = request.user
+#         # Xác định serializer dựa trên vai trò của người dùng
+#         if user.is_teacher:
+#             serializer = TeacherUpdateSerializer(user.teacher, data=request.data, partial=True)
+#         elif user.is_admin:
+#             serializer = AdminUpdateSerializer(user.admin, data=request.data, partial=True)
+#         elif user.is_parent:
+#             serializer = ParentUpdateSerializer(user.parent, data=request.data, partial=True)
+#         elif user.is_student:
+#             serializer = StudentUpdateSerializer(user.student, data=request.data, partial=True)
+#         else:
+#             serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+        
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class UserUpdateView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         user = request.user
-        # Xác định serializer dựa trên vai trò của người dùng
+        
         if user.is_teacher:
             serializer = TeacherUpdateSerializer(user.teacher, data=request.data, partial=True)
         elif user.is_admin:
