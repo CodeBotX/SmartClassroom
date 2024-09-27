@@ -34,8 +34,8 @@ class CustomUserManager(BaseUserManager):
         return superuser
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    user_id = models.CharField(primary_key=True, max_length=8, editable=False)  # Làm khóa chính, không cần unique=True
-    username = models.CharField(max_length=255, unique=True)  # Tên đăng nhập, unique để đảm bảo duy nhất
+    user_id = models.CharField(primary_key=True, max_length=8, editable=False)  
+    username = models.CharField(max_length=255, unique=True)  
     full_name = models.CharField(max_length=255)
     sex = models.CharField(max_length=32, null=True, blank=True)
     nation = models.CharField(max_length=32, null=True, blank=True)
@@ -53,12 +53,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)  # Thời gian tạo tài khoản
-    last_login = models.DateTimeField(auto_now=True)  # Tự động cập nhật khi đăng nhập
-
+    date_joined = models.DateTimeField(auto_now_add=True)  
+    last_login = models.DateTimeField(auto_now=True)  
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'username'  # Trường sử dụng để đăng nhập
+    USERNAME_FIELD = 'username'  
     REQUIRED_FIELDS = ['full_name']
 
     def __str__(self):
