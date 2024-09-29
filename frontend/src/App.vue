@@ -1,6 +1,8 @@
 <template>
   <div>
     <router-view />
+    <notifications group="auth" position="top center" />
+    <notifications group="app" position="top right" />
   </div>
 </template>
 

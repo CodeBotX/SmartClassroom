@@ -8,3 +8,26 @@
     @apply  bg-gray-200 text-gray-800  transition duration-400 ease-in-out
   }
  }
+ 
+ .vue-notification {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  color: #333;
+}
+
+.vue-notification .success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.vue-notification .error {
+  background-color: #f44336;
+  color: white;
+}
+
+.vue-notification .warn {
+  background-color: #ff9800;
+  color: white;
+}
