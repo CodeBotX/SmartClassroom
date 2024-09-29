@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jws0d7!db@mj42q-*n7cqn@^+guao$@rgf3o_@@al5ailinfdr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'adminpanel',
+    'rooms',
 ]
 
 MIDDLEWARE = [
@@ -136,8 +138,16 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # ),
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'rest_framework.parsers.JSONParser',
+    # ),
      'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
+        'rest_framework.authentication.SessionAuthentication',  # Session Authentication
+        'rest_framework.authentication.BasicAuthentication',  # Basic Auth
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -145,7 +155,9 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=50),  # Thời gian sống của access token
+    'USER_ID_FIELD': 'user_id',  # Sử dụng 'user_id' thay vì 'id'
+    'USER_ID_CLAIM': 'user_id',  # ghi `user_id` vào trong token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=240),  # Thời gian sống của access token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Thời gian sống của refresh token
     'ROTATE_REFRESH_TOKENS': False,                # Tùy chọn làm mới refresh token khi làm mới access token
     'BLACKLIST_AFTER_ROTATION': False,             # Có nên đưa refresh token vào blacklist sau khi bị làm mới
@@ -154,3 +166,7 @@ SIMPLE_JWT = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://d118-2405-4802-491-7680-7136-b7cf-890c-f45e.ngrok-free.app',
+# ]
