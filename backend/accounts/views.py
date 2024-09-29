@@ -51,7 +51,7 @@ class APIRegisterTeacherView(APIView):
     permission_classes = []  # IsAuthenticated, IsAdmin
 
     def post(self, request, *args, **kwargs):
-        serializer = ExcelUploadSerializer(data=request.FILES)  # Đọc file từ request.FILES
+        serializer = ExcelUploadSerializer(data=request.FILES)  
         if serializer.is_valid():
             file = serializer.validated_data['file']
             workbook = openpyxl.load_workbook(file)
@@ -61,42 +61,36 @@ class APIRegisterTeacherView(APIView):
             existing_users = 0
 
             for row in sheet.iter_rows(min_row=2, values_only=True):
-                # Lấy dữ liệu từ các cột tương ứng
                 ma_dinh_danh = row[1]
                 full_name = row[2]
                 ngay_sinh = row[3]
                 gioi_tinh = row[4]
                 dan_toc = row[6]
                 dien_thoai = row[7]
-                vi_tri = row[8]  # Giáo viên hoặc Cán bộ quản lý
+                vi_tri = row[8]  
 
-                # Bỏ qua hàng không đủ thông tin cần thiết
                 if not ma_dinh_danh or not full_name or not vi_tri:
                     continue
 
-                # Phân loại role theo vị trí việc làm
                 is_teacher = vi_tri.lower() == 'giáo viên'
                 is_admin = vi_tri.lower() == 'cán bộ quản lý'
                 
                 if not is_teacher and not is_admin:
-                    continue  # Bỏ qua nếu vị trí không hợp lệ
+                    continue  
 
-                # Kiểm tra nếu người dùng đã tồn tại
                 if CustomUser.objects.filter(user_id=ma_dinh_danh).exists():
                     existing_users += 1
                     continue
 
-                # Kiểm tra ngày sinh
                 if ngay_sinh:
                     try:
                         ngay_sinh = datetime.strptime(ngay_sinh, '%d/%m/%Y').date()
                     except ValueError:
-                        continue  # Bỏ qua nếu định dạng ngày sinh không hợp lệ
+                        continue  
 
-                # Tạo CustomUser
                 user = CustomUser(
                     full_name=full_name,
-                    username=ma_dinh_danh,  # Username sẽ là mã định danh
+                    username=ma_dinh_danh,  
                     user_id=ma_dinh_danh,
                     sex=gioi_tinh,
                     nation=dan_toc,
@@ -105,11 +99,9 @@ class APIRegisterTeacherView(APIView):
                     is_teacher=is_teacher,
                     is_admin=is_admin,
                 )
-
                 try:
                     user.save()
 
-                    # Tạo đối tượng Teacher hoặc Admin
                     if is_teacher:
                         Teacher.objects.create(
                             user=user,
@@ -121,17 +113,15 @@ class APIRegisterTeacherView(APIView):
                     elif is_admin:
                         Admin.objects.create(
                             user=user,
-                            active_status=row[5],  # Trạng thái
-                            contract_types=row[10],  # Hình thức hợp đồng
-                            expertise_levels=row[11],  #trình độ chuyên môn
-                            description=row[9]  # Mô tả
+                            active_status=row[5],  
+                            contract_types=row[10],  
+                            expertise_levels=row[11],  
+                            description=row[9]  
                         )
-
                     created_users += 1
                 except ValidationError as e:
                     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Trả về kết quả sau khi xử lý
             if created_users > 0:
                 return Response({"detail": f"Tạo thành công {created_users} tài khoản giáo viên/cán bộ quản lý."}, status=status.HTTP_200_OK)
             else:
@@ -154,31 +144,23 @@ class APIRegisterStudentView(APIView):
             existing_students = 0
 
             for row in sheet.iter_rows(min_row=7, values_only=True):
-                # Lấy dữ liệu từ các cột tương ứng
                 ma_dinh_danh = row[2]
                 full_name = row[3]
                 ngay_sinh = row[4]
                 gioi_tinh = row[5]
                 dan_toc = row[6]
                 active_status = row[7]  # Trạng thái
-
-                # Bỏ qua hàng không đủ thông tin cần thiết
                 if not ma_dinh_danh or not full_name:
                     continue
-
-                # Kiểm tra nếu người dùng đã tồn tại
                 if CustomUser.objects.filter(user_id=ma_dinh_danh).exists():
                     existing_students += 1
                     continue
-
-                # Kiểm tra ngày sinh
                 if ngay_sinh:
                     try:
                         ngay_sinh = datetime.strptime(ngay_sinh, '%d/%m/%Y').date()
                     except ValueError:
                         continue  # Bỏ qua nếu định dạng ngày sinh không hợp lệ
 
-                # Tạo CustomUser cho học sinh
                 user = CustomUser(
                     full_name=full_name,
                     username=ma_dinh_danh,  # Username sẽ là mã định danh
@@ -191,7 +173,6 @@ class APIRegisterStudentView(APIView):
 
                 try:
                     user.save()
-                    # Tạo đối tượng Student
                     Student.objects.create(
                         user=user,
                         room=None,  # Hoặc có thể thêm logic để lấy thông tin phòng
@@ -203,7 +184,6 @@ class APIRegisterStudentView(APIView):
                 except ValidationError as e:
                     return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Trả về kết quả sau khi xử lý
             if created_students > 0:
                 return Response({"detail": f"Tạo thành công {created_students} tài khoản học sinh."}, status=status.HTTP_200_OK)
             else:
@@ -235,32 +215,24 @@ class APIRegisterParentView(APIView):
                 address = row[3]
                 ma_dinh_danh_hoc_sinh = row[4]
 
-                # Bỏ qua hàng không đủ thông tin cần thiết
                 if not full_name or not phone_number or not ma_dinh_danh_hoc_sinh:
                     continue
 
-                # Kiểm tra học sinh có tồn tại không
                 try:
                     ma_dinh_danh_hoc_sinh = str(ma_dinh_danh_hoc_sinh).strip()
                     student = Student.objects.get(user__user_id=ma_dinh_danh_hoc_sinh)
                 except Student.DoesNotExist:
-                    # Nếu học sinh không tồn tại, bỏ qua
                     invalid_students += 1
                     print(f"Học sinh với mã định danh {ma_dinh_danh_hoc_sinh} không tồn tại.")
                     continue
-
-                # Kiểm tra nếu phụ huynh đã tồn tại
                 parent_user = CustomUser.objects.filter(username=phone_number, is_parent=True).first()
 
                 if parent_user:
-                    # Nếu phụ huynh đã tồn tại mà học sinh chưa được liên kết với phụ huynh đó, bỏ qua
                     if not student.parent:
                         student.parent = parent_user.parent
                         student.save()
                     existing_parents += 1
                     continue
-
-                # Tạo CustomUser cho phụ huynh nếu phụ huynh chưa tồn tại
                 user = CustomUser(
                     full_name=full_name,
                     username=phone_number,
@@ -269,26 +241,16 @@ class APIRegisterParentView(APIView):
                     is_parent=True,
                 )
                 user.set_password(phone_number)  # Sử dụng số điện thoại làm password
-
-                # Lưu đối tượng phụ huynh
                 user.save()
-
-                # Tạo đối tượng Parent
                 parent = Parent.objects.create(
                     user=user,
                     address=address
                 )
-
-                # Cập nhật mối quan hệ giữa phụ huynh và học sinh
                 student.parent = parent
                 student.save()
-
                 created_parents += 1
-                
                 for info in added_students_info:
                     added_students_messages.append(f"Đã thêm học sinh {info['student_user_id']} cho phụ huynh {info['parent_user_id']}.")
-
-            # Trả về kết quả sau khi xử lý
             return Response({
                 "detail": f"Tạo thành công {created_parents} tài khoản phụ huynh.",
                 "existing_parents": existing_parents,
@@ -309,11 +271,7 @@ class UserDetailView(APIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-
-        # Serialize base user data
         user_data = UserSerializer(user).data
-
-        # Check the user's role and add role-specific data
         if user.is_teacher:
             try:
                 teacher = user.teacher
@@ -321,7 +279,6 @@ class UserDetailView(APIView):
                 user_data.update(teacher_data)
             except Teacher.DoesNotExist:
                 return Response({'error': 'Teacher profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-
         elif user.is_admin:
             try:
                 admin = user.admin
@@ -329,7 +286,6 @@ class UserDetailView(APIView):
                 user_data.update(admin_data)
             except Admin.DoesNotExist:
                 return Response({'error': 'Admin profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-
         elif user.is_parent:
             try:
                 parent = user.parent
@@ -337,7 +293,6 @@ class UserDetailView(APIView):
                 user_data.update(parent_data)
             except Parent.DoesNotExist:
                 return Response({'error': 'Parent profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-
         elif user.is_student:
             try:
                 student = user.student
@@ -345,7 +300,6 @@ class UserDetailView(APIView):
                 user_data.update(student_data)
             except Student.DoesNotExist:
                 return Response({'error': 'Student profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-
         return Response(user_data, status=status.HTTP_200_OK)
 
 # ---------------------------------------------------------------------------------------------
