@@ -6,7 +6,7 @@ from datetime import timedelta
 
 # Bảng học kỳ   
 class Semester(models.Model):
-    semester = models.IntegerField(unique=True)
+    semester = models.IntegerField(primary_key=True)
     day_begin = models.DateField()
     number_of_weeks = models.IntegerField()
 
@@ -15,13 +15,12 @@ class Semester(models.Model):
         verbose_name = 'Semester'
         verbose_name_plural = 'Semesters'
 
-    def save(self, *args, **kwargs):
-        if not hasattr(self, 'day_end'):
-            self.day_end = self.day_begin + timedelta(weeks=self.number_of_weeks)
-        super().save(*args, **kwargs)
+    def get_day_end(self):
+        return self.day_begin + timedelta(weeks=self.number_of_weeks)
 
     def __str__(self):
-        return f"Semester {self.semester} ({self.day_begin} - {self.day_end})"
+        day_end = self.get_day_end()
+        return f"Semester {self.semester} ({self.day_begin} - {day_end})"
 
 
 # Bảng tuần học 
@@ -81,11 +80,10 @@ class PlannedLesson(models.Model):
 # Bảng tiet hoc
 class Lesson(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    study_week = models.ForeignKey(StudyWeek, on_delete=models.CASCADE)
     day = models.DateField()
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='lessons')
     period_number = models.IntegerField(choices=PERIOD_CHOICES)
-    planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  # Tiết đã lên kế hoạch
+    planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE,null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
@@ -102,31 +100,27 @@ class Lesson(models.Model):
     
     
 # -------------------------------------------------------------------------------
+# Bảng điểm
+class Grades(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    grade = models.FloatField()  
 
-# # Bảng điểm
-# class Grades(models.Model):
-#     student_id = models.ForeignKey(Students, on_delete=models.CASCADE, related_name='grades')
-#     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='grades')
-#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-#     lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='grades')
-#     grade = models.FloatField()  # float, làm tròn đến 2 chữ số
+    class Meta:
+        db_table = 'grades'
+        unique_together = ('student_id', 'subject_id') 
+        verbose_name = 'Điểm'
+        verbose_name_plural = 'Các điểm'
 
-#     class Meta:
-#         db_table = 'grades'
-#         unique_together = ('student_id', 'subject_id')  # Khóa chính tổ hợp
-#         verbose_name = 'Điểm'
-#         verbose_name_plural = 'Các điểm'
+    def save(self, *args, **kwargs):
+        if not 0 <= self.grade <= 10:
+            raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
+        self.grade = round(self.grade, 2)
+        super().save(*args, **kwargs)
 
-#     def save(self, *args, **kwargs):
-#         # Kiểm tra giá trị của grade (phải nằm trong khoảng từ 0 đến 10)
-#         if not 0 <= self.grade <= 10:
-#             raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
-#         # Làm tròn điểm đến 2 chữ số thập phân
-#         self.grade = round(self.grade, 2)
-#         super().save(*args, **kwargs)
-
-#     def __str__(self):
-#         return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
+    def __str__(self):
+        return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
 
 
 
@@ -138,5 +132,6 @@ class Lesson(models.Model):
 
 #     class Meta:
 #         db_table = 'school_management'
+
 
 

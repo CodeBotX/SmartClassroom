@@ -25,8 +25,8 @@ class PlannedLessonAdmin(admin.ModelAdmin):
 # Hiển thị thông tin tiết học
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'study_week', 'day', 'period_number', 'room', 'teacher', 'get_weekday', 'planned_lesson', 'evaluate')
-    list_filter = ('semester', 'study_week', 'period_number', 'room', 'teacher')
+    list_display = ('semester', 'day', 'period_number', 'room', 'teacher', 'get_weekday', 'planned_lesson', 'evaluate')
+    list_filter = ('semester', 'period_number', 'room', 'teacher')
     search_fields = ('room__name', 'teacher__name', 'planned_lesson__name_lesson')
     date_hierarchy = 'day'
     ordering = ('day', 'period_number')
