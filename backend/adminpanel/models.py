@@ -109,7 +109,7 @@ class Grades(models.Model):
 
     class Meta:
         db_table = 'grades'
-        unique_together = ('student_id', 'subject_id') 
+        unique_together = ('student', 'subject') 
         verbose_name = 'Điểm'
         verbose_name_plural = 'Các điểm'
 
@@ -120,7 +120,7 @@ class Grades(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
+        return f"{self.student.full_name} - Môn {self.subject.subject_name} - Điểm: {self.grade}"
 
 
 
