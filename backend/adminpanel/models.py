@@ -101,26 +101,26 @@ class Lesson(models.Model):
     
 # -------------------------------------------------------------------------------
 # Bảng điểm
-class Grades(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
-    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    grade = models.FloatField()  
+# class Grades(models.Model):
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
+#     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+#     grade = models.FloatField()  
 
-    class Meta:
-        db_table = 'grades'
-        unique_together = ('student_id', 'subject_id') 
-        verbose_name = 'Điểm'
-        verbose_name_plural = 'Các điểm'
+#     class Meta:
+#         db_table = 'grades'
+#         unique_together = ('student_id', 'subject_id') 
+#         verbose_name = 'Điểm'
+#         verbose_name_plural = 'Các điểm'
 
-    def save(self, *args, **kwargs):
-        if not 0 <= self.grade <= 10:
-            raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
-        self.grade = round(self.grade, 2)
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if not 0 <= self.grade <= 10:
+#             raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
+#         self.grade = round(self.grade, 2)
+#         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
+#     def __str__(self):
+#         return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
 
 
 

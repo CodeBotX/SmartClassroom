@@ -5,37 +5,45 @@ from django.contrib.auth.password_validation import validate_password
 from .models import *
 
 # Phần đăng ký
+        
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'user_id', 'full_name', 'phone_number', 'day_of_birth', 'email', 'is_teacher', 'is_admin', 'is_parent', 'is_student']
-
+        # fields = ['username', 'user_id', 'full_name', 'phone_number', 'day_of_birth', 'email', 'is_teacher', 'is_admin', 'is_parent', 'is_student']
+        fields = '__all__'
+        
 # Serializer cho Teacher
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = ['active_status', 'contract_types', 'expertise_levels', 'subjects']
-
+        # fields = ['active_status', 'contract_types', 'expertise_levels', 'subjects']
+        fields = '__all__'
+        
 # Serializer cho Admin
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin
-        fields = ['active_status', 'contract_types', 'expertise_levels', 'description']
-
+        # fields = ['active_status', 'contract_types', 'expertise_levels', 'description']
+        fields = '__all__'
+        
 # Serializer cho Parent
 class ParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parent
-        fields = ['address','students']
-
+        # fields = ['address','students']
+        fields = '__all__'
+        
 # Serializer cho Student
+# class StudentSerializer(serializers.ModelSerializer):
+#     room = serializers.CharField(source='room.name', read_only=True)
+#     parent = serializers.CharField(source='parent.user.full_name', read_only=True)
+#     class Meta:
+#         model = Student
+#         fields = ['active_status', 'room', 'parent']
 class StudentSerializer(serializers.ModelSerializer):
-    room = serializers.CharField(source='room.name', read_only=True)
-    parent = serializers.CharField(source='parent.user.full_name', read_only=True)
-
     class Meta:
         model = Student
-        fields = ['active_status', 'room', 'parent']
+        fields = '__all__'
 
 #up file excel
 class ExcelUploadSerializer(serializers.Serializer):

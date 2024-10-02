@@ -7,6 +7,13 @@ from django.utils import timezone
 
 # Bảng người dùng
 #(user name = id , pass  =  id)
+# class Role(models.Model):
+#     name = models.CharField(max_length=50, unique=True)  # Tên vai trò, ví dụ: teacher, admin
+#     description = models.TextField(blank=True)  # Mô tả chi tiết về vai trò (nếu cần)
+
+#     def __str__(self):
+#         return self.name
+    
 class CustomUserManager(BaseUserManager):
     def create_user(self,user_id, full_name, **extra_fields):
         if not full_name:
@@ -48,6 +55,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    # roles = models.ManyToManyField(Role, blank=True)
 
     # User permissions
     is_active = models.BooleanField(default=True)
@@ -127,78 +135,4 @@ class Student(models.Model):
 
 
 #--------------------------------------------------------------------------------------
-
-
-
-
-
-# # Bảng sinh học sinh
-# class Students(models.Model):
-#     full_name = models.CharField(max_length=127)  
-#     class_id = models.ForeignKey(
-#         Classes, 
-#         on_delete=models.CASCADE, 
-#         related_name='students'  
-#     )
-#     parent_id = models.ForeignKey(
-#         CustomUser, 
-#         on_delete=models.CASCADE, 
-#         limit_choices_to={'role': 'parent'}, 
-#         related_name='parent_students'  
-#     )
-
-#     def save(self, *args, **kwargs):
-#         if self.parent_id.role != 'parent':
-#             raise ValueError("Người dùng được chọn phải là phụ huynh.")
-#         super().save(*args, **kwargs)  
-
-#     def __str__(self):
-#         return self.full_name  
-
-#     class Meta:
-#         db_table = 'students'  
-#         verbose_name = 'Học sinh'
-#         verbose_name_plural = 'Các Học sinh'
-        
-
-
-
-        
-
-
-# # Bảng điểm
-# class Grades(models.Model):
-#     student_id = models.ForeignKey(Students, on_delete=models.CASCADE, related_name='grades')
-#     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='grades')
-#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-#     lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='grades')
-#     grade = models.FloatField()  # float, làm tròn đến 2 chữ số
-
-#     class Meta:
-#         db_table = 'grades'
-#         unique_together = ('student_id', 'subject_id')  # Khóa chính tổ hợp
-#         verbose_name = 'Điểm'
-#         verbose_name_plural = 'Các điểm'
-
-#     def save(self, *args, **kwargs):
-#         # Kiểm tra giá trị của grade (phải nằm trong khoảng từ 0 đến 10)
-#         if not 0 <= self.grade <= 10:
-#             raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
-#         # Làm tròn điểm đến 2 chữ số thập phân
-#         self.grade = round(self.grade, 2)
-#         super().save(*args, **kwargs)
-
-#     def __str__(self):
-#         return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
-
-
-
-# # Bảng quản lý trường học
-# class SchoolManagement(models.Model):
-#     admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='school_managements')
-#     action = models.BigIntegerField() # 1: Thêm, 2: Sửa, 3: Xóa + thông tin chi tiết
-#     timestamp = models.BigIntegerField() # Thời gian thực hiện hành động
-
-#     class Meta:
-#         db_table = 'school_management'
 
