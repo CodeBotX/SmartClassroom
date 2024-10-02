@@ -2,18 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.apps import apps
-from django.utils import timezone
 
 # Bảng người dùng
-#(user name = id , pass  =  id)
-# class Role(models.Model):
-#     name = models.CharField(max_length=50, unique=True)  # Tên vai trò, ví dụ: teacher, admin
-#     description = models.TextField(blank=True)  # Mô tả chi tiết về vai trò (nếu cần)
 
-#     def __str__(self):
-#         return self.name
-    
 class CustomUserManager(BaseUserManager):
     def create_user(self,user_id, full_name, **extra_fields):
         if not full_name:
@@ -43,19 +34,14 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.CharField(primary_key=True, max_length=8, editable=False)  
     username = models.CharField(max_length=255, unique=True)  
-    full_name = models.CharField(max_length=255)
-    sex = models.CharField(max_length=32, null=True, blank=True)
-    nation = models.CharField(max_length=32, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True, null=True, blank=True) 
     phone_number = models.CharField(max_length=32,unique=True, null=True, blank=True)
-    day_of_birth = models.DateField(null=True, blank=True)
     
     # Vai trò
     is_parent = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    # roles = models.ManyToManyField(Role, blank=True)
 
     # User permissions
     is_active = models.BooleanField(default=True)
@@ -66,10 +52,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'  
-    REQUIRED_FIELDS = ['full_name','user_id']
+    REQUIRED_FIELDS = ['user_id']
 
     def __str__(self):
-        return self.full_name
+        return self.username or self.user_id
 
     def save(self, *args, **kwargs):
         if self.is_teacher or self.is_admin or self.is_student:
@@ -94,6 +80,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE, related_name='teacher')
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     active_status = models.CharField(max_length=355, null=True, blank=True)
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
@@ -105,6 +95,10 @@ class Teacher(models.Model):
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='admin')
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     active_status = models.CharField(max_length=355, null=True, blank=True)
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
@@ -116,6 +110,7 @@ class Admin(models.Model):
 
 class Parent(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='parent')
+    full_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, null=True, blank=True)
     class Meta:
         db_table = 'Parent'
@@ -125,6 +120,10 @@ class Parent(models.Model):
   
 class Student(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='student') 
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     room = models.ForeignKey('rooms.Room',null=True, blank=True, default=None,related_name='students', on_delete=models.SET_NULL)
     parent = models.ForeignKey(Parent, null=True, blank=True, default=None, on_delete=models.SET_NULL,related_name='students')   
     active_status = models.CharField(max_length=355, null=True, blank=True)

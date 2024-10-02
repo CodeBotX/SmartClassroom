@@ -5,15 +5,14 @@ from django.contrib.auth import authenticate, login
 from .models import *
 import openpyxl
 from django.core.exceptions import ValidationError
-from .serializers import ExcelUploadSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication  
 from datetime import datetime
 from .serializers import *
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from openpyxl import load_workbook
+from rest_framework import viewsets
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 # API đăng nhập
@@ -49,7 +48,7 @@ class ApiLoginView(APIView):
 class APIRegisterTeacherView(APIView):
     authentication_classes = []  # JWTAuthentication 
     permission_classes = []  # IsAuthenticated, IsAdmin
-
+    parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):
         serializer = ExcelUploadSerializer(data=request.FILES)  
         if serializer.is_valid():
@@ -89,13 +88,9 @@ class APIRegisterTeacherView(APIView):
                         continue  
 
                 user = CustomUser(
-                    full_name=full_name,
                     username=ma_dinh_danh,  
                     user_id=ma_dinh_danh,
-                    sex=gioi_tinh,
-                    nation=dan_toc,
                     phone_number=dien_thoai,
-                    day_of_birth=ngay_sinh,
                     is_teacher=is_teacher,
                     is_admin=is_admin,
                 )
@@ -105,14 +100,22 @@ class APIRegisterTeacherView(APIView):
                     if is_teacher:
                         Teacher.objects.create(
                             user=user,
-                            active_status=row[5],  # Trạng thái
-                            contract_types=row[10],  # Hình thức hợp đồng
-                            expertise_levels=row[11],  # trình độ chuyên môn
-                            subjects=row[12]  # Môn dạy
+                            full_name=full_name,
+                            sex=gioi_tinh,
+                            day_of_birth=ngay_sinh,
+                            nation=dan_toc,
+                            active_status=row[5], 
+                            contract_types=row[10],  
+                            expertise_levels=row[11], 
+                            subjects=row[12] 
                         )
                     elif is_admin:
                         Admin.objects.create(
                             user=user,
+                            full_name=full_name,
+                            sex=gioi_tinh,
+                            day_of_birth=ngay_sinh,
+                            nation=dan_toc,
                             active_status=row[5],  
                             contract_types=row[10],  
                             expertise_levels=row[11],  
@@ -132,7 +135,7 @@ class APIRegisterTeacherView(APIView):
 class APIRegisterStudentView(APIView):
     authentication_classes = []  # JWTAuthentication 
     permission_classes = []  # IsAuthenticated, IsAdmin
-
+    parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):
         serializer = ExcelUploadSerializer(data=request.data)
         if serializer.is_valid():
@@ -149,7 +152,7 @@ class APIRegisterStudentView(APIView):
                 ngay_sinh = row[4]
                 gioi_tinh = row[5]
                 dan_toc = row[6]
-                active_status = row[7]  # Trạng thái
+                active_status = row[7] 
                 if not ma_dinh_danh or not full_name:
                     continue
                 if CustomUser.objects.filter(user_id=ma_dinh_danh).exists():
@@ -159,25 +162,25 @@ class APIRegisterStudentView(APIView):
                     try:
                         ngay_sinh = datetime.strptime(ngay_sinh, '%d/%m/%Y').date()
                     except ValueError:
-                        continue  # Bỏ qua nếu định dạng ngày sinh không hợp lệ
+                        continue  
 
                 user = CustomUser(
-                    full_name=full_name,
-                    username=ma_dinh_danh,  # Username sẽ là mã định danh
+                    username=ma_dinh_danh,  
                     user_id=ma_dinh_danh,
-                    sex=gioi_tinh,
-                    nation=dan_toc,
-                    day_of_birth=ngay_sinh,
-                    is_student=True,  # Đánh dấu là học sinh
+                    is_student=True,  
                 )
 
                 try:
                     user.save()
                     Student.objects.create(
                         user=user,
-                        room=None,  # Hoặc có thể thêm logic để lấy thông tin phòng
-                        parent=None,  # Hoặc có thể thêm logic để gán phụ huynh
-                        active_status = active_status  # Trạng thái
+                        full_name=full_name,
+                        sex=gioi_tinh,
+                        nation=dan_toc,
+                        day_of_birth=ngay_sinh,
+                        room=None,  
+                        parent=None, 
+                        active_status = active_status  
                     )
 
                     created_students += 1
@@ -195,21 +198,20 @@ class APIRegisterStudentView(APIView):
 class APIRegisterParentView(APIView):
     authentication_classes = []  # JWTAuthentication 
     permission_classes = []  # IsAuthenticated, IsAdmin
-
+    parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):
-        serializer = ExcelUploadSerializer(data=request.FILES)  # Đọc file từ request.FILES
+        serializer = ExcelUploadSerializer(data=request.FILES)  
         if serializer.is_valid():
             file = serializer.validated_data['file']
             workbook = openpyxl.load_workbook(file)
-            sheet = workbook["Danh sách phụ huynh"]  # Tên sheet trong file excel
+            sheet = workbook["Danh sách phụ huynh"]  
 
             created_parents = 0
-            existing_parents = 0  # tài khoản tồn tại
-            invalid_students = 0  # không có học sinh tương ứng
+            existing_parents = 0  
+            invalid_students = 0  
             added_students_info = []
             added_students_messages = []
             for row in sheet.iter_rows(min_row=5, values_only=True):
-                # Lấy dữ liệu từ các cột tương ứng
                 full_name = row[1]
                 phone_number = row[2]
                 address = row[3]
@@ -234,16 +236,16 @@ class APIRegisterParentView(APIView):
                     existing_parents += 1
                     continue
                 user = CustomUser(
-                    full_name=full_name,
                     username=phone_number,
-                    user_id=phone_number,  # Username sẽ là số điện thoại
+                    user_id=phone_number,  
                     phone_number=phone_number,
                     is_parent=True,
                 )
-                user.set_password(phone_number)  # Sử dụng số điện thoại làm password
+                user.set_password(phone_number)  
                 user.save()
                 parent = Parent.objects.create(
                     user=user,
+                    full_name=full_name,
                     address=address
                 )
                 student.parent = parent
@@ -261,9 +263,6 @@ class APIRegisterParentView(APIView):
 
 
 # ---------------------------------------------------------------------------------------------
-
-
-
 # api lấy thông tin user
 class UserDetailView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -272,6 +271,21 @@ class UserDetailView(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
         user_data = UserSerializer(user).data
+        
+        # Xóa bỏ một số trường
+        user_data.pop('password', None)
+        user_data.pop('groups', None)
+        user_data.pop('user_permissions', None)
+
+        # Chỉ thêm vai trò nếu giá trị là True
+        roles = ['is_teacher', 'is_admin', 'is_parent', 'is_student']
+        for role in roles:
+            if user_data[role]:  # chỉ thêm vào nếu là True
+                user_data[role] = user_data[role]
+            else:
+                user_data.pop(role, None)  # loại bỏ nếu không phải
+
+        # Lấy dữ liệu bổ sung từ các mô hình khác
         if user.is_teacher:
             try:
                 teacher = user.teacher
@@ -300,31 +314,52 @@ class UserDetailView(APIView):
                 user_data.update(student_data)
             except Student.DoesNotExist:
                 return Response({'error': 'Student profile not found.'}, status=status.HTTP_404_NOT_FOUND)
+
         return Response(user_data, status=status.HTTP_200_OK)
 
-# ---------------------------------------------------------------------------------------------
+# -----------------------------------------------view-set------------------------------------------
 
-class UserUpdateView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'user_id'
 
-    def patch(self, request, *args, **kwargs):
-        user = request.user
-        
-        if user.is_teacher:
-            serializer = TeacherUpdateSerializer(user.teacher, data=request.data, partial=True)
-        elif user.is_admin:
-            serializer = AdminUpdateSerializer(user.admin, data=request.data, partial=True)
-        elif user.is_parent:
-            serializer = ParentUpdateSerializer(user.parent, data=request.data, partial=True)
-        elif user.is_student:
-            serializer = StudentUpdateSerializer(user.student, data=request.data, partial=True)
+class TeacherViewSet(viewsets.ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+    lookup_field = 'user_id'
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class AdminViewSet(viewsets.ModelViewSet):
+    queryset = Admin.objects.all()
+    serializer_class = AdminSerializer
 
+class ParentViewSet(viewsets.ModelViewSet):
+    queryset = Parent.objects.all()
+    serializer_class = ParentSerializer
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+#api cập nhật thông tin user
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserUpdateSerializer
+    permission_classes = []  
+    def get_serializer_class(self):
+        if self.action in ['partial_update', 'update']:
+            return UserUpdateSerializer
+        return super().get_serializer_class()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # api đổi mật khẩu
