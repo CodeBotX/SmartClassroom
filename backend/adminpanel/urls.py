@@ -13,6 +13,9 @@ from .views import *
 router = DefaultRouter()
 router.register(r'semesters', SemesterViewSet)
 router.register(r'studyweeks', StudyWeekViewSet)
+router.register(r'planned-lessons', PlannedLessonViewSet)
+router.register(r'lessons', LessonViewSet)
+router.register(r'grades', GradesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

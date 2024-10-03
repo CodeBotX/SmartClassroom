@@ -1,38 +1,9 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from .models import Semester, StudyWeek
-# from .serializers import SemesterSerializer
-
-# class SemesterCreateAPIView(APIView):
-#     authencaiton_classes = []
-#     permission_classes = []
-#     def post(self, request, *args, **kwargs):
-#         serializer = SemesterSerializer(data=request.data)
-#         if serializer.is_valid():
-#             semester_data = serializer.validated_data
-#             semester = semester_data['semester']
-#             day_begin = semester_data['day_begin']
-#             number_of_weeks = semester_data['number_of_weeks']
-#             if Semester.objects.filter(semester=semester).exists():
-#                 return Response({'error': 'Semester already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-#             semester_instance = Semester.objects.create(
-#                 semester=semester,
-#                 day_begin=day_begin,
-#                 number_of_weeks=number_of_weeks
-#             )
-#             for week_number in range(1, number_of_weeks + 1):
-#                 StudyWeek.objects.create(semester=semester_instance, week_number=week_number)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 # -----------------------------------------------sử dụng viewset-----------------------------------------------
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import Semester, StudyWeek
+from .models import *
 from .serializers import *
 from rest_framework.decorators import action
 
@@ -144,3 +115,22 @@ class StudyWeekViewSet(viewsets.ModelViewSet):
                 return Response({'error': f'Không tìm thấy tuần {week_number} trong kỳ {semester_id}.'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"error": "Bạn cần nhập vào học kỳ và tuần học."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class PlannedLessonViewSet(viewsets.ModelViewSet):
+    authencation_classes = []
+    permission_classes = []
+    queryset = PlannedLesson.objects.all()
+    serializer_class = PlannedLessonSerializer
+
+class LessonViewSet(viewsets.ModelViewSet):
+    authencation_classes = []
+    permission_classes = []
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+
+class GradesViewSet(viewsets.ModelViewSet):
+    authencation_classes = []
+    permission_classes = []
+    queryset = Grades.objects.all()
+    serializer_class = GradesSerializer

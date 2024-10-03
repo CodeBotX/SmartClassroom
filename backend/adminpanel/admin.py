@@ -1,38 +1,37 @@
 from django.contrib import admin
-from .models import Semester, StudyWeek, PlannedLesson, Lesson
+from .models import Semester, StudyWeek, PlannedLesson, Lesson, Grades
 
-# Hiển thị thông tin chi tiết của học kỳ
+# Registering the Semester model
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'day_begin', 'number_of_weeks')
+    list_display = ('semester', 'day_begin', 'number_of_weeks', 'get_day_end')
     search_fields = ('semester',)
-    list_filter = ('day_begin', 'number_of_weeks')
 
-# Hiển thị tuần học trong học kỳ
+# Registering the StudyWeek model
 @admin.register(StudyWeek)
 class StudyWeekAdmin(admin.ModelAdmin):
     list_display = ('semester', 'week_number')
     list_filter = ('semester',)
     search_fields = ('semester__semester', 'week_number')
 
-# Hiển thị tiết học đã được lên kế hoạch
+# Registering the PlannedLesson model
 @admin.register(PlannedLesson)
 class PlannedLessonAdmin(admin.ModelAdmin):
     list_display = ('subject', 'semester', 'lesson_number', 'name_lesson')
     list_filter = ('subject', 'semester')
-    search_fields = ('name_lesson', 'subject', 'semester__semester')
+    search_fields = ('name_lesson',)
 
-# Hiển thị thông tin tiết học
+# Registering the Lesson model
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'day', 'period_number', 'room', 'teacher', 'get_weekday', 'planned_lesson', 'evaluate')
-    list_filter = ('semester', 'period_number', 'room', 'teacher')
-    search_fields = ('room__name', 'teacher__name', 'planned_lesson__name_lesson')
-    date_hierarchy = 'day'
-    ordering = ('day', 'period_number')
+    list_display = ('semester', 'day', 'room', 'period_number', 'planned_lesson', 'teacher')
+    list_filter = ('semester', 'room', 'teacher')
+    search_fields = ('planned_lesson__name_lesson', 'teacher__full_name')
 
-    # Hiển thị tên tuần (thứ 2 - chủ nhật)
-    def get_weekday(self, obj):
-        return obj.get_weekday()
-    get_weekday.short_description = 'Weekday'
+# Registering the Grades model
+@admin.register(Grades)
+class GradesAdmin(admin.ModelAdmin):
+    list_display = ('student', 'subject', 'semester', 'score_type', 'grade')
+    list_filter = ('subject', 'semester', 'score_type')
+    search_fields = ('student__full_name', 'subject')
 

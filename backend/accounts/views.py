@@ -1,6 +1,6 @@
-from rest_framework.views import APIView # type: ignore
+from rest_framework.views import APIView 
 from rest_framework.response import Response
-from rest_framework import status,views
+from rest_framework import status
 from django.contrib.auth import authenticate, login
 from .models import *
 import openpyxl
@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication  
 from datetime import datetime
 from .serializers import *
-from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -284,7 +283,6 @@ class UserDetailView(APIView):
                 user_data[role] = user_data[role]
             else:
                 user_data.pop(role, None)  # loại bỏ nếu không phải
-
         # Lấy dữ liệu bổ sung từ các mô hình khác
         if user.is_teacher:
             try:
@@ -341,7 +339,6 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
-#api cập nhật thông tin user
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserUpdateSerializer
@@ -362,7 +359,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# api đổi mật khẩu
+# -----------------------------------api đổi mật khẩu----------------------------------------------
 class ChangePasswordView(APIView):
     authentication_classes = [JWTAuthentication] 
     permission_classes = [IsAuthenticated]

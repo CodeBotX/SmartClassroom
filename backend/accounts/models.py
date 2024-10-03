@@ -4,7 +4,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 
 # Bảng người dùng
-
 class CustomUserManager(BaseUserManager):
     def create_user(self,user_id, full_name, **extra_fields):
         if not full_name:
@@ -77,7 +76,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         super().save(*args, **kwargs)
         
-        
+# Các đối tượng người dùng (Sau phát triển thành app thông tin cá nhân)
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE, related_name='teacher')
     full_name = models.CharField(max_length=255)
