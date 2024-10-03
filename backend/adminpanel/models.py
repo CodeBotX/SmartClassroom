@@ -1,6 +1,5 @@
 from django.db import models
 from rooms.models import Room
-from accounts.models import Teacher, Admin, Parent, Student
 from datetime import timedelta
 
 
@@ -84,7 +83,7 @@ class Lesson(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='lessons')
     period_number = models.IntegerField(choices=PERIOD_CHOICES)
     planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE,null=True, blank=True)
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE,null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
     class Meta:
@@ -107,7 +106,7 @@ class ScoreType(models.TextChoices):
     CUOI_KY = 'CuoiKy', 'Điểm cuối kỳ'
 # Bảng điểm
 class Grades(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     score_type = models.CharField(max_length=10, choices=ScoreType.choices)
