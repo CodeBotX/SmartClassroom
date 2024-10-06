@@ -85,6 +85,7 @@ class PlannedLesson(models.Model):
 
 # Bảng tiet hoc
 class Lesson(models.Model):
+    semester= models.ForeignKey(Semester, on_delete=models.CASCADE,related_name='lessons')
     day = models.DateField()  
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')
