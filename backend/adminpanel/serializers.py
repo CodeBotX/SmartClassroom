@@ -2,6 +2,7 @@
 # -----------------------------------------------sử dụng viewset-----------------------------------------------
 from rest_framework import serializers
 from .models import *
+from rooms.models import Room
 
 class SemesterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,3 +45,16 @@ class GradesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
         fields = '__all__'
+        
+# tạo thời khóa biểu
+class LessonCreateSerializer(serializers.Serializer):
+    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())
+    day = serializers.DateField()
+    period = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all())
+    subject = serializers.CharField(max_length=20)
+    
+    def validate(self, data):
+        # Kiểm tra xem kỳ học hiện tại có tồn tại không
+        if not Semester.objects.filter(current=True).exists():
+            raise serializers.ValidationError("Không có kỳ học nào đang hoạt động.")
+        return data

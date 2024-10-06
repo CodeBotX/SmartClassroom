@@ -97,7 +97,7 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
-        unique_together = ('day', 'room', 'period')  # Đặt khóa duy nhất cho ba trường này
+        unique_together = ('day', 'room', 'period','semester')  
 
     def get_weekday(self):
         day_names = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']

@@ -19,4 +19,5 @@ router.register(r'grades', GradesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('create-lesson/', LessonCreateView.as_view(), name='create-lesson'),
 ]

@@ -134,3 +134,58 @@ class GradesViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = Grades.objects.all()
     serializer_class = GradesSerializer
+    
+    
+class LessonCreateView(APIView):
+    def post(self, request):
+        serializer = LessonCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            room = serializer.validated_data['room']
+            day = serializer.validated_data['day']
+            period = serializer.validated_data['period']
+            subject = serializer.validated_data['subject']
+
+            # Tìm kỳ học hiện tại
+            semester = Semester.objects.get(current=True)
+
+            # Kiểm tra xem lesson đã tồn tại hay chưa
+            if Lesson.objects.filter(day=day, room=room, period=period, semester=semester).exists():
+                return Response({"error": "Tiết học đã tồn tại cho thời gian và phòng này."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Tìm danh sách PlannedLesson cho môn học đó trong kỳ học này
+            planned_lessons = PlannedLesson.objects.filter(
+                subject=subject,
+                semester=semester
+            ).order_by('lesson_number')
+
+            if not planned_lessons.exists():
+                return Response({"error": "Không tìm thấy PlannedLesson cho môn học này trong kỳ học hiện tại."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Tìm lesson_number tiếp theo dựa trên các Lesson đã có
+            last_lesson = Lesson.objects.filter(
+                room=room,
+                planned_lesson__subject=subject,
+                planned_lesson__semester=semester
+            ).aggregate(Max('planned_lesson__lesson_number'))
+
+            # Xác định lesson_number tiếp theo
+            next_lesson_number = last_lesson['planned_lesson__lesson_number__max'] + 1 if last_lesson['planned_lesson__lesson_number__max'] else 1
+
+            # Tìm PlannedLesson tương ứng với lesson_number tiếp theo
+            try:
+                planned_lesson = planned_lessons.get(lesson_number=next_lesson_number)
+            except PlannedLesson.DoesNotExist:
+                return Response({"error": "Không còn PlannedLesson nào có sẵn."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Tạo Lesson mới
+            lesson = Lesson.objects.create(
+                day=day,
+                room=room,
+                period=period,
+                semester=semester,
+                planned_lesson=planned_lesson
+            )
+
+            return Response({"message": "Tạo tiết học thành công.", "lesson_id": lesson.id}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
