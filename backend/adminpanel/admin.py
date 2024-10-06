@@ -10,9 +10,9 @@ class SemesterAdmin(admin.ModelAdmin):
 # Registering the StudyWeek model
 @admin.register(StudyWeek)
 class StudyWeekAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'week_number')
-    list_filter = ('semester',)
-    search_fields = ('semester__semester', 'week_number')
+    list_display = ('id','semester', 'week_number')
+    list_filter = ('id','semester',)
+    search_fields = ('id','semester__semester', 'week_number')
 
 # Registering the PlannedLesson model
 @admin.register(PlannedLesson)
@@ -24,8 +24,8 @@ class PlannedLessonAdmin(admin.ModelAdmin):
 # Registering the Lesson model
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'day', 'room', 'period_number', 'planned_lesson', 'teacher')
-    list_filter = ('semester', 'room', 'teacher')
+    list_display = ( 'day', 'room', 'period', 'planned_lesson', 'teacher')
+    list_filter = ( 'room', 'teacher')
     search_fields = ('planned_lesson__name_lesson', 'teacher__full_name')
 
 # Registering the Grades model

@@ -123,7 +123,6 @@ class Student(models.Model):
     sex = models.CharField(max_length=32, null=True, blank=True)
     day_of_birth = models.DateField(null=True, blank=True)
     nation = models.CharField(max_length=32, null=True, blank=True)
-    room = models.ForeignKey('rooms.Room',null=True, blank=True, default=None,related_name='students', on_delete=models.SET_NULL)
     parent = models.ForeignKey(Parent, null=True, blank=True, default=None, on_delete=models.SET_NULL,related_name='students')   
     active_status = models.CharField(max_length=355, null=True, blank=True)
     class Meta:

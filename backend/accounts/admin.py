@@ -22,7 +22,7 @@ class ParentAdmin(admin.ModelAdmin):
     search_fields = ('full_name', 'user__username', 'user__email')
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'full_name', 'sex', 'day_of_birth', 'room', 'active_status')
+    list_display = ('user', 'full_name', 'sex', 'day_of_birth','active_status')
     search_fields = ('full_name', 'user__username', 'user__email')
     list_filter = ('active_status',)
 

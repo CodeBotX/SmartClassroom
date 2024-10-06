@@ -1,5 +1,4 @@
 from django.db import models
-from rooms.models import Room
 from datetime import timedelta
 
 
@@ -24,6 +23,7 @@ class Semester(models.Model):
 
 # Bảng tuần học 
 class StudyWeek(models.Model):
+    id = models.CharField(primary_key=True, max_length=10)
     semester = models.ForeignKey(Semester, related_name='study_weeks', on_delete=models.CASCADE)
     week_number = models.IntegerField()
 
@@ -36,7 +36,9 @@ class StudyWeek(models.Model):
         start_date = self.semester.day_begin + timedelta(weeks=self.week_number - 1)
         end_date = start_date + timedelta(days=6)
         return start_date, end_date
-
+    def save(self, *args, **kwargs):
+        self.id = f"{self.semester.semester}{self.week_number}"
+        super().save(*args, **kwargs)  
     def __str__(self):
         return f"Week {self.week_number} of Semester {self.semester.semester}"
 
@@ -60,12 +62,17 @@ class SubjectChoices(models.TextChoices):
     CN = 'CN', 'Công nghệ'
     HDTN_HN = 'HDTN-HN', 'Hoạt động trại nghiệm, hướng nghiệp'
 
-PERIOD_CHOICES = [(i, f'Tiết {i}') for i in range(1, 11)]
+class Period(models.Model):
+    number = models.IntegerField(primary_key=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    def __str__(self):
+        return f'Tiết {self.number}'
 
 class PlannedLesson(models.Model):
-    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    lesson_number = models.IntegerField()  # Tiết thứ bao nhiêu trong môn
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    lesson_number = models.IntegerField(primary_key=True)  # Tiết thứ bao nhiêu trong môn
     name_lesson = models.CharField(max_length=100)  # Tên bài học
 
     class Meta:
@@ -78,24 +85,25 @@ class PlannedLesson(models.Model):
 
 # Bảng tiet hoc
 class Lesson(models.Model):
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    day = models.DateField()
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='lessons')
-    period_number = models.IntegerField(choices=PERIOD_CHOICES)
+    day = models.DateField()  
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')
     planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  
-    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE,null=True, blank=True)
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
+
     class Meta:
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
+        unique_together = ('day', 'room', 'period')  # Đặt khóa duy nhất cho ba trường này
 
     def get_weekday(self):
         day_names = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
         return day_names[self.day.weekday()]
 
     def __str__(self):
-        return f"Lesson on {self.get_weekday()}, Period {self.period_number}"
+        return f"Lesson on {self.get_weekday()}, Period {self.period}"
     
     
 # -------------------------------------------------------------------------------
@@ -114,7 +122,7 @@ class Grades(models.Model):
 
     class Meta:
         db_table = 'grades'
-        unique_together = ('student', 'subject') 
+        unique_together = ('student', 'subject', 'semester', 'score_type') 
         verbose_name = 'Điểm'
         verbose_name_plural = 'grades'
 
@@ -127,16 +135,6 @@ class Grades(models.Model):
     def __str__(self):
         return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
 
-
-
-# # Bảng quản lý trường học
-# class SchoolManagement(models.Model):
-#     admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='school_managements')
-#     action = models.BigIntegerField() # 1: Thêm, 2: Sửa, 3: Xóa + thông tin chi tiết
-#     timestamp = models.BigIntegerField() # Thời gian thực hiện hành động
-
-#     class Meta:
-#         db_table = 'school_management'
 
 
 
