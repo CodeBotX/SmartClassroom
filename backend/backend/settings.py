@@ -138,8 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.customuser'
 
-CORS_ORIGIN_ALLOW_ALL = True 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ORIGIN_ALLOW_ALL = True 
+# CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = ['https://bkteaching.one']
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
