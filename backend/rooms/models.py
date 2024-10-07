@@ -3,7 +3,7 @@ from django.db import models
 # Bảng lớp học
 class Room(models.Model):
     name = models.CharField(primary_key=True,max_length=127,unique=True) 
-    student = models.ManyToManyField('accounts.Student', related_name='rooms')
+    student = models.ManyToManyField('accounts.Student', related_name='rooms',blank=True)
     homeroom_teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='homeroom_classes')
     def __str__(self):
         return self.name

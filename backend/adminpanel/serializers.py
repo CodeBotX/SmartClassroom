@@ -15,26 +15,13 @@ class SemesterSerializer(serializers.ModelSerializer):
             StudyWeek.objects.create(semester=semester, week_number=week_number)
         return semester
 
-# class StudyWeekSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = StudyWeek
-#         fields = ['id', 'semester', 'week_number']
 
-
-# class SemesterSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Semester
-#         fields = '__all__'
 
 class StudyWeekSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyWeek
         fields = '__all__'
 
-class PlannedLessonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PlannedLesson
-        fields = '__all__'
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,14 +34,19 @@ class GradesSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 # tạo thời khóa biểu
-class LessonCreateSerializer(serializers.Serializer):
-    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())
-    day = serializers.DateField()
-    period = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all())
+
+
+class CreateLessonSerializer(serializers.Serializer):
+    semester = serializers.PrimaryKeyRelatedField(queryset=Semester.objects.all())
     subject = serializers.CharField(max_length=20)
+    lesson_number = serializers.IntegerField()
+    name_lesson = serializers.CharField(max_length=100)
+    rooms = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Room.objects.all()))
     
+    
+class PlannedLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlannedLesson
+        fields = ['semester', 'subject', 'lesson_number', 'name_lesson', 'room']   
     def validate(self, data):
-        # Kiểm tra xem kỳ học hiện tại có tồn tại không
-        if not Semester.objects.filter(current=True).exists():
-            raise serializers.ValidationError("Không có kỳ học nào đang hoạt động.")
         return data

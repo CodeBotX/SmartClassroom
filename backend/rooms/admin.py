@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Room, SeatingPosition
+from .models import *
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ class SeatingPositionAdmin(admin.ModelAdmin):
     list_display = ('student', 'room', 'row', 'column')
     search_fields = ('student__full_name', 'room__room_name')
     list_filter = ('room',)
+

@@ -68,15 +68,15 @@ class Period(models.Model):
     end_time = models.TimeField()
     def __str__(self):
         return f'Tiết {self.number}'
-
+    
 class PlannedLesson(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    lesson_number = models.IntegerField(primary_key=True)  # Tiết thứ bao nhiêu trong môn
-    name_lesson = models.CharField(max_length=100)  # Tên bài học
-
+    lesson_number = models.IntegerField()  
+    name_lesson = models.CharField(max_length=100) 
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='planned_lessons')
     class Meta:
-        unique_together = ('subject', 'semester', 'lesson_number')
+        unique_together = ('subject', 'semester', 'lesson_number','room')
         verbose_name = 'Planned Lesson'
         verbose_name_plural = 'Planned Lessons'
 
@@ -85,11 +85,13 @@ class PlannedLesson(models.Model):
 
 # Bảng tiet hoc
 class Lesson(models.Model):
-    semester= models.ForeignKey(Semester, on_delete=models.CASCADE,related_name='lessons')
-    day = models.DateField()  
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    lesson_number = models.IntegerField()  # Tiết thứ bao nhiêu trong môn
+    name_lesson = models.CharField(max_length=100)  # Tên bài học
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
-    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')
-    planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  
+    day = models.DateField(null=True, blank=True)  # Ngày học (có thể là null khi chỉ mới lập kế hoạch)
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons', null=True, blank=True)  # Tiết học
     teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
@@ -97,15 +99,10 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
-        unique_together = ('day', 'room', 'period','semester')  
-
-    def get_weekday(self):
-        day_names = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
-        return day_names[self.day.weekday()]
+        unique_together = ('semester', 'room', 'subject','day','period')
 
     def __str__(self):
-        return f"Lesson on {self.get_weekday()}, Period {self.period}"
-    
+        return f"{self.subject} - Tiết {self.lesson_number}: {self.name_lesson} (Phòng {self.room}, Kỳ {self.semester})"
     
 # -------------------------------------------------------------------------------
 class ScoreType(models.TextChoices):

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jws0d7!db@mj42q-*n7cqn@^+guao$@rgf3o_@@al5ailinfdr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1:8000','bkteaching.one']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -116,6 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
+DATE_FORMAT = 'd/m/Y'  # dd/mm/yyyy
+DATETIME_FORMAT = 'd/m/Y H:i:s'  # dd/mm/yyyy hh:mm:ss
+TIME_FORMAT = 'H:i:s'  # hh:mm:ss
 
 USE_I18N = True
 
