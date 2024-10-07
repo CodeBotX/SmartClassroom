@@ -177,7 +177,6 @@ class APIRegisterStudentView(APIView):
                         sex=gioi_tinh,
                         nation=dan_toc,
                         day_of_birth=ngay_sinh,
-                        room=None,  
                         parent=None, 
                         active_status = active_status  
                     )
