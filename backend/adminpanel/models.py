@@ -70,7 +70,7 @@ class Period(models.Model):
         return f'Tiết {self.number}'
     
 class PlannedLesson(models.Model):
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='planned_lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     lesson_number = models.IntegerField()  
     name_lesson = models.CharField(max_length=100) 
@@ -87,7 +87,7 @@ class PlannedLesson(models.Model):
 class Lesson(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    lesson_number = models.IntegerField()  # Tiết thứ bao nhiêu trong môn
+    lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn
     name_lesson = models.CharField(max_length=100)  # Tên bài học
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     day = models.DateField(null=True, blank=True)  # Ngày học (có thể là null khi chỉ mới lập kế hoạch)

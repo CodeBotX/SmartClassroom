@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'adminpanel',
     'rooms',
+    'attendance',
 ]
 
 MIDDLEWARE = [

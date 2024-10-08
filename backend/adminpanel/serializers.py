@@ -3,7 +3,7 @@
 from rest_framework import serializers
 from .models import *
 from rooms.models import Room
-
+# học kỳ
 class SemesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semester
@@ -22,7 +22,7 @@ class StudyWeekSerializer(serializers.ModelSerializer):
         model = StudyWeek
         fields = '__all__'
 
-
+# Lesson
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
@@ -36,17 +36,20 @@ class GradesSerializer(serializers.ModelSerializer):
 # tạo thời khóa biểu
 
 
-class CreateLessonSerializer(serializers.Serializer):
-    semester = serializers.PrimaryKeyRelatedField(queryset=Semester.objects.all())
-    subject = serializers.CharField(max_length=20)
-    lesson_number = serializers.IntegerField()
-    name_lesson = serializers.CharField(max_length=100)
-    rooms = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Room.objects.all()))
+# class CreateLessonSerializer(serializers.Serializer):
+#     semester = serializers.PrimaryKeyRelatedField(queryset=Semester.objects.all())
+#     subject = serializers.CharField(max_length=20)
+#     lesson_number = serializers.IntegerField()
+#     name_lesson = serializers.CharField(max_length=100)
+#     rooms = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Room.objects.all()))
     
     
 class PlannedLessonSerializer(serializers.ModelSerializer):
+    semester = serializers.PrimaryKeyRelatedField(queryset=Semester.objects.all())
+    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())
     class Meta:
         model = PlannedLesson
         fields = ['semester', 'subject', 'lesson_number', 'name_lesson', 'room']   
     def validate(self, data):
         return data
+

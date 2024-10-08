@@ -15,8 +15,8 @@ class StudyWeekAdmin(admin.ModelAdmin):
     search_fields = ('id','semester__semester', 'week_number')
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'subject', 'lesson_number', 'name_lesson', 'room', 'day', 'teacher')
-    search_fields = ('name_lesson', 'subject', 'room__name', 'teacher__name')
+    list_display = ('id','semester', 'subject', 'lesson_number', 'name_lesson', 'room', 'day', 'teacher')
+    search_fields = ('id','name_lesson', 'subject', 'room__name', 'teacher__name')
     list_filter = ('semester', 'subject', 'room', 'teacher', 'day')
     ordering = ('semester', 'room', 'lesson_number')
     list_editable = ('day', 'teacher')

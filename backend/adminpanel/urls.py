@@ -13,7 +13,7 @@ from .views import *
 router = DefaultRouter()
 router.register(r'semesters', SemesterViewSet)
 router.register(r'studyweeks', StudyWeekViewSet)
-router.register(r'lessons', LessonViewSet)
+router.register(r'lessons', LessonViewSet, basename='lesson')
 router.register(r'grades', GradesViewSet)
 router.register(r'planned-lessons', PlannedLessonViewSet)
 
