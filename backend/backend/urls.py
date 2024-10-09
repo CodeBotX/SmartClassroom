@@ -7,5 +7,5 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/adminpanel/', include('adminpanel.urls')),
     path('api/rooms/', include('rooms.urls')),
-    path('api/attendance', include('attendance.urls')),
+    path('api/attendance/', include('attendance.urls')),
 ]

@@ -18,7 +18,7 @@ class Semester(models.Model):
 
     def __str__(self):
         day_end = self.get_day_end()
-        return f"Semester {self.semester} ({self.day_begin} - {day_end})"
+        return f"{self.semester}"
 
 
 # Bảng tuần học 
