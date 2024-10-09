@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'adminpanel',
     'rooms',
     'attendance',
+    'Appdocuments'
 ]
 
 MIDDLEWARE = [
@@ -170,8 +171,9 @@ SIMPLE_JWT = {
     'ALGORITHM': 'HS256',                          # Thuật toán mã hóa
 }
 
-MEDIA_URL = '/media/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # CSRF_TRUSTED_ORIGINS = [
 #     'https://d118-2405-4802-491-7680-7136-b7cf-890c-f45e.ngrok-free.app',
