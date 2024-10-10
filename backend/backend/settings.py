@@ -142,7 +142,7 @@ AUTH_USER_MODEL = 'accounts.customuser'
 
 # CORS_ORIGIN_ALLOW_ALL = True 
 # CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['https://bkteaching.one']
+CSRF_TRUSTED_ORIGINS = ['https://smartclassroom.click', 'http://localhost:8080', 'http://localhost:8000']
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -175,6 +175,3 @@ SIMPLE_JWT = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# CSRF_TRUSTED_ORIGINS = [
-#     'https://d118-2405-4802-491-7680-7136-b7cf-890c-f45e.ngrok-free.app',
-# ]
