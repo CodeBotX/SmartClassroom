@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'adminpanel',
     'rooms',
     'attendance',
-    'Appdocuments'
+    'Appdocuments',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -140,9 +141,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.customuser'
 
-# CORS_ORIGIN_ALLOW_ALL = True 
-# CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['https://smartclassroom.click', 'http://localhost:8080', 'http://localhost:8000']
+CORS_ORIGIN_ALLOW_ALL = True 
+CORS_ALLOW_ALL_ORIGINS = True
+# CSRF_TRUSTED_ORIGINS = ['https://smartclassroom.click', 'http://127.0.0.1:8080', 'http://127.0.0.1:8000']
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
