@@ -141,7 +141,7 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
     queryset = PlannedLesson.objects.all()
     serializer_class = PlannedLessonSerializer
     def create(self, request):
-        serializer = CreateLessonSerializer(data=request.data)
+        serializer = PlannedLessonSerializer(data=request.data)
         if serializer.is_valid():
             semester = serializer.validated_data['semester'] # Liên kết
             subject = serializer.validated_data['subject'] #choice
@@ -235,10 +235,11 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
 #         ).first()
 #         return planned_lesson.name_lesson if planned_lesson else "Unknown Lesson"
 
-class LessonViewSet(viewsets.ViewSet):
+class LessonViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
-    queryset = Lesson.objects.all()  
+    queryset = Lesson.objects.all() 
+    serializer_class = LessonSerializer 
     # 1. Create Schedule (Thời khóa biểu)
     @action(detail=False, methods=['post'], url_path='create_schedule')
     @transaction.atomic
