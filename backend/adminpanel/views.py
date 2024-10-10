@@ -8,6 +8,8 @@ from .serializers import *
 from rest_framework.decorators import action
 from django.db import transaction
 from datetime import timedelta
+from .filters import LessonFilter 
+from django_filters.rest_framework import DjangoFilterBackend
 
 class SemesterViewSet(viewsets.ModelViewSet):
     authentication_classes = []  
@@ -301,3 +303,9 @@ class LessonViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = LessonFilter
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
