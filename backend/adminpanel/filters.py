@@ -7,6 +7,7 @@ class LessonFilter(django_filters.FilterSet):
     room = django_filters.NumberFilter(field_name='room')
     day = django_filters.DateFilter(field_name='day')
     period = django_filters.NumberFilter(field_name='period')
+    day_range = django_filters.DateFromToRangeFilter(field_name='day')
 
     class Meta:
         model = Lesson
