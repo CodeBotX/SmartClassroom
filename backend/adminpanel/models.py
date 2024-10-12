@@ -92,7 +92,7 @@ class Lesson(models.Model):
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     day = models.DateField(null=True, blank=True)  # Ngày học (có thể là null khi chỉ mới lập kế hoạch)
     period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons', null=True, blank=True)  # Tiết học
-    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True)
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) # cần được sửa lại là customuser is_teacher
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
 
@@ -112,7 +112,7 @@ class ScoreType(models.TextChoices):
     CUOI_KY = 'CuoiKy', 'Điểm cuối kỳ'
 # Bảng điểm
 class Grades(models.Model):
-    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades') 
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     score_type = models.CharField(max_length=10, choices=ScoreType.choices)

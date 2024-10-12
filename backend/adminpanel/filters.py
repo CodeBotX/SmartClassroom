@@ -4,7 +4,7 @@ from .models import Lesson
 class LessonFilter(django_filters.FilterSet):
     semester = django_filters.NumberFilter(field_name='semester')
     subject = django_filters.CharFilter(field_name='subject', lookup_expr='icontains')
-    room = django_filters.NumberFilter(field_name='room')
+    room = django_filters.CharFilter(field_name='room__name',lookup_expr='iexact')
     day = django_filters.DateFilter(field_name='day')
     period = django_filters.NumberFilter(field_name='period')
     day_range = django_filters.DateFromToRangeFilter(field_name='day')
