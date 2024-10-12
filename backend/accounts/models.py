@@ -87,6 +87,10 @@ class Teacher(models.Model):
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     subjects = models.TextField(null=True, blank=True)
+    def get_teacher_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Teacher'
         verbose_name = 'Teacher'
@@ -102,6 +106,10 @@ class Admin(models.Model):
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     description = models.CharField(max_length=32, null=True, blank=True)
+    def get_admin_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Admin'
         verbose_name = 'Admin'
@@ -111,10 +119,15 @@ class Parent(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='parent')
     full_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, null=True, blank=True)
+    def get_parent_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Parent'
         verbose_name = 'Parent'
         verbose_name_plural = 'Parents'
+    
 
   
 class Student(models.Model):
@@ -125,6 +138,10 @@ class Student(models.Model):
     nation = models.CharField(max_length=32, null=True, blank=True)
     parent = models.ForeignKey(Parent, null=True, blank=True, default=None, on_delete=models.SET_NULL,related_name='students')   
     active_status = models.CharField(max_length=355, null=True, blank=True)
+    def get_student_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Student'
         verbose_name = 'Student'

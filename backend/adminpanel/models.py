@@ -46,15 +46,15 @@ class StudyWeek(models.Model):
    
 # # Bảng môn học (choice)
 class SubjectChoices(models.TextChoices):
-    TOAN = 'Toan', 'Toán'
-    VAN = 'Van', 'Ngữ Văn'
-    ANH = 'Anh', 'Tiếng Anh'
-    KHTN_HOA = 'Hoa', 'Hoá'
-    KHTN_LY = 'Ly', 'Vật lý'
-    KHTN_SINH = 'Sinh', 'Sinh học'
-    KHXH_DIA = 'Dia', 'Địa lý'
-    KHXH_SU = 'Su', 'Lịch sử'
-    KHXH_GDCD = 'GDCD', 'GDCD'
+    TOAN = 'TOAN', 'Toán'
+    VAN = 'VAN', 'Ngữ Văn'
+    ANH = 'ANH', 'Tiếng Anh'
+    KHTN_HOA = 'KHTN_HOA', 'Hoá'
+    KHTN_LY = 'KHTN_LY', 'Vật lý'
+    KHTN_SINH = 'KHTN_SINH', 'Sinh học'
+    KHXH_DIA = 'KHXH_DIA', 'Địa lý'
+    KHXH_SU = 'KHXH_SU', 'Lịch sử'
+    KHXH_GDCD = 'KHXH_GDCD', 'GDCD'
     TD = 'TD', 'Thể dục'
     MT = 'MT', 'Mỹ thuật'
     AN = 'AN', 'Âm nhạc'
@@ -88,10 +88,10 @@ class Lesson(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn
-    name_lesson = models.CharField(max_length=100)  # Tên bài học
+    name_lesson = models.CharField(max_length=100, null=True, blank=True)  # Tên bài học
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
-    day = models.DateField(null=True, blank=True)  # Ngày học (có thể là null khi chỉ mới lập kế hoạch)
-    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons', null=True, blank=True)  # Tiết học
+    day = models.DateField()  
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')  # Tiết học
     teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) # cần được sửa lại là customuser is_teacher
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)

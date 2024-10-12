@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 # Bảng lớp học
 class Room(models.Model):
     name = models.CharField(primary_key=True,max_length=127,unique=True) 
-    student = models.ManyToManyField('accounts.Student', related_name='rooms',blank=True)
-    homeroom_teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='homeroom_classes')
+    students = models.ManyToManyField('accounts.Student', related_name='rooms')
+    homeroom_teacher = models.ForeignKey('accounts.Teacher', on_delete=models.SET_NULL, related_name='homeroom_rooms', blank=True, null=True)
     def __str__(self):
         return self.name
     class Meta:
@@ -36,5 +37,5 @@ class SeatingPosition(models.Model):
         unique_together = ('room', 'row', 'column') 
 
     def __str__(self):
-        return f"Student {self.student.full_name} in Room {self.room.room_name} at position ({self.row}, {self.column})"
+         return f"Student {self.student.full_name} in Room {self.room.name} at position ({self.row}, {self.column})"
 
