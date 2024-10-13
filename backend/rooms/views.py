@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status 
 from accounts.models import Student
 from rest_framework.decorators import action
+from rest_framework import generics
 # api room
 class RoomViewSet(viewsets.ModelViewSet):
     authencation_classes = []
@@ -66,9 +67,6 @@ class RoomViewSet(viewsets.ModelViewSet):
     
 
 
-
-
-
 # api chỗ ngồi
 class SeatingPositionViewSet(viewsets.ModelViewSet):
     authencation_classes = []
@@ -123,3 +121,24 @@ class SeatingPositionViewSet(viewsets.ModelViewSet):
             return Response({'error': 'One or both students do not have seating positions'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SeatingPositionListView(generics.ListAPIView):
+    authencation_classes = []
+    permission_classes = []
+    serializer_class = SeatingPositionSerializer
+
+    def get_queryset(self):
+        room_name = self.kwargs['room_name']
+        try:
+            room = Room.objects.get(name=room_name)
+            return SeatingPosition.objects.filter(room=room)
+        except Room.DoesNotExist:
+            return SeatingPosition.objects.none()  # Hoặc có thể raise 404
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if not queryset.exists():
+            return Response({"detail": "Room not found or no seating positions available."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
