@@ -192,6 +192,71 @@ class APIRegisterStudentView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Dạng đăng kí bằng json 
+# class APIRegisterStudentView(APIView):
+#     authentication_classes = []  # JWTAuthentication 
+#     permission_classes = []  # IsAuthenticated, IsAdmin
+#     def post(self, request, *args, **kwargs):
+#         students_data = request.data.get('students', [])  # Lấy danh sách học sinh từ JSON
+#         if not students_data:
+#             return Response({"detail": "Không có dữ liệu học sinh."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         created_students = 0
+#         existing_students = 0
+
+#         for student_data in students_data:
+#             ma_dinh_danh = student_data.get('user_id')
+#             full_name = student_data.get('full_name')
+#             ngay_sinh = student_data.get('day_of_birth')
+#             gioi_tinh = student_data.get('sex')
+#             dan_toc = student_data.get('nation')
+#             active_status = student_data.get('active_status')
+
+#             if not ma_dinh_danh or not full_name:
+#                 continue
+
+#             # Kiểm tra xem học sinh đã tồn tại chưa
+#             if CustomUser.objects.filter(user_id=ma_dinh_danh).exists():
+#                 existing_students += 1
+#                 continue
+
+#             # Chuyển đổi ngày sinh từ string sang date
+#             if ngay_sinh:
+#                 try:
+#                     ngay_sinh = datetime.strptime(ngay_sinh, '%Y-%m-%d').date()  # Format ngày sinh từ JSON
+#                 except ValueError:
+#                     continue  
+
+#             # Tạo người dùng mới
+#             user = CustomUser(
+#                 username=ma_dinh_danh,  
+#                 user_id=ma_dinh_danh,
+#                 is_student=True,  
+#             )
+
+#             try:
+#                 user.save()  # Lưu CustomUser
+#                 # Tạo bản ghi Student
+#                 Student.objects.create(
+#                     user=user,
+#                     full_name=full_name,
+#                     sex=gioi_tinh,
+#                     nation=dan_toc,
+#                     day_of_birth=ngay_sinh,
+#                     parent=None,  # Có thể xử lý parent nếu cần
+#                     active_status=active_status
+#                 )
+
+#                 created_students += 1
+#             except ValidationError as e:
+#                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+#         if created_students > 0:
+#             return Response({"detail": f"Tạo thành công {created_students} tài khoản học sinh."}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"detail": "Không có tài khoản mới được tạo."}, status=status.HTTP_200_OK)
+
+
 
 class APIRegisterParentView(APIView):
     authentication_classes = []  # JWTAuthentication 
