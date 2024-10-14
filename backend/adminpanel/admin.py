@@ -4,15 +4,8 @@ from .models import *
 # Registering the Semester model
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'day_begin', 'number_of_weeks', 'get_day_end')
-    search_fields = ('semester',)
-
-# Registering the StudyWeek model
-@admin.register(StudyWeek)
-class StudyWeekAdmin(admin.ModelAdmin):
-    list_display = ('id','semester', 'week_number')
-    list_filter = ('id','semester',)
-    search_fields = ('id','semester__semester', 'week_number')
+    list_display = ('name', 'day_begin', 'number_of_weeks', 'get_day_end')
+    search_fields = ('name',)
 
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('id','semester', 'subject', 'lesson_number', 'name_lesson', 'room', 'day', 'teacher')

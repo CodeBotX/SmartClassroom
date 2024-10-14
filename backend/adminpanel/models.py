@@ -1,10 +1,10 @@
 from django.db import models
-from datetime import timedelta
+from datetime import timedelta, date
 
 
 # Bảng học kỳ   
 class Semester(models.Model):
-    semester = models.IntegerField(primary_key=True)
+    name = models.IntegerField(primary_key=True)
     day_begin = models.DateField()
     number_of_weeks = models.IntegerField()
 
@@ -15,34 +15,26 @@ class Semester(models.Model):
 
     def get_day_end(self):
         return self.day_begin + timedelta(weeks=self.number_of_weeks)
+    def get_week(self, input_date=None):
+        """
+        Tính tuần học dựa trên ngày bắt đầu học kỳ.
+        - Nếu `input_date` không có giá trị, dùng ngày hiện tại.
+        - Nếu `input_date` có giá trị, tính tuần học tại ngày đó.
+        """
+        if input_date is None:
+            input_date = date.today()  
+        if input_date < self.day_begin:
+            return None 
+        delta_days = (input_date - self.day_begin).days
+        current_week = (delta_days // 7) + 1
+        if current_week > self.number_of_weeks:
+            return None  
+        return current_week
+
 
     def __str__(self):
         day_end = self.get_day_end()
-        return f"{self.semester}"
-
-
-# Bảng tuần học 
-class StudyWeek(models.Model):
-    id = models.CharField(primary_key=True, max_length=10)
-    semester = models.ForeignKey(Semester, related_name='study_weeks', on_delete=models.CASCADE)
-    week_number = models.IntegerField()
-
-    class Meta:
-        db_table = 'study_week'
-        verbose_name = 'Study Week'
-        verbose_name_plural = 'Study Weeks'
-
-    def get_week_dates(self):
-        start_date = self.semester.day_begin + timedelta(weeks=self.week_number - 1)
-        end_date = start_date + timedelta(days=6)
-        return start_date, end_date
-    def save(self, *args, **kwargs):
-        self.id = f"{self.semester.semester}{self.week_number}"
-        super().save(*args, **kwargs)  
-    def __str__(self):
-        return f"Week {self.week_number} of Semester {self.semester.semester}"
-
-
+        return f"{self.name}"
    
 # # Bảng môn học (choice)
 class SubjectChoices(models.TextChoices):
@@ -106,10 +98,9 @@ class Lesson(models.Model):
     
 # -------------------------------------------------------------------------------
 class ScoreType(models.TextChoices):
-    MIENG = '15p', 'Điểm 15p'
-    MOT_TIET = '1Tiet', 'Điểm 1 tiết'
-    GIUA_KY = 'GiuaKy', 'Điểm giữa kỳ'
-    CUOI_KY = 'CuoiKy', 'Điểm cuối kỳ'
+    TX = 'TX', 'Đánh giá thường xuyên'
+    GK = 'GiuaKy', 'Điểm giữa kỳ'
+    CK = 'CuoiKy', 'Điểm cuối kỳ'
 # Bảng điểm
 class Grades(models.Model):
     student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades') 
@@ -123,6 +114,25 @@ class Grades(models.Model):
         unique_together = ('student', 'subject', 'semester', 'score_type') 
         verbose_name = 'Điểm'
         verbose_name_plural = 'grades'
+    
+    @staticmethod
+    def calculate_average(student_id, subject, semester_id):
+        grades = Grades.objects.filter(student__id=student_id, subject=subject, semester__id=semester_id)
+        
+        tx_grades = grades.filter(score_type=ScoreType.TX)
+        gk_grade = grades.filter(score_type=ScoreType.GK).first()
+        ck_grade = grades.filter(score_type=ScoreType.CK).first()
+
+        if tx_grades.exists():
+            tx_average = tx_grades.aggregate(tx_avg=models.Avg('grade'))['tx_avg']
+        else:
+            tx_average = 0
+        gk = gk_grade.grade if gk_grade else 0
+        ck = ck_grade.grade if ck_grade else 0
+        total_weight = 1 + 2 + 3  
+        weighted_total = (tx_average * 1) + (gk * 2) + (ck * 3)
+        average_score = weighted_total / total_weight
+        return round(average_score, 2)
 
     def save(self, *args, **kwargs):
         if not 0 <= self.grade <= 10:
@@ -132,7 +142,4 @@ class Grades(models.Model):
 
     def __str__(self):
         return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
-
-
-
 
