@@ -125,7 +125,7 @@ class SeatingPositionViewSet(viewsets.ModelViewSet):
 
 class SeatingPositionListView(generics.ListAPIView):
     authencation_classes = []
-    permission_classes = []
+    permission_classes = [] 
     serializer_class = SeatingPositionSerializer
 
     def get_queryset(self):

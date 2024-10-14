@@ -4,9 +4,17 @@ from .serializers import *
 from rest_framework.exceptions import PermissionDenied
 from .permissions import IsTeacherOrAdmin
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
+
+
+# api danh mục
 class CategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsTeacherOrAdmin]
+    #IsTeacherOrAdmin
+    authentication_classes = []
+    permission_classes = []
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -36,28 +44,3 @@ class CategoryViewSet(viewsets.ModelViewSet):
             'message': 'Category deleted successfully.'
         }, status=status.HTTP_204_NO_CONTENT)
 
-class DocumentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsTeacherOrAdmin]
-    queryset = Document.objects.all()
-    serializer_class = DocumentSerializer
-
-    def perform_create(self, serializer):
-        document = serializer.save(author=self.request.user)
-        return Response({
-            'message': 'Document created successfully.',
-            'document': DocumentSerializer(document).data
-        }, status=status.HTTP_201_CREATED)
-
-    def perform_update(self, serializer):
-        document = serializer.save()
-        return Response({
-            'message': 'Document updated successfully.',
-            'document': DocumentSerializer(document).data
-        }, status=status.HTTP_200_OK)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return Response({
-            'message': 'Document deleted successfully.'
-        }, status=status.HTTP_204_NO_CONTENT)

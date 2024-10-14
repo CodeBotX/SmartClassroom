@@ -4,7 +4,6 @@ from .views import *
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register(r'documents', DocumentViewSet)
 router.register(r'categories', CategoryViewSet)
 
 urlpatterns = [
