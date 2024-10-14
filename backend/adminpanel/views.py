@@ -12,7 +12,7 @@ from .filters import LessonFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.models import Student
 from django.db.models import Avg
-from collections import defaultdict
+
 
 
 
@@ -166,7 +166,7 @@ class LessonViewSet(viewsets.ModelViewSet):
 
         # Get the semester
         try:
-            semester = Semester.objects.get(semester=semester_id)
+            semester = Semester.objects.get(name=semester_id)
         except Semester.DoesNotExist:
             return Response({"error": "Semester not found."}, status=status.HTTP_404_NOT_FOUND)
 
