@@ -64,8 +64,7 @@
 <script>
 // import axios from 'axios';
 import axios from '../../services/axios';
-// const API_URL = 'https://classroom50.online';
-const API_URL = 'http://127.0.0.1:8000';
+let API_URL = ""
 export default {
   data() {
     return {
@@ -73,6 +72,11 @@ export default {
       password: '',
       errorMessage: '',
     };
+  },
+  computed: {
+    getApiUrl() {
+      API_URL =  this.$t("dashboard.apiURL");
+    },
   },
   methods: {
     async login() {
@@ -83,6 +87,7 @@ export default {
         })
         this.$notify({
           type: 'success',
+          icon: 'tim-icons icon-check-2',
           message: "Đăng nhập thành công",
           timeout: 3000,
           verticalAlign: 'top',
@@ -103,6 +108,7 @@ export default {
         if (error.response && error.response.status === 401) {
           this.$notify({
           type: 'danger',
+          icon: 'tim-icons icon-alert-circle-exc',
           message: "Tên đăng nhập hoặc mật khẩu không chính xác!",
           timeout: 3000,
           verticalAlign: 'top',
@@ -111,6 +117,7 @@ export default {
         } else {
           this.$notify({
           type: 'danger',
+          icon: 'tim-icons icon-alert-circle-exc',
           message: "Có lỗi xảy ra. Vui lòng thử lại sau",
           timeout: 3000,
           verticalAlign: 'top',

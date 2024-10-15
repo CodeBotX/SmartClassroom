@@ -1,10 +1,20 @@
 <template>
   <div class="wrapper">
     <side-bar>
-      <template slot="links">
+      <template slot="links" >
+        <sidebar-link 
+          to="/administration"
+          :name="$t('sidebar.administration')"
+          icon="tim-icons icon-bank"
+        />
+        <sidebar-link 
+          to="/education_program"
+          :name="$t('sidebar.educationProgram')"
+          icon="tim-icons icon-book-bookmark"
+        />
         <sidebar-link
-          to="/demo"
-          :name="$t('sidebar.demo')"
+          to="/dashboard"
+          :name="$t('sidebar.dashboard')"
           icon="tim-icons icon-chart-pie-36"
         />
         <sidebar-link
@@ -45,7 +55,7 @@
       </template>
     </side-bar>
     <div class="main-panel">
-      <top-navbar></top-navbar>
+      <top-navbar v-if="userData" :userData="userData"></top-navbar>
 
       <dashboard-content @click.native="toggleSidebar"> </dashboard-content>
 
@@ -55,22 +65,72 @@
 </template>
 <style lang="scss"></style>
 <script>
+import axios from '../../services/axios'; 
+let API_URL = ""
+
+
 import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 // import MobileMenu from "./MobileMenu";
 export default {
+  data() {
+    return {
+      userData: null,
+    }
+  },
+  computed: {
+    getApiUrl() {
+      API_URL =  this.$t("dashboard.apiURL");
+    },
+  },
   components: {
     TopNavbar,
     ContentFooter,
     DashboardContent,
   },
   methods: {
-    toggleSidebar() {
-      if (this.$sidebar.showSidebar) {
-        this.$sidebar.displaySidebar(false);
+  toggleSidebar() {
+    if (this.$sidebar.showSidebar) {
+      this.$sidebar.displaySidebar(false);
+    }
+  },
+  getUserData() {
+    let savedUserData = localStorage.getItem('user_data');
+    if (savedUserData) {
+      // Nếu đã có dữ liệu trong localStorage, sử dụng dữ liệu đó
+      this.userData = JSON.parse(savedUserData);
+      return;
+    }
+
+    // Nếu chưa có dữ liệu, gọi API để lấy thông tin
+    const token = localStorage.getItem('access_token');
+    axios.post(API_URL + '/accounts/detail/', {}, {
+      headers: {
+        'Authorization': `Bearer ${token}` // Đính kèm token vào headers
       }
-    },
+    })
+    .then((response) => {
+      this.userData = response.data;
+      // Lưu dữ liệu userData vào localStorage
+      localStorage.setItem('user_data', JSON.stringify(this.userData));
+      console.log(this.userData);
+    })
+    .catch(error => {
+      console.error("Error fetching user data:", error);
+      this.$notify({
+        type: 'danger',
+        message: "Lấy thông tin tài khoản thất bại. Vui lòng đăng nhập lại",
+        timeout: 3000,
+        verticalAlign: 'top',
+        horizontalAlign: 'center',
+      });
+      this.$router.push('/login');
+    });
+  },
+},
+  mounted() {
+    this.getUserData(); // Gọi API khi trang tải
   },
 };
 </script>

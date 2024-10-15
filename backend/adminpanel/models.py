@@ -1,12 +1,10 @@
 from django.db import models
-from rooms.models import Room
-from accounts.models import Teacher, Admin, Parent, Student
-from datetime import timedelta
+from datetime import timedelta, date
 
 
 # Bảng học kỳ   
 class Semester(models.Model):
-    semester = models.IntegerField(unique=True)
+    name = models.IntegerField(primary_key=True)
     day_begin = models.DateField()
     number_of_weeks = models.IntegerField()
 
@@ -15,46 +13,40 @@ class Semester(models.Model):
         verbose_name = 'Semester'
         verbose_name_plural = 'Semesters'
 
-    def save(self, *args, **kwargs):
-        if not hasattr(self, 'day_end'):
-            self.day_end = self.day_begin + timedelta(weeks=self.number_of_weeks)
-        super().save(*args, **kwargs)
+    def get_day_end(self):
+        return self.day_begin + timedelta(weeks=self.number_of_weeks)
+    def get_week(self, input_date=None):
+        """
+        Tính tuần học dựa trên ngày bắt đầu học kỳ.
+        - Nếu `input_date` không có giá trị, dùng ngày hiện tại.
+        - Nếu `input_date` có giá trị, tính tuần học tại ngày đó.
+        """
+        if input_date is None:
+            input_date = date.today()  
+        if input_date < self.day_begin:
+            return None 
+        delta_days = (input_date - self.day_begin).days
+        current_week = (delta_days // 7) + 1
+        if current_week > self.number_of_weeks:
+            return None  
+        return current_week
+
 
     def __str__(self):
-        return f"Semester {self.semester} ({self.day_begin} - {self.day_end})"
-
-
-# Bảng tuần học 
-class StudyWeek(models.Model):
-    semester = models.ForeignKey(Semester, related_name='study_weeks', on_delete=models.CASCADE)
-    week_number = models.IntegerField()
-
-    class Meta:
-        db_table = 'study_week'
-        verbose_name = 'Study Week'
-        verbose_name_plural = 'Study Weeks'
-
-    def get_week_dates(self):
-        start_date = self.semester.day_begin + timedelta(weeks=self.week_number - 1)
-        end_date = start_date + timedelta(days=6)
-        return start_date, end_date
-
-    def __str__(self):
-        return f"Week {self.week_number} of Semester {self.semester.semester}"
-
-
+        day_end = self.get_day_end()
+        return f"{self.name}"
    
 # # Bảng môn học (choice)
 class SubjectChoices(models.TextChoices):
-    TOAN = 'Toan', 'Toán'
-    VAN = 'Van', 'Ngữ Văn'
-    ANH = 'Anh', 'Tiếng Anh'
-    KHTN_HOA = 'Hoa', 'Hoá'
-    KHTN_LY = 'Ly', 'Vật lý'
-    KHTN_SINH = 'Sinh', 'Sinh học'
-    KHXH_DIA = 'Dia', 'Địa lý'
-    KHXH_SU = 'Su', 'Lịch sử'
-    KHXH_GDCD = 'GDCD', 'GDCD'
+    TOAN = 'TOAN', 'Toán'
+    VAN = 'VAN', 'Ngữ Văn'
+    ANH = 'ANH', 'Tiếng Anh'
+    KHTN_HOA = 'KHTN_HOA', 'Hoá'
+    KHTN_LY = 'KHTN_LY', 'Vật lý'
+    KHTN_SINH = 'KHTN_SINH', 'Sinh học'
+    KHXH_DIA = 'KHXH_DIA', 'Địa lý'
+    KHXH_SU = 'KHXH_SU', 'Lịch sử'
+    KHXH_GDCD = 'KHXH_GDCD', 'GDCD'
     TD = 'TD', 'Thể dục'
     MT = 'MT', 'Mỹ thuật'
     AN = 'AN', 'Âm nhạc'
@@ -62,16 +54,21 @@ class SubjectChoices(models.TextChoices):
     CN = 'CN', 'Công nghệ'
     HDTN_HN = 'HDTN-HN', 'Hoạt động trại nghiệm, hướng nghiệp'
 
-PERIOD_CHOICES = [(i, f'Tiết {i}') for i in range(1, 11)]
-
+class Period(models.Model):
+    number = models.IntegerField(primary_key=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    def __str__(self):
+        return f'Tiết {self.number}'
+    
 class PlannedLesson(models.Model):
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='planned_lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    lesson_number = models.IntegerField()  # Tiết thứ bao nhiêu trong môn
-    name_lesson = models.CharField(max_length=100)  # Tên bài học
-
+    lesson_number = models.IntegerField()  
+    name_lesson = models.CharField(max_length=100) 
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='planned_lessons')
     class Meta:
-        unique_together = ('subject', 'semester', 'lesson_number')
+        unique_together = ('subject', 'semester', 'lesson_number','room')
         verbose_name = 'Planned Lesson'
         verbose_name_plural = 'Planned Lessons'
 
@@ -80,63 +77,69 @@ class PlannedLesson(models.Model):
 
 # Bảng tiet hoc
 class Lesson(models.Model):
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-    study_week = models.ForeignKey(StudyWeek, on_delete=models.CASCADE)
-    day = models.DateField()
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='lessons')
-    period_number = models.IntegerField(choices=PERIOD_CHOICES)
-    planned_lesson = models.ForeignKey(PlannedLesson, on_delete=models.SET_NULL, null=True, blank=True)  # Tiết đã lên kế hoạch
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE,null=True, blank=True)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn
+    name_lesson = models.CharField(max_length=100, null=True, blank=True)  # Tên bài học
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
+    day = models.DateField()  
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')  # Tiết học
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) # cần được sửa lại là customuser is_teacher
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
+
     class Meta:
         verbose_name = 'Lesson'
         verbose_name_plural = 'Lessons'
-
-    def get_weekday(self):
-        day_names = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
-        return day_names[self.day.weekday()]
+        unique_together = ('semester', 'room', 'subject','day','period')
 
     def __str__(self):
-        return f"Lesson on {self.get_weekday()}, Period {self.period_number}"
-    
+        return f"{self.subject} - Tiết {self.lesson_number}: {self.name_lesson} (Phòng {self.room}, Kỳ {self.semester})"
     
 # -------------------------------------------------------------------------------
+class ScoreType(models.TextChoices):
+    TX = 'TX', 'Đánh giá thường xuyên'
+    GK = 'GiuaKy', 'Điểm giữa kỳ'
+    CK = 'CuoiKy', 'Điểm cuối kỳ'
+# Bảng điểm
+class Grades(models.Model):
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades') 
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    score_type = models.CharField(max_length=10, choices=ScoreType.choices)
+    grade = models.FloatField()
 
-# # Bảng điểm
-# class Grades(models.Model):
-#     student_id = models.ForeignKey(Students, on_delete=models.CASCADE, related_name='grades')
-#     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='grades')
-#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-#     lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='grades')
-#     grade = models.FloatField()  # float, làm tròn đến 2 chữ số
+    class Meta:
+        db_table = 'grades'
+        unique_together = ('student', 'subject', 'semester', 'score_type') 
+        verbose_name = 'Điểm'
+        verbose_name_plural = 'grades'
+    
+    @staticmethod
+    def calculate_average(student_id, subject, semester_id):
+        grades = Grades.objects.filter(student__id=student_id, subject=subject, semester__id=semester_id)
+        
+        tx_grades = grades.filter(score_type=ScoreType.TX)
+        gk_grade = grades.filter(score_type=ScoreType.GK).first()
+        ck_grade = grades.filter(score_type=ScoreType.CK).first()
 
-#     class Meta:
-#         db_table = 'grades'
-#         unique_together = ('student_id', 'subject_id')  # Khóa chính tổ hợp
-#         verbose_name = 'Điểm'
-#         verbose_name_plural = 'Các điểm'
+        if tx_grades.exists():
+            tx_average = tx_grades.aggregate(tx_avg=models.Avg('grade'))['tx_avg']
+        else:
+            tx_average = 0
+        gk = gk_grade.grade if gk_grade else 0
+        ck = ck_grade.grade if ck_grade else 0
+        total_weight = 1 + 2 + 3  
+        weighted_total = (tx_average * 1) + (gk * 2) + (ck * 3)
+        average_score = weighted_total / total_weight
+        return round(average_score, 2)
 
-#     def save(self, *args, **kwargs):
-#         # Kiểm tra giá trị của grade (phải nằm trong khoảng từ 0 đến 10)
-#         if not 0 <= self.grade <= 10:
-#             raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
-#         # Làm tròn điểm đến 2 chữ số thập phân
-#         self.grade = round(self.grade, 2)
-#         super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not 0 <= self.grade <= 10:
+            raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
+        self.grade = round(self.grade, 2)
+        super().save(*args, **kwargs)
 
-#     def __str__(self):
-#         return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
-
-
-
-# # Bảng quản lý trường học
-# class SchoolManagement(models.Model):
-#     admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='school_managements')
-#     action = models.BigIntegerField() # 1: Thêm, 2: Sửa, 3: Xóa + thông tin chi tiết
-#     timestamp = models.BigIntegerField() # Thời gian thực hiện hành động
-
-#     class Meta:
-#         db_table = 'school_management'
-
+    def __str__(self):
+        return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
 

@@ -1,38 +1,50 @@
 from django.contrib import admin
-from .models import Semester, StudyWeek, PlannedLesson, Lesson
+from .models import *
 
-# Hiển thị thông tin chi tiết của học kỳ
+# Registering the Semester model
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'day_begin', 'number_of_weeks')
-    search_fields = ('semester',)
-    list_filter = ('day_begin', 'number_of_weeks')
+    list_display = ('name', 'day_begin', 'number_of_weeks', 'get_day_end')
+    search_fields = ('name',)
 
-# Hiển thị tuần học trong học kỳ
-@admin.register(StudyWeek)
-class StudyWeekAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'week_number')
-    list_filter = ('semester',)
-    search_fields = ('semester__semester', 'week_number')
-
-# Hiển thị tiết học đã được lên kế hoạch
-@admin.register(PlannedLesson)
-class PlannedLessonAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'semester', 'lesson_number', 'name_lesson')
-    list_filter = ('subject', 'semester')
-    search_fields = ('name_lesson', 'subject', 'semester__semester')
-
-# Hiển thị thông tin tiết học
-@admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'study_week', 'day', 'period_number', 'room', 'teacher', 'get_weekday', 'planned_lesson', 'evaluate')
-    list_filter = ('semester', 'study_week', 'period_number', 'room', 'teacher')
-    search_fields = ('room__name', 'teacher__name', 'planned_lesson__name_lesson')
-    date_hierarchy = 'day'
-    ordering = ('day', 'period_number')
+    list_display = ('id','semester', 'subject', 'lesson_number', 'name_lesson', 'room', 'day', 'teacher')
+    search_fields = ('id','name_lesson', 'subject', 'room__name', 'teacher__name')
+    list_filter = ('semester', 'subject', 'room', 'teacher', 'day')
+    ordering = ('semester', 'room', 'lesson_number')
+    list_editable = ('day', 'teacher')
 
-    # Hiển thị tên tuần (thứ 2 - chủ nhật)
-    def get_weekday(self, obj):
-        return obj.get_weekday()
-    get_weekday.short_description = 'Weekday'
+    # Optional: If you have custom validation or saving logic, you can override this method
+    def save_model(self, request, obj, form, change):
+        # Custom logic can be added here if needed
+        super().save_model(request, obj, form, change)
 
+admin.site.register(Lesson, LessonAdmin)
+
+# Registering the Grades model
+@admin.register(Grades)
+class GradesAdmin(admin.ModelAdmin):
+    list_display = ('student', 'subject', 'semester', 'score_type', 'grade')
+    list_filter = ('subject', 'semester', 'score_type')
+    search_fields = ('student__full_name', 'subject')
+
+
+class PeriodAdmin(admin.ModelAdmin):
+    list_display = ('number', 'start_time', 'end_time')  # Hiển thị các trường trong danh sách
+    search_fields = ('number',)  # Tìm kiếm theo số tiết
+    ordering = ('number',)  # Sắp xếp theo số tiết
+
+admin.site.register(Period, PeriodAdmin)
+
+class PlannedLessonAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'semester', 'lesson_number', 'name_lesson', 'room')
+    search_fields = ('name_lesson', 'subject')
+    list_filter = ('semester', 'subject', 'room')
+    ordering = ('semester', 'lesson_number')
+    list_per_page = 20
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('room', 'semester')  # Tối ưu hóa truy vấn
+
+admin.site.register(PlannedLesson, PlannedLessonAdmin)

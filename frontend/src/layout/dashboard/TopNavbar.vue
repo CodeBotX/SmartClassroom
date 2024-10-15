@@ -22,6 +22,8 @@
         </div>
         <a class="navbar-brand" href="#pablo">{{ routeName }}</a>
       </div>
+      
+
       <button
         class="navbar-toggler"
         type="button"
@@ -45,14 +47,19 @@
             >
               <!-- <input type="text" class="form-control" placeholder="Search...">
               <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
-              <button
+              <!-- <button
                 class="btn btn-link"
                 id="search-button"
                 data-toggle="modal"
                 data-target="#searchModal"
               >
                 <i class="tim-icons icon-zoom-split"></i>
-              </button>
+              </button> -->
+              <base-button @click="studyToggle" type="success" simple class="text-center ml-2">
+               <i class="tim-icons icon-atom"></i> Dạy học
+              </base-button>
+              
+              
               <!-- You can choose types of search input -->
             </div>
             <modal
@@ -86,11 +93,11 @@
               >
                 <div class="notification d-none d-lg-block d-xl-block"></div>
                 <i class="tim-icons icon-sound-wave"></i>
-                <p class="d-lg-none">New Notifications</p>
+                <p class="d-lg-none"> </p>
               </a>
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item"
-                  >Mike John responded to your email</a
+                  >{{userData.full_name}}</a
                 >
               </li>
               <li class="nav-link">
@@ -156,10 +163,20 @@
 import { CollapseTransition } from "vue2-transitions";
 import Modal from "@/components/Modal";
 
+import BaseButton from '../../components/BaseButton.vue';
+
 export default {
+  props: {
+    userData: {
+      type: Object,
+      required: true,
+      default: "User",
+    }
+  },
   components: {
     CollapseTransition,
     Modal,
+    BaseButton
   },
   computed: {
     routeName() {
@@ -198,9 +215,12 @@ export default {
       this.showMenu = !this.showMenu;
     },
     logout() {
-      localStorage.removeItem('authToken');  // Xóa token khỏi localStorage
+      localStorage.removeItem('access_token');  // Xóa token khỏi localStorage
+      // localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user_data');
       this.$notify({
           type: 'warning',
+          icon: 'tim-icons icon-bell-55',
           message: "Bạn đã đăng xuất",
           timeout: 3000,
           verticalAlign: 'top',
@@ -209,7 +229,33 @@ export default {
       this.$router.push('/login');  // Điều hướng về trang đăng nhập
       
     },
+    studyToggle(){
+      this.$notify({
+          type: 'success',
+          icon: 'tim-icons icon-bell-55',
+          message: "Bắt đầu dạy học",
+          timeout: 1000,
+          verticalAlign: 'top',
+          horizontalAlign: 'center',
+        });
+      this.$router.push('/study');  // Điều hướng về trang dạy học
+    },
   },
 };
 </script>
-<style></style>
+<style>
+/* .centered-button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+} */
+ .btn-demo {
+  padding: 10px 20px;
+}
+
+.search-bar .btn-demo {
+  margin-left: 10px; /* Khoảng cách giữa icon tìm kiếm và nút Dạy học */
+}
+</style>

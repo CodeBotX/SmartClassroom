@@ -1,11 +1,17 @@
 {
   "dashboard": {
+    "apiURL" : "http://127.0.0.1:8000/api",
     "completedTasks": "Completed Tasks",
     "dailySales": "Daily Sales",
     "performance": "Performance",
     "simpleTable": "Simple Table",
     "totalShipments": "Total Shipments",
     "chartCategories": ["Accounts", "Purchases", "Sessions"],
+    "accountSetting": ["Reset password", "Đăng ký tài khoản", "Cập nhật trạng thái"],
+    "userSetting": ["Học sinh", "Giáo viên", "Phụ huynh", "Admin"],
+    "curriculum": ["Học kỳ", "Tuần học", "Bài giảng", "Tiết học", "Điểm số"],
+    "administration": ["Quản trị tài khoản", "Quản trị người dùng", "Chương trình đào tạo"],
+    "educationProgram": ["Thời khóa biểu", "Thống kê", "Option3"],
     "tasks": "Tasks({count})",
     "today": "Today",
     "dropdown": {
@@ -105,12 +111,14 @@
     "title": "Creative Tim",
     "shortTitle": "CT",
     "dashboard": "dashboard",
+    "educationProgram": "Chương trình đào tạo",
     "icons": "Icons",
     "maps": "Maps",
     "notifications": "Notifications",
     "userProfile": "User Profile",
     "tableList": "Table List",
     "typography": "Typography",
-    "rtlSupport": "RTL Support"
+    "rtlSupport": "RTL Support",
+    "administration": "Quản trị"
   }
 }
