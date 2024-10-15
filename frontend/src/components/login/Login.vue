@@ -19,7 +19,10 @@
   <div class="login">
          <img src="../../assets/img/bg_2.jpg" alt="login image" class="login__img">
          <form action="" class="login__form" @submit.prevent="login">
-            <h1 class="login__title">Login</h1>
+            <div class="d-flex align-items-center justify-content-center mb-4 login__logo">
+              <img src="../../assets/img/Class4.0.png" class="">
+            </div>
+            <!-- <h1 class="login__title">Login</h1> -->
 
             <div class="login__content">
                <div class="login__box">
@@ -27,7 +30,7 @@
 
                   <div class="login__box-input">
                      <input type="text" required class="login__input" id="login-email" placeholder=" " v-model="username">
-                     <label for="login-email" class="login__label">Username</label>
+                     <label for="login-email" class="login__label">Tên đăng nhập</label>
                   </div>
                </div>
 
@@ -36,7 +39,7 @@
 
                   <div class="login__box-input">
                      <input type="password" required class="login__input" id="login-pass" placeholder=" " v-model="password">
-                     <label for="login-pass" class="login__label">Password</label>
+                     <label for="login-pass" class="login__label">Mật khẩu</label>
                      <i class="ri-eye-off-line login__eye" id="login-eye"></i>
                   </div>
                </div>
@@ -51,7 +54,7 @@
                <a href="#" class="login__forgot">Forgot Password?</a>
             </div> -->
 
-            <button type="submit" class="login__button">Login</button>
+            <button type="submit" class="login__button">Đăng nhập</button>
 
             <!-- <p class="login__register">
                Don't have an account? <a href="#">Register</a>
@@ -172,10 +175,10 @@ export default {
 }
 
 /* Hiệu ứng khi focus vào input */
-.input-group input:focus {
+/* .input-group input:focus {
   border-color: #3498db;
   outline: none;
-}
+} */
 
 /* Nút đăng nhập */
 .login-btn {

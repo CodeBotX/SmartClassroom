@@ -20,7 +20,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="#pablo">{{ routeName }}</a>
+        <a class="navbar-brand" style="color: black" href="#pablo">{{ routeName }}</a>
       </div>
       <button
         class="navbar-toggler"
@@ -39,12 +39,10 @@
       <collapse-transition>
         <div class="collapse navbar-collapse show" v-show="showMenu">
           <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
-            <div
+            <!-- <div
               class="search-bar input-group"
               @click="searchModalVisible = true"
             >
-              <!-- <input type="text" class="form-control" placeholder="Search...">
-              <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
               <button
                 class="btn btn-link"
                 id="search-button"
@@ -53,9 +51,8 @@
               >
                 <i class="tim-icons icon-zoom-split"></i>
               </button>
-              <!-- You can choose types of search input -->
-            </div>
-            <modal
+            </div> -->
+            <!-- <modal
               :show.sync="searchModalVisible"
               class="modal-search"
               id="searchModal"
@@ -70,8 +67,8 @@
                 id="inlineFormInputGroup"
                 placeholder="SEARCH"
               />
-            </modal>
-            <base-dropdown
+            </modal> -->
+            <!-- <base-dropdown
               tag="li"
               :menu-on-right="!$rtl.isRTL"
               title-tag="a"
@@ -111,7 +108,7 @@
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item">Another one</a>
               </li>
-            </base-dropdown>
+            </base-dropdown> -->
             <base-dropdown
               tag="li"
               :menu-on-right="!$rtl.isRTL"
@@ -175,7 +172,7 @@ export default {
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,
-      searchQuery: "",
+      searchQuery: "", 
     };
   },
   methods: {
