@@ -35,6 +35,7 @@ class Semester(models.Model):
     def __str__(self):
         day_end = self.get_day_end()
         return f"{self.name}"
+
    
 # # Bảng môn học (choice)
 class SubjectChoices(models.TextChoices):

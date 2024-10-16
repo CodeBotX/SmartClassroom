@@ -8,7 +8,7 @@ class SemesterAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('id','semester', 'subject', 'lesson_number', 'name_lesson', 'room', 'day', 'teacher')
+    list_display = ('id','semester','room', 'day', 'teacher')
     search_fields = ('id','name_lesson', 'subject', 'room__name', 'teacher__name')
     list_filter = ('semester', 'subject', 'room', 'teacher', 'day')
     ordering = ('semester', 'room', 'lesson_number')

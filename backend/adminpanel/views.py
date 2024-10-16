@@ -17,36 +17,60 @@ from django.db.models import Avg
 
 
 #api set kì học
+# class SemesterViewSet(viewsets.ModelViewSet):
+#     authentication_classes  = []
+#     permission_classes = []
+#     queryset = Semester.objects.all()
+#     serializer_class = SemesterSerializer
+
+
+#     def list(self, request, *args, **kwargs):
+#         queryset = self.get_queryset()
+#         serializer = self.get_serializer(queryset, many=True)
+#         return Response(serializer.data)
+
+#     def retrieve(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data)
+
+#     def update(self, request, *args, **kwargs):
+#         partial = kwargs.pop('partial', False)
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
+#         if serializer.is_valid():
+#             self.perform_update(serializer)
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def destroy(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         self.perform_destroy(instance)
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class SemesterViewSet(viewsets.ModelViewSet):
-    authentication_classes  = []
+    authentication_classes = []
     permission_classes = []
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
 
+    def create(self, request, *args, **kwargs):
+        day_begin = request.data.get('day_begin')
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        # Kiểm tra nếu ngày bắt đầu không phải là thứ Hai
+        if day_begin:
+            day_begin_date = date.fromisoformat(day_begin)
+            if day_begin_date.weekday() != 0:  # 0 tương ứng với thứ Hai
+                return Response({"error": "Ngày bắt đầu phải là thứ Hai."},
+                                status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        # Nếu hợp lệ, tiến hành tạo mới học kỳ
+        return super().create(request, *args, **kwargs)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_create(self, serializer):
+        # Ghi đè để thực hiện các hành động bổ sung trước khi lưu
+        serializer.save()
 
         
 
