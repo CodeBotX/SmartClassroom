@@ -142,3 +142,5 @@ class SeatingPositionListView(generics.ListAPIView):
             return Response({"detail": "Room not found or no seating positions available."}, status=status.HTTP_404_NOT_FOUND)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    
