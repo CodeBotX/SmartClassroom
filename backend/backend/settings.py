@@ -141,9 +141,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.customuser'
 
-CORS_ORIGIN_ALLOW_ALL = True 
-CORS_ALLOW_ALL_ORIGINS = True
-# CSRF_TRUSTED_ORIGINS = ['https://smartclassroom.click', 'http://127.0.0.1:8080', 'http://127.0.0.1:8000']
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -177,4 +174,7 @@ SIMPLE_JWT = {
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+CORS_ALLOW_ALL_ORIGINS = True
 
