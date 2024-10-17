@@ -48,3 +48,10 @@ class PlannedLessonAdmin(admin.ModelAdmin):
         return qs.select_related('room', 'semester')  # Tối ưu hóa truy vấn
 
 admin.site.register(PlannedLesson, PlannedLessonAdmin)
+
+class ClassSubjectTeacherAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('room', 'subject', 'teacher')
+    search_fields = ('room__name', 'subject', 'teacher__name')  # Giả sử có trường 'name' trong Room và Teacher
+    list_filter = ('room', 'subject', 'teacher')
+
+admin.site.register(ClassSubjectTeacherAssignment, ClassSubjectTeacherAssignmentAdmin)

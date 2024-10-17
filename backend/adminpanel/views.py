@@ -10,9 +10,9 @@ from django.db import transaction
 from datetime import timedelta
 from .filters import LessonFilter 
 from django_filters.rest_framework import DjangoFilterBackend
-from accounts.models import Student
+from accounts.models import Student,Teacher
 from django.db.models import Avg
-
+from rest_framework.views import APIView
 
 
 
@@ -304,3 +304,49 @@ class TopStudentsViewSet(viewsets.ViewSet):
 
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+        
+# Phân công giáo vien
+
+class TeacherAssignmentView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        room_name = request.data.get('room')
+        subject = request.data.get('subject')
+
+        # Kiểm tra dữ liệu đầu vào
+        if not user_id or not room_name or not subject:
+            return Response({'error': 'Missing user_id, room, or subject'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Kiểm tra subject có hợp lệ không
+        if subject not in SubjectChoices.values:
+            return Response({'error': 'Invalid subject'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Lấy teacher từ user_id
+            teacher = Teacher.objects.get(user_id=user_id)
+
+            # Lấy room từ room_name
+            room = Room.objects.get(name=room_name)
+
+            # Tạo hoặc cập nhật thông tin phân công giáo viên
+            assignment, created = ClassSubjectTeacherAssignment.objects.update_or_create(
+                room=room,
+                subject=subject,
+                defaults={'teacher': teacher},
+            )
+
+            if created:
+                return Response({'message': 'Teacher assigned successfully.'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'message': 'Teacher assignment updated successfully.'}, status=status.HTTP_200_OK)
+
+        except Teacher.DoesNotExist:
+            return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Room.DoesNotExist:
+            return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

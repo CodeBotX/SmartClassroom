@@ -85,7 +85,7 @@ class Lesson(models.Model):
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     day = models.DateField()  
     period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')  # Tiết học
-    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) # cần được sửa lại là customuser is_teacher
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) 
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
 
@@ -144,3 +144,15 @@ class Grades(models.Model):
     def __str__(self):
         return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
 
+
+
+# bảng phân công giáo viên
+class ClassSubjectTeacherAssignment(models.Model):
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='subject_teacher_assignments')
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='subject_assignments')
+
+    class Meta:
+        unique_together = ('room', 'subject')  
+        verbose_name = "Phân công"  # Tên hiển thị cho mô hình
+        verbose_name_plural = "Phân công giáo viên"  # Tên hiển thị cho danh sách mô hình

@@ -20,4 +20,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('student/<str:user_id>/grades/', StudentGradesViewSet.as_view({'get': 'list'}), name='student-grades'),
     path('top-students/', TopStudentsViewSet.as_view({'get': 'list'}), name='top-students'),
+    path('assign-teacher/', TeacherAssignmentView.as_view(), name='assign-teacher'),
 ]
