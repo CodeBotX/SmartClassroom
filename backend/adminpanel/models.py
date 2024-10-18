@@ -100,8 +100,8 @@ class Lesson(models.Model):
 # -------------------------------------------------------------------------------
 class ScoreType(models.TextChoices):
     TX = 'TX', 'Đánh giá thường xuyên'
-    GK = 'GiuaKy', 'Điểm giữa kỳ'
-    CK = 'CuoiKy', 'Điểm cuối kỳ'
+    GK = 'GK', 'Điểm giữa kỳ'
+    CK = 'CK', 'Điểm cuối kỳ'
 # Bảng điểm
 class Grades(models.Model):
     student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades') 
@@ -112,7 +112,6 @@ class Grades(models.Model):
 
     class Meta:
         db_table = 'grades'
-        unique_together = ('student', 'subject', 'semester', 'score_type') 
         verbose_name = 'Điểm'
         verbose_name_plural = 'grades'
     
