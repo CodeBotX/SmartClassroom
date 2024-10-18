@@ -282,30 +282,72 @@ class LessonViewSet(viewsets.ModelViewSet):
 
        
 # Phân công giáo vien
-class TeacherAssignmentView(APIView):
+# class TeacherAssignmentView(APIView):
+#     authentication_classes = []
+#     permission_classes = []
+#     def post(self, request):
+#         user_id = request.data.get('user_id')
+#         room_name = request.data.get('room')
+#         subject = request.data.get('subject')
+
+#         # Kiểm tra dữ liệu đầu vào
+#         if not user_id or not room_name or not subject:
+#             return Response({'error': 'Missing user_id, room, or subject'}, status=status.HTTP_400_BAD_REQUEST)
+        
+#         # Kiểm tra subject có hợp lệ không
+#         if subject not in SubjectChoices.values:
+#             return Response({'error': 'Invalid subject'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             # Lấy teacher từ user_id
+#             teacher = Teacher.objects.get(user_id=user_id)
+
+#             # Lấy room từ room_name
+#             room = Room.objects.get(name=room_name)
+
+#             # Tạo hoặc cập nhật thông tin phân công giáo viên
+#             assignment, created = ClassSubjectTeacherAssignment.objects.update_or_create(
+#                 room=room,
+#                 subject=subject,
+#                 defaults={'teacher': teacher},
+#             )
+
+#             if created:
+#                 return Response({'message': 'Teacher assigned successfully.'}, status=status.HTTP_201_CREATED)
+#             else:
+#                 return Response({'message': 'Teacher assignment updated successfully.'}, status=status.HTTP_200_OK)
+
+#         except Teacher.DoesNotExist:
+#             return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+#         except Room.DoesNotExist:
+#             return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+#         except Exception as e:
+#             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TeacherAssignmentViewSet(viewsets.ModelViewSet):
+    queryset = ClassSubjectTeacherAssignment.objects.all()
+    serializer_class = TeacherAssignmentSerializer
     authentication_classes = []
     permission_classes = []
-    def post(self, request):
+
+    def create(self, request, *args, **kwargs):
         user_id = request.data.get('user_id')
         room_name = request.data.get('room')
         subject = request.data.get('subject')
 
-        # Kiểm tra dữ liệu đầu vào
         if not user_id or not room_name or not subject:
             return Response({'error': 'Missing user_id, room, or subject'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Kiểm tra subject có hợp lệ không
+
         if subject not in SubjectChoices.values:
             return Response({'error': 'Invalid subject'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Lấy teacher từ user_id
             teacher = Teacher.objects.get(user_id=user_id)
-
-            # Lấy room từ room_name
             room = Room.objects.get(name=room_name)
 
-            # Tạo hoặc cập nhật thông tin phân công giáo viên
             assignment, created = ClassSubjectTeacherAssignment.objects.update_or_create(
                 room=room,
                 subject=subject,
@@ -319,9 +361,34 @@ class TeacherAssignmentView(APIView):
 
         except Teacher.DoesNotExist:
             return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         except Room.DoesNotExist:
             return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def list(self, request, *args, **kwargs):
+        # Lấy tất cả giáo viên
+        teachers = Teacher.objects.all()
+        result = []
+
+        # Lặp qua từng giáo viên để kiểm tra phân công
+        for teacher in teachers:
+            assignments = ClassSubjectTeacherAssignment.objects.filter(teacher=teacher)
+
+            # Nếu giáo viên đã được phân công, liệt kê các lớp và môn học
+            if assignments.exists():
+                rooms = [assignment.room.name for assignment in assignments]
+                subject = assignments.first().subject  # Giả sử 1 giáo viên chỉ dạy 1 môn
+            else:
+                rooms = []
+                subject = None
+
+            result.append({
+                'user_id': teacher.user_id,
+                'rooms': rooms,
+                'subject': subject
+            })
+
+        return Response(result, status=status.HTTP_200_OK)

@@ -9,8 +9,6 @@ class SemesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semester
         fields = '__all__'
-
-
 # Lesson
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +30,9 @@ class PlannedLessonSerializer(serializers.ModelSerializer):
     def validate(self, data):
         return data
 
+#bảng phân công giáo viên
+class TeacherAssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassSubjectTeacherAssignment
+        fields = ['teacher', 'room', 'subject']
+        

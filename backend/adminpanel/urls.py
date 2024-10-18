@@ -15,10 +15,11 @@ router.register(r'semesters', SemesterViewSet)
 router.register(r'lessons', LessonViewSet, basename='lesson')
 router.register(r'grades', GradesViewSet, basename='grades') 
 router.register(r'planned-lessons', PlannedLessonViewSet)
+router.register(r'assignments', TeacherAssignmentViewSet, basename='teacher-assignment')
 
 urlpatterns = [
     path('', include(router.urls)),
     # path('student/<str:user_id>/grades/', StudentGradesViewSet.as_view({'get': 'list'}), name='student-grades'),
     # path('top-students/', TopStudentsViewSet.as_view({'get': 'list'}), name='top-students'),
-    path('assign-teacher/', TeacherAssignmentView.as_view(), name='assign-teacher'),
+    # path('assign-teacher/', TeacherAssignmentView.as_view(), name='assign-teacher'),
 ]
