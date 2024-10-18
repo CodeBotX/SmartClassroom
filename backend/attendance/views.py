@@ -9,8 +9,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 
 
-
-
 def get_current_lesson(room, current_time):
         today = current_time.date()
         lessons = Lesson.objects.filter(room=room, day=today)
