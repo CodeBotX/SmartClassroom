@@ -72,12 +72,11 @@ class PlannedLesson(models.Model):
         unique_together = ('subject', 'semester', 'lesson_number','room')
         verbose_name = 'Planned Lesson'
         verbose_name_plural = 'Planned Lessons'
-
     def __str__(self):
         return f"{self.subject} - Tiết {self.lesson_number}: {self.name_lesson} (Kỳ {self.semester})"
 
 # Bảng tiet hoc
-class Lesson(models.Model):
+class Lesson(models.Model):#
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn

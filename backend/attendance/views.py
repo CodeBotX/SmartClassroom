@@ -7,6 +7,7 @@ from .serializers import *
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+from datetime import timedelta
 
 
 def get_current_lesson(room, current_time):
@@ -18,18 +19,58 @@ def get_current_lesson(room, current_time):
                     return lesson  
         return None  
 
+#api điểm danh
+# class AttendanceViewSet(viewsets.ModelViewSet):
+#     authentication_classes = []
+#     permission_classes = []
+#     queryset = Attendance.objects.all()
+#     serializer_class = AttendanceSerializer
+#     def create(self, request, *args, **kwargs):
+#         user_id = request.data.get("student_id")  
+#         device_id = request.data.get("device_id")
+
+#         if not user_id:
+#             return Response({"error": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             device = Device.objects.get(device_id=device_id)
+#             room = device.room
+#             current_time = timezone.now()
+
+#             lesson = get_current_lesson(room, current_time)
+
+#             if lesson:
+#                 user = get_object_or_404(CustomUser, user_id=user_id)
+#                 attendance = Attendance(
+#                     user=user,  
+#                     lesson=lesson,
+#                     status=request.data.get("status")
+#                 )
+#                 attendance.save()  
+#                 serializer = self.get_serializer(attendance)
+#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+#             else:
+#                 return Response({"error": "No active lesson at this time."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         except Device.DoesNotExist:
+#             return Response({"error": "Device not found."}, status=status.HTTP_404_NOT_FOUND)
+#         except ValidationError as e:
+#             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
+
     def create(self, request, *args, **kwargs):
         user_id = request.data.get("student_id")  
         device_id = request.data.get("device_id")
+        attendance_time = request.data.get("attendance_time")  # Mong đợi thời gian ở định dạng chuỗi
 
         if not user_id:
-            return Response({"error": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cần có ID người dùng."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             device = Device.objects.get(device_id=device_id)
@@ -40,22 +81,36 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
             if lesson:
                 user = get_object_or_404(CustomUser, user_id=user_id)
+
+                # Chuyển đổi attendance_time từ chuỗi sang datetime
+                attendance_time = timezone.datetime.fromisoformat(attendance_time)
+                lesson_start_time = timezone.datetime.combine(lesson.day, lesson.period.start_time)
+
+                # Xác định trạng thái dựa trên thời gian điểm danh
+                if attendance_time <= lesson_start_time + timedelta(minutes=10):
+                    status_value = 1  # Có mặt
+                elif attendance_time <= lesson_start_time + timedelta(minutes=25):
+                    status_value = 2  # Đi muộn
+                else:
+                    status_value = 3  # Vắng mặt
+
                 attendance = Attendance(
                     user=user,  
                     lesson=lesson,
-                    status=request.data.get("status")
+                    status=status_value
                 )
                 attendance.save()  
                 serializer = self.get_serializer(attendance)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response({"error": "No active lesson at this time."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Không có tiết học nào đang hoạt động vào thời điểm này."}, status=status.HTTP_400_BAD_REQUEST)
 
         except Device.DoesNotExist:
-            return Response({"error": "Device not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Không tìm thấy thiết bị."}, status=status.HTTP_404_NOT_FOUND)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+        except ValueError:
+            return Response({"error": "Định dạng thời gian điểm danh không hợp lệ."}, status=status.HTTP_400_BAD_REQUEST)
 
 class DeviceViewSet(viewsets.ViewSet):
     authentication_classes = []
@@ -93,7 +148,7 @@ class DeviceViewSet(viewsets.ViewSet):
             return Response({"error": "Device not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-
+# Hệ thống ghi id vào thẻ 
 class RFIDViewSet(viewsets.ViewSet):
     authentication_classes = []
     permission_classes = []
