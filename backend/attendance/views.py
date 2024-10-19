@@ -57,7 +57,6 @@ def get_current_lesson(room, current_time):
 #         except ValidationError as e:
 #             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class AttendanceViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
