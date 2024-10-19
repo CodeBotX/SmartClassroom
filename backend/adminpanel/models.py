@@ -143,8 +143,6 @@ class Grades(models.Model):
         return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
 
 
-
-# bảng phân công giáo viên
 class TeacherAssignment(models.Model):
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='assignments')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)

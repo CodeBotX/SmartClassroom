@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from django.db import transaction
 from datetime import timedelta
 from .filters import LessonFilter 
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from accounts.models import Student,Teacher
 from django.db.models import Avg
 from collections import defaultdict
@@ -38,7 +38,7 @@ class GradesViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = Grades.objects.all()
     serializer_class = GradesSerializer
-
+    # tạo điểm
     @transaction.atomic  
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -163,156 +163,218 @@ class GradesViewSet(viewsets.ModelViewSet):
         semester_name = request.query_params.get('semester_name')
         room_name = request.query_params.get('room_name')
         subject = request.query_params.get('subject')
-        score_type = request.query_params.get('score_type')  # Nhận loại điểm từ tham số
+        score_type = request.query_params.get('score_type')
 
         if not semester_name or not room_name or not subject or not score_type:
-            return Response({'error': 'Thiếu các tham số: semester_name, room_name, subject hoặc score_type.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Thiếu tham số: semester_name, room_name, subject hoặc score_type.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             room = Room.objects.get(name=room_name)
             semester = Semester.objects.get(name=semester_name)
 
-            # Lấy danh sách học sinh trong room
             students = room.students.all()
 
-            # Khởi tạo dictionary để lưu trữ số lượng cho mỗi khoảng
-            grade_ranges = defaultdict(int)
+            # Khởi tạo các biến đếm cho từng khoảng
+            count_0_05, count_05_1, count_1_15, count_15_2 = 0, 0, 0, 0
+            count_2_25, count_25_3, count_3_35, count_35_4 = 0, 0, 0, 0
+            count_4_45, count_45_5, count_5_55, count_55_6 = 0, 0, 0, 0
+            count_6_65, count_65_7, count_7_75, count_75_8 = 0, 0, 0, 0
+            count_8_85, count_85_9, count_9_95, count_95_10 = 0, 0, 0, 0
 
-            # Thiết lập các khoảng điểm
-            step = 0.5
-            for i in range(0, 10):
-                grade_ranges[f'{i}-{i + step}'] = 0
+            # Lọc điểm theo học sinh, môn học, học kỳ và loại điểm
+            grades = Grades.objects.filter(
+                student__in=students,
+                subject=subject,
+                semester=semester,
+                score_type=score_type
+            ).values_list('grade', flat=True)
 
-            for student in students:
-                # Lấy tất cả điểm theo loại điểm từ tham số
-                grades = Grades.objects.filter(
-                    student=student,
-                    subject=subject,
-                    semester=semester,
-                    score_type=score_type  # Lọc theo loại điểm
-                ).values_list('grade', flat=True)
+            # Duyệt qua từng điểm và phân loại vào các khoảng
+            for grade in grades:
+                if 0 <= grade < 0.5:
+                    count_0_05 += 1
+                elif 0.5 <= grade < 1.0:
+                    count_05_1 += 1
+                elif 1.0 <= grade < 1.5:
+                    count_1_15 += 1
+                elif 1.5 <= grade < 2.0:
+                    count_15_2 += 1
+                elif 2.0 <= grade < 2.5:
+                    count_2_25 += 1
+                elif 2.5 <= grade < 3.0:
+                    count_25_3 += 1
+                elif 3.0 <= grade < 3.5:
+                    count_3_35 += 1
+                elif 3.5 <= grade < 4.0:
+                    count_35_4 += 1
+                elif 4.0 <= grade < 4.5:
+                    count_4_45 += 1
+                elif 4.5 <= grade < 5.0:
+                    count_45_5 += 1
+                elif 5.0 <= grade < 5.5:
+                    count_5_55 += 1
+                elif 5.5 <= grade < 6.0:
+                    count_55_6 += 1
+                elif 6.0 <= grade < 6.5:
+                    count_6_65 += 1
+                elif 6.5 <= grade < 7.0:
+                    count_65_7 += 1
+                elif 7.0 <= grade < 7.5:
+                    count_7_75 += 1
+                elif 7.5 <= grade < 8.0:
+                    count_75_8 += 1
+                elif 8.0 <= grade < 8.5:
+                    count_8_85 += 1
+                elif 8.5 <= grade < 9.0:
+                    count_85_9 += 1
+                elif 9.0 <= grade < 9.5:
+                    count_9_95 += 1
+                elif 9.5 <= grade <= 10:
+                    count_95_10 += 1
 
-                # Tính số lượng điểm cho mỗi khoảng
-                for grade in grades:
-                    for i in range(0, 10):
-                        if i <= grade < i + step:
-                            grade_ranges[f'{i}-{i + step}'] += 1
-                            break
-
-            return Response(grade_ranges, status=status.HTTP_200_OK)
+            # Trả về kết quả thống kê
+            return Response({
+                "0.0-0.5": count_0_05,
+                "0.5-1.0": count_05_1,
+                "1.0-1.5": count_1_15,
+                "1.5-2.0": count_15_2,
+                "2.0-2.5": count_2_25,
+                "2.5-3.0": count_25_3,
+                "3.0-3.5": count_3_35,
+                "3.5-4.0": count_35_4,
+                "4.0-4.5": count_4_45,
+                "4.5-5.0": count_45_5,
+                "5.0-5.5": count_5_55,
+                "5.5-6.0": count_55_6,
+                "6.0-6.5": count_6_65,
+                "6.5-7.0": count_65_7,
+                "7.0-7.5": count_7_75,
+                "7.5-8.0": count_75_8,
+                "8.0-8.5": count_8_85,
+                "8.5-9.0": count_85_9,
+                "9.0-9.5": count_9_95,
+                "9.5-10.0": count_95_10
+            }, status=status.HTTP_200_OK)
 
         except Room.DoesNotExist:
             return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-        except Grades.DoesNotExist:
-            return Response({'error': 'Loại điểm không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+# class PlannedLessonViewSet(viewsets.ModelViewSet):
+#     authentication_classes = []
+#     permission_classes = []
+#     queryset = PlannedLesson.objects.all()
+#     serializer_class = PlannedLessonSerializer
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['semester__name', 'subject', 'room__name', 'name_lesson']
+
+#     def create(self, request):
+#         serializer = PlannedLessonSerializer(data=request.data)
+#         if serializer.is_valid():
+#             semester = serializer.validated_data['semester']
+#             subject = serializer.validated_data['subject']
+#             lesson_number = serializer.validated_data['lesson_number']
+#             name_lesson = serializer.validated_data['name_lesson']
+#             rooms = serializer.validated_data['rooms']
+
+#             if subject not in SubjectChoices.values:
+#                 return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             with transaction.atomic():
+#                 for room in rooms:
+#                     # Kiểm tra xem bản ghi đã tồn tại chưa
+#                     existing_lesson = PlannedLesson.objects.filter(
+#                         semester=semester,
+#                         subject=subject,
+#                         lesson_number=lesson_number,
+#                         room=room
+#                     ).first()
+
+#                     if existing_lesson:
+#                         continue  # Bỏ qua nếu đã tồn tại, có thể bạn muốn thông báo khác
+
+#                     # Tạo kế hoạch bài giảng cho từng phòng
+#                     PlannedLesson.objects.create(
+#                         semester=semester,
+#                         subject=subject,
+#                         lesson_number=lesson_number,
+#                         name_lesson=name_lesson,
+#                         room=room
+#                     )
+#             return Response({'message': 'Tạo bài học thành công cho các phòng.'}, status=status.HTTP_201_CREATED)
+#         errors = {}
+#         for field, messages in serializer.errors.items():
+#             if field == 'semester':
+#                 errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
+#             elif field == 'subject':
+#                 errors[field] = ['Môn học không hợp lệ.']
+#             elif field == 'rooms':
+#                 errors[field] = ['Không tìm thấy phòng học.']
+#             else:
+#                 errors[field] = messages
+
+#         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def update(self, request, *args, **kwargs):
+#         partial = kwargs.pop('partial', False)
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             rooms = serializer.validated_data['rooms']
+
+#             if instance.subject not in SubjectChoices.values:
+#                 return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             for room in rooms:
+#                 PlannedLesson.objects.update_or_create(
+#                     semester=serializer.validated_data['semester'],
+#                     subject=serializer.validated_data['subject'],
+#                     lesson_number=serializer.validated_data['lesson_number'],
+#                     name_lesson=serializer.validated_data['name_lesson'],
+#                     room=room
+#                 )
+#             return Response({'message': 'Cập nhật bài học thành công.'}, status=status.HTTP_200_OK)
+
+#         errors = {}
+#         for field, messages in serializer.errors.items():
+#             if field == 'semester':
+#                 errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
+#             elif field == 'subject':
+#                 errors[field] = ['Môn học không hợp lệ.']
+#             elif field == 'rooms':
+#                 errors[field] = ['Trường này là bắt buộc và ít nhất một phòng phải tồn tại.']
+#             else:
+#                 errors[field] = messages
+
+#         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PlannedLessonViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
     queryset = PlannedLesson.objects.all()
     serializer_class = PlannedLessonSerializer
-
-    def create(self, request):
-        serializer = PlannedLessonSerializer(data=request.data)
-        if serializer.is_valid():
-            semester = serializer.validated_data['semester']
-            subject = serializer.validated_data['subject']
-            lesson_number = serializer.validated_data['lesson_number']
-            name_lesson = serializer.validated_data['name_lesson']
-            rooms = serializer.validated_data['rooms']  # Lưu ý sử dụng 'rooms'
-
-            if subject not in SubjectChoices.values:
-                return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            with transaction.atomic():
-                for room in rooms:
-                    PlannedLesson.objects.create(
-                        semester=semester,
-                        subject=subject,
-                        lesson_number=lesson_number,
-                        name_lesson=name_lesson,
-                        room=room
-                    )
-            return Response({'message': 'Tạo bài học thành công.'}, status=status.HTTP_201_CREATED)
-
-        # Thông báo lỗi bằng tiếng Việt
-        errors = {}
-        for field, messages in serializer.errors.items():
-            if field == 'semester':
-                errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
-            elif field == 'subject':
-                errors[field] = ['Môn học không hợp lệ.']
-            elif field == 'rooms':
-                errors[field] = ['Không tìm thấy phòng học.']
-            else:
-                errors[field] = messages
-
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-
-        if serializer.is_valid():
-            serializer.save()
-            rooms = serializer.validated_data['rooms']
-
-            if instance.subject not in SubjectChoices.values:
-                return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Cập nhật thông tin bài học
-            for room in rooms:
-                PlannedLesson.objects.update_or_create(
-                    semester=serializer.validated_data['semester'],
-                    subject=serializer.validated_data['subject'],
-                    lesson_number=serializer.validated_data['lesson_number'],
-                    name_lesson=serializer.validated_data['name_lesson'],
-                    room=room
-                )
-            return Response({'message': 'Cập nhật bài học thành công.'}, status=status.HTTP_200_OK)
-
-        # Thông báo lỗi bằng tiếng Việt
-        errors = {}
-        for field, messages in serializer.errors.items():
-            if field == 'semester':
-                errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
-            elif field == 'subject':
-                errors[field] = ['Môn học không hợp lệ.']
-            elif field == 'rooms':
-                errors[field] = ['Trường này là bắt buộc và ít nhất một phòng phải tồn tại.']
-            else:
-                errors[field] = messages
-
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-    def list(self, request, *args, **kwargs):
-        queryset = self.queryset
-
-        # Lấy các tham số tìm kiếm từ query params
-        semester = request.query_params.get('semester', None)
-        subject = request.query_params.get('subject', None)
-        room = request.query_params.get('room', None)
-        name_lesson = request.query_params.get('name_lesson', None)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        semester = self.request.query_params.get('semester')
+        room = self.request.query_params.get('room')
+        subject = self.request.query_params.get('subject')
 
         if semester:
-            queryset = queryset.filter(semester=semester)
+            queryset = queryset.filter(semester__name=semester)
+        if room:
+            queryset = queryset.filter(room__name=room)
         if subject:
             queryset = queryset.filter(subject=subject)
-        if room:
-            queryset = queryset.filter(room=room)  # Lọc theo trường room
-        if name_lesson:
-            queryset = queryset.filter(name_lesson__icontains=name_lesson)
 
-        # Kiểm tra nếu không tìm thấy kết quả nào
-        if not queryset.exists():
-            return Response({'message': 'Không tìm thấy bài học nào.'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return queryset
     
-# lesson
+#lesson
 class LessonViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
@@ -398,67 +460,6 @@ class LessonViewSet(viewsets.ModelViewSet):
         return queryset
     
 
-class TeacherAssignmentViewSet(viewsets.ModelViewSet):
-    queryset = TeacherAssignment.objects.all()
-    serializer_class = TeacherAssignmentSerializer
-    authentication_classes = []
-    permission_classes = []
-
-    def create(self, request, *args, **kwargs):
-        user_id = request.data.get('user_id')
-        room_name = request.data.get('room')
-        subject = request.data.get('subject')
-
-        if not user_id or not room_name or not subject:
-            return Response({'error': 'Missing user_id, room, or subject'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if subject not in SubjectChoices.values:
-            return Response({'error': 'Invalid subject'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            teacher = Teacher.objects.get(user_id=user_id)
-            room = Room.objects.get(name=room_name)
-
-            assignment, created = TeacherAssignment.objects.update_or_create(
-                room=room,
-                subject=subject,
-                defaults={'teacher': teacher},
-            )
-
-            if created:
-                return Response({'message': 'Teacher assigned successfully.'}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({'message': 'Teacher assignment updated successfully.'}, status=status.HTTP_200_OK)
-
-        except Teacher.DoesNotExist:
-            return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        except Room.DoesNotExist:
-            return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def list(self, request, *args, **kwargs):
-        teachers = Teacher.objects.all()
-        result = []
-        for teacher in teachers:
-            assignments = ClassSubjectTeacherAssignment.objects.filter(teacher=teacher)
-            if assignments.exists():
-                rooms = [assignment.room.name for assignment in assignments]
-                subject = assignments.first().subject  
-            else:
-                rooms = []
-                subject = None
-
-            result.append({
-                'user_id': teacher.user_id,
-                'rooms': rooms,
-                'subject': subject
-            })
-
-        return Response(result, status=status.HTTP_200_OK)
-    
 # Tiết học
 class PeriodViewSet(viewsets.ModelViewSet):
     authentication_classes = []
@@ -495,3 +496,10 @@ class PeriodViewSet(viewsets.ModelViewSet):
         period = self.get_object()
         period.delete()
         return Response(status=204)
+    
+# Phân công giáo viên
+class TeacherAssignmentViewSet(viewsets.ModelViewSet):
+    queryset = TeacherAssignment.objects.all()
+    serializer_class = TeacherAssignmentSerializer
+    authentication_classes = []  # Thêm authentication nếu cần
+    permission_classes = []  # Thêm permission nếu cần
