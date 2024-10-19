@@ -399,7 +399,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     
 
 class TeacherAssignmentViewSet(viewsets.ModelViewSet):
-    queryset = ClassSubjectTeacherAssignment.objects.all()
+    queryset = TeacherAssignment.objects.all()
     serializer_class = TeacherAssignmentSerializer
     authentication_classes = []
     permission_classes = []
@@ -419,7 +419,7 @@ class TeacherAssignmentViewSet(viewsets.ModelViewSet):
             teacher = Teacher.objects.get(user_id=user_id)
             room = Room.objects.get(name=room_name)
 
-            assignment, created = ClassSubjectTeacherAssignment.objects.update_or_create(
+            assignment, created = TeacherAssignment.objects.update_or_create(
                 room=room,
                 subject=subject,
                 defaults={'teacher': teacher},

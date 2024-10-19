@@ -38,7 +38,7 @@ class PlannedLessonSerializer(serializers.ModelSerializer):
 #bảng phân công giáo viên
 class TeacherAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ClassSubjectTeacherAssignment
+        model = TeacherAssignment
         fields = ['teacher', 'room', 'subject']
 
 # Tiết học

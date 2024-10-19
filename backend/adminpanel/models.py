@@ -145,12 +145,10 @@ class Grades(models.Model):
 
 
 # bảng phân công giáo viên
-class ClassSubjectTeacherAssignment(models.Model):
-    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='subject_teacher_assignments')
+class TeacherAssignment(models.Model):
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='assignments')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='subject_assignments')
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='assignments')
 
     class Meta:
         unique_together = ('room', 'subject')  
-        verbose_name = "Phân công"  # Tên hiển thị cho mô hình
-        verbose_name_plural = "Phân công giáo viên"  # Tên hiển thị cho danh sách mô hình
