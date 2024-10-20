@@ -13,6 +13,7 @@ from rest_framework import filters
 from accounts.models import Student,Teacher
 from django.db.models import Avg
 from collections import defaultdict
+from django_filters.rest_framework import DjangoFilterBackend
 
 class SemesterViewSet(viewsets.ModelViewSet):
     authentication_classes = []
@@ -262,95 +263,7 @@ class GradesViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
         
 
-# class PlannedLessonViewSet(viewsets.ModelViewSet):
-#     authentication_classes = []
-#     permission_classes = []
-#     queryset = PlannedLesson.objects.all()
-#     serializer_class = PlannedLessonSerializer
-#     filter_backends = [filters.SearchFilter]
-#     search_fields = ['semester__name', 'subject', 'room__name', 'name_lesson']
 
-#     def create(self, request):
-#         serializer = PlannedLessonSerializer(data=request.data)
-#         if serializer.is_valid():
-#             semester = serializer.validated_data['semester']
-#             subject = serializer.validated_data['subject']
-#             lesson_number = serializer.validated_data['lesson_number']
-#             name_lesson = serializer.validated_data['name_lesson']
-#             rooms = serializer.validated_data['rooms']
-
-#             if subject not in SubjectChoices.values:
-#                 return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#             with transaction.atomic():
-#                 for room in rooms:
-#                     # Kiểm tra xem bản ghi đã tồn tại chưa
-#                     existing_lesson = PlannedLesson.objects.filter(
-#                         semester=semester,
-#                         subject=subject,
-#                         lesson_number=lesson_number,
-#                         room=room
-#                     ).first()
-
-#                     if existing_lesson:
-#                         continue  # Bỏ qua nếu đã tồn tại, có thể bạn muốn thông báo khác
-
-#                     # Tạo kế hoạch bài giảng cho từng phòng
-#                     PlannedLesson.objects.create(
-#                         semester=semester,
-#                         subject=subject,
-#                         lesson_number=lesson_number,
-#                         name_lesson=name_lesson,
-#                         room=room
-#                     )
-#             return Response({'message': 'Tạo bài học thành công cho các phòng.'}, status=status.HTTP_201_CREATED)
-#         errors = {}
-#         for field, messages in serializer.errors.items():
-#             if field == 'semester':
-#                 errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
-#             elif field == 'subject':
-#                 errors[field] = ['Môn học không hợp lệ.']
-#             elif field == 'rooms':
-#                 errors[field] = ['Không tìm thấy phòng học.']
-#             else:
-#                 errors[field] = messages
-
-#         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-
-#         if serializer.is_valid():
-#             serializer.save()
-#             rooms = serializer.validated_data['rooms']
-
-#             if instance.subject not in SubjectChoices.values:
-#                 return Response({'error': 'Môn học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#             for room in rooms:
-#                 PlannedLesson.objects.update_or_create(
-#                     semester=serializer.validated_data['semester'],
-#                     subject=serializer.validated_data['subject'],
-#                     lesson_number=serializer.validated_data['lesson_number'],
-#                     name_lesson=serializer.validated_data['name_lesson'],
-#                     room=room
-#                 )
-#             return Response({'message': 'Cập nhật bài học thành công.'}, status=status.HTTP_200_OK)
-
-#         errors = {}
-#         for field, messages in serializer.errors.items():
-#             if field == 'semester':
-#                 errors[field] = ['Khóa không hợp lệ - đối tượng không tồn tại.']
-#             elif field == 'subject':
-#                 errors[field] = ['Môn học không hợp lệ.']
-#             elif field == 'rooms':
-#                 errors[field] = ['Trường này là bắt buộc và ít nhất một phòng phải tồn tại.']
-#             else:
-#                 errors[field] = messages
-
-#         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PlannedLessonViewSet(viewsets.ModelViewSet):
@@ -364,6 +277,7 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
         semester = self.request.query_params.get('semester')
         room = self.request.query_params.get('room')
         subject = self.request.query_params.get('subject')
+        teacher_user_id = self.request.query_params.get('user_id')
 
         if semester:
             queryset = queryset.filter(semester__name=semester)
@@ -371,6 +285,8 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(room__name=room)
         if subject:
             queryset = queryset.filter(subject=subject)
+        if teacher_user_id:
+            queryset = queryset.filter(teacher__user_id=teacher_user_id)
 
         return queryset
     
@@ -380,6 +296,8 @@ class LessonViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = Lesson.objects.all() 
     serializer_class = LessonSerializer 
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = LessonFilter 
 
     @action(detail=False, methods=['post'], url_path='create_schedule')
     @transaction.atomic
@@ -501,5 +419,26 @@ class PeriodViewSet(viewsets.ModelViewSet):
 class TeacherAssignmentViewSet(viewsets.ModelViewSet):
     queryset = TeacherAssignment.objects.all()
     serializer_class = TeacherAssignmentSerializer
-    authentication_classes = []  # Thêm authentication nếu cần
-    permission_classes = []  # Thêm permission nếu cần
+    authentication_classes = []  
+    permission_classes = []  
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Lấy các tham số lọc từ query params
+        teacher_user_id = self.request.query_params.get('user_id')
+        room = self.request.query_params.get('room')
+        subject = self.request.query_params.get('subject')
+
+        # Lọc theo giáo viên (user_id)
+        if teacher_user_id:
+            queryset = queryset.filter(teacher__user__id=teacher_user_id)
+
+        # Lọc theo phòng học (room)
+        if room:
+            queryset = queryset.filter(room__name=room)
+
+        # Lọc theo môn học (subject)
+        if subject:
+            queryset = queryset.filter(subject=subject)
+
+        return queryset
