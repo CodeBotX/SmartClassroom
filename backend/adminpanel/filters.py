@@ -22,6 +22,7 @@ class LessonFilter(filters.FilterSet):
     semester = filters.CharFilter(field_name='semester__name', lookup_expr='iexact')
     subject = filters.CharFilter(field_name='subject', lookup_expr='icontains')
     room = filters.CharFilter(field_name='room__name', lookup_expr='iexact')
+    day = django_filters.DateFilter(field_name='day')
     day_range = filters.DateFromToRangeFilter(field_name='day')  
     teacher = filters.CharFilter(field_name='teacher__user__id', lookup_expr='icontains')
     evaluate = filters.NumberFilter(field_name='evaluate')
