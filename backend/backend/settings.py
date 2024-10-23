@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+# Mới pull 
 from pathlib import Path
 from datetime import timedelta
 import os
@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'adminpanel',
     'rooms',
+    'attendance',
+    'Appdocuments',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -115,7 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
+DATE_FORMAT = 'd/m/Y'  # dd/mm/yyyy
+DATETIME_FORMAT = 'd/m/Y H:i:s'  # dd/mm/yyyy hh:mm:ss
+TIME_FORMAT = 'H:i:s'  # hh:mm:ss
 
 USE_I18N = True
 
@@ -125,7 +131,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -136,14 +143,17 @@ AUTH_USER_MODEL = 'accounts.customuser'
 
 CORS_ORIGIN_ALLOW_ALL = True 
 CORS_ALLOW_ALL_ORIGINS = True
+# CSRF_TRUSTED_ORIGINS = ['https://smartclassroom.click', 'http://127.0.0.1:8080', 'http://127.0.0.1:8000']
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
-    # 'DEFAULT_PARSER_CLASSES': (
-    #     'rest_framework.parsers.JSONParser',
-    # ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        # 'rest_framework.parsers.MultiPartParser',
+        # 'rest_framework.parsers.FormParser',
+    ),
      'DEFAULT_AUTHENTICATION_CLASSES': (
          'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT Authentication
         'rest_framework.authentication.SessionAuthentication',  # Session Authentication
@@ -164,9 +174,7 @@ SIMPLE_JWT = {
     'ALGORITHM': 'HS256',                          # Thuật toán mã hóa
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# CSRF_TRUSTED_ORIGINS = [
-#     'https://d118-2405-4802-491-7680-7136-b7cf-890c-f45e.ngrok-free.app',
-# ]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+

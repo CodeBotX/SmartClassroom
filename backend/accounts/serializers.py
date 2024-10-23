@@ -8,34 +8,31 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'user_id', 'full_name', 'phone_number', 'day_of_birth', 'email', 'is_teacher', 'is_admin', 'is_parent', 'is_student']
-
+        fields = '__all__'
+        
 # Serializer cho Teacher
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
-        fields = ['active_status', 'contract_types', 'expertise_levels', 'subjects']
-
+        fields = '__all__'
+        
 # Serializer cho Admin
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin
-        fields = ['active_status', 'contract_types', 'expertise_levels', 'description']
-
+        fields = '__all__'
+        
 # Serializer cho Parent
 class ParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parent
-        fields = ['address','students']
-
+        fields = '__all__'
+        
 # Serializer cho Student
 class StudentSerializer(serializers.ModelSerializer):
-    room = serializers.CharField(source='room.name', read_only=True)
-    parent = serializers.CharField(source='parent.user.full_name', read_only=True)
-
     class Meta:
         model = Student
-        fields = ['active_status', 'room', 'parent']
+        fields = '__all__'
 
 #up file excel
 class ExcelUploadSerializer(serializers.Serializer):
@@ -47,128 +44,23 @@ class ExcelUploadSerializer(serializers.Serializer):
         return value
 
 # --------------------------------------------------------------------------------------
-
-
-# update thông tin user
-# class UserUpdateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth']
-#         read_only_fields = ['user_id','username']
-
-class TeacherUpdateSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(source='user.full_name')
-    sex = serializers.CharField(source='user.sex', allow_null=True)
-    nation = serializers.CharField(source='user.nation', allow_null=True)
-    email = serializers.EmailField(source='user.email', allow_null=True)
-    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
-    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
-
+class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Teacher
-        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'active_status', 'contract_types', 'expertise_levels', 'subjects']
+        model = CustomUser
+        fields = ['email', 'phone_number']
 
-    # def update(self, instance, validated_data):
-    #     user_data = validated_data.pop('user', None)
-    #     if user_data:
-    #         for attr, value in user_data.items():
-    #             setattr(instance.user, attr, value)
-    #         instance.user.save()
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
-        
-        # Kiểm tra trùng lặp email và số điện thoại trước khi lưu
-        if user_data:
-            email = user_data.get('email')
-            phone_number = user_data.get('phone_number')
+    def validate_email(self, value):
+        # Kiểm tra nếu email đã được sử dụng
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email này đã được sử dụng.")
+        return value
 
-            if email and CustomUser.objects.filter(email=email).exclude(user_id=instance.user.user_id).exists():
-                raise ValidationError({'email': 'Email đã tồn tại.'})
-
-            if phone_number and CustomUser.objects.filter(phone_number=phone_number).exclude(user_id=instance.user.user_id).exists():
-                raise ValidationError({'phone_number': 'Số điện thoại đã tồn tại.'})
-
-            # Cập nhật thông tin người dùng
-            for attr, value in user_data.items():
-                setattr(instance.user, attr, value)
-            instance.user.save()
-
-        return super().update(instance, validated_data)
-
-
-
-class AdminUpdateSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(source='user.full_name')
-    sex = serializers.CharField(source='user.sex', allow_null=True)
-    nation = serializers.CharField(source='user.nation', allow_null=True)
-    email = serializers.EmailField(source='user.email', allow_null=True)
-    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
-    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
-
-    class Meta:
-        model = Admin
-        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'active_status', 'contract_types', 'expertise_levels', 'description']
-
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
-        if user_data:
-            for attr, value in user_data.items():
-                setattr(instance.user, attr, value)
-            instance.user.save()
-
-        return super().update(instance, validated_data)
-
-
-class ParentUpdateSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(source='user.full_name')
-    sex = serializers.CharField(source='user.sex', allow_null=True)
-    nation = serializers.CharField(source='user.nation', allow_null=True)
-    email = serializers.EmailField(source='user.email', allow_null=True)
-    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
-    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
-
-    class Meta:
-        model = Parent
-        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'address']
-
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
-        if user_data:
-            for attr, value in user_data.items():
-                setattr(instance.user, attr, value)
-            instance.user.save()
-
-        return super().update(instance, validated_data)
-
-
-class StudentUpdateSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(source='user.full_name')
-    sex = serializers.CharField(source='user.sex', allow_null=True)
-    nation = serializers.CharField(source='user.nation', allow_null=True)
-    email = serializers.EmailField(source='user.email', allow_null=True)
-    phone_number = serializers.CharField(source='user.phone_number', allow_null=True)
-    day_of_birth = serializers.DateField(source='user.day_of_birth', allow_null=True)
-
-    class Meta:
-        model = Student
-        fields = ['full_name', 'sex', 'nation', 'email', 'phone_number', 'day_of_birth', 'room', 'parent', 'active_status']
-
-    def update(self, instance, validated_data):
-        # Update the related CustomUser fields
-        user_data = validated_data.pop('user', None)
-        if user_data:
-            for attr, value in user_data.items():
-                setattr(instance.user, attr, value)
-            instance.user.save()
-
-        # Update Student fields
-        return super().update(instance, validated_data)
-
-
-
-
-# --------------------------------------------------------------------------------------
-
+    def validate_phone_number(self, value):
+        # Kiểm tra nếu số điện thoại đã được sử dụng
+        if CustomUser.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError("Số điện thoại này đã được sử dụng.")
+        return value
+    
 # đổi password
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -185,7 +77,6 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("Mật khẩu mới phải có ít nhất 8 ký tự.")
         return value
 # --------------------------------------------------------------------------------------
-
 
 #admin reset password
 class AdminPasswordResetSerializer(serializers.Serializer):

@@ -2,11 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.apps import apps
-from django.utils import timezone
 
 # Bảng người dùng
-#(user name = id , pass  =  id)
 class CustomUserManager(BaseUserManager):
     def create_user(self,user_id, full_name, **extra_fields):
         if not full_name:
@@ -36,12 +33,8 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.CharField(primary_key=True, max_length=8, editable=False)  
     username = models.CharField(max_length=255, unique=True)  
-    full_name = models.CharField(max_length=255)
-    sex = models.CharField(max_length=32, null=True, blank=True)
-    nation = models.CharField(max_length=32, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True, null=True, blank=True) 
     phone_number = models.CharField(max_length=32,unique=True, null=True, blank=True)
-    day_of_birth = models.DateField(null=True, blank=True)
     
     # Vai trò
     is_parent = models.BooleanField(default=False)
@@ -58,10 +51,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'  
-    REQUIRED_FIELDS = ['full_name','user_id']
+    REQUIRED_FIELDS = ['user_id']
 
     def __str__(self):
-        return self.full_name
+        return self.username or self.user_id
 
     def save(self, *args, **kwargs):
         if self.is_teacher or self.is_admin or self.is_student:
@@ -83,13 +76,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         super().save(*args, **kwargs)
         
-        
+# Các đối tượng người dùng (Sau phát triển thành app thông tin cá nhân)
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE, related_name='teacher')
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     active_status = models.CharField(max_length=355, null=True, blank=True)
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     subjects = models.TextField(null=True, blank=True)
+    def get_teacher_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Teacher'
         verbose_name = 'Teacher'
@@ -97,10 +98,18 @@ class Teacher(models.Model):
 
 class Admin(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='admin')
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     active_status = models.CharField(max_length=355, null=True, blank=True)
     contract_types= models.CharField(max_length=255, null=True, blank=True)
     expertise_levels = models.CharField(max_length=255, null=True, blank=True)
     description = models.CharField(max_length=32, null=True, blank=True)
+    def get_admin_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Admin'
         verbose_name = 'Admin'
@@ -108,18 +117,31 @@ class Admin(models.Model):
 
 class Parent(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='parent')
+    full_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255, null=True, blank=True)
+    def get_parent_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Parent'
         verbose_name = 'Parent'
         verbose_name_plural = 'Parents'
+    
 
   
 class Student(models.Model):
     user = models.OneToOneField(CustomUser,primary_key=True, on_delete=models.CASCADE,related_name='student') 
-    room = models.ForeignKey('rooms.Room',null=True, blank=True, default=None,related_name='students', on_delete=models.SET_NULL)
+    full_name = models.CharField(max_length=255)
+    sex = models.CharField(max_length=32, null=True, blank=True)
+    day_of_birth = models.DateField(null=True, blank=True)
+    nation = models.CharField(max_length=32, null=True, blank=True)
     parent = models.ForeignKey(Parent, null=True, blank=True, default=None, on_delete=models.SET_NULL,related_name='students')   
     active_status = models.CharField(max_length=355, null=True, blank=True)
+    def get_student_id(self):
+        return self.user.user_id
+    def __str__(self):
+        return f"{self.full_name} - {self.user.user_id}"
     class Meta:
         db_table = 'Student'
         verbose_name = 'Student'
@@ -127,78 +149,4 @@ class Student(models.Model):
 
 
 #--------------------------------------------------------------------------------------
-
-
-
-
-
-# # Bảng sinh học sinh
-# class Students(models.Model):
-#     full_name = models.CharField(max_length=127)  
-#     class_id = models.ForeignKey(
-#         Classes, 
-#         on_delete=models.CASCADE, 
-#         related_name='students'  
-#     )
-#     parent_id = models.ForeignKey(
-#         CustomUser, 
-#         on_delete=models.CASCADE, 
-#         limit_choices_to={'role': 'parent'}, 
-#         related_name='parent_students'  
-#     )
-
-#     def save(self, *args, **kwargs):
-#         if self.parent_id.role != 'parent':
-#             raise ValueError("Người dùng được chọn phải là phụ huynh.")
-#         super().save(*args, **kwargs)  
-
-#     def __str__(self):
-#         return self.full_name  
-
-#     class Meta:
-#         db_table = 'students'  
-#         verbose_name = 'Học sinh'
-#         verbose_name_plural = 'Các Học sinh'
-        
-
-
-
-        
-
-
-# # Bảng điểm
-# class Grades(models.Model):
-#     student_id = models.ForeignKey(Students, on_delete=models.CASCADE, related_name='grades')
-#     subject_id = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='grades')
-#     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
-#     lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE, related_name='grades')
-#     grade = models.FloatField()  # float, làm tròn đến 2 chữ số
-
-#     class Meta:
-#         db_table = 'grades'
-#         unique_together = ('student_id', 'subject_id')  # Khóa chính tổ hợp
-#         verbose_name = 'Điểm'
-#         verbose_name_plural = 'Các điểm'
-
-#     def save(self, *args, **kwargs):
-#         # Kiểm tra giá trị của grade (phải nằm trong khoảng từ 0 đến 10)
-#         if not 0 <= self.grade <= 10:
-#             raise ValueError("Điểm phải nằm trong khoảng từ 0 đến 10.") 
-#         # Làm tròn điểm đến 2 chữ số thập phân
-#         self.grade = round(self.grade, 2)
-#         super().save(*args, **kwargs)
-
-#     def __str__(self):
-#         return f"{self.student_id.full_name} - Môn {self.subject_id.subject_name} - Điểm: {self.grade}"
-
-
-
-# # Bảng quản lý trường học
-# class SchoolManagement(models.Model):
-#     admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='school_managements')
-#     action = models.BigIntegerField() # 1: Thêm, 2: Sửa, 3: Xóa + thông tin chi tiết
-#     timestamp = models.BigIntegerField() # Thời gian thực hiện hành động
-
-#     class Meta:
-#         db_table = 'school_management'
 

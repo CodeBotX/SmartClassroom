@@ -1,272 +1,77 @@
 <template>
-  <card type="plain" title="Google Maps">
-    <div id="map" class="map"></div>
-  </card>
+  <div>
+    <md-table v-model="users" :md-sort.sync="currentSort" :md-sort-order.sync="currentSortOrder" :md-sort-fn="customSort" md-card>
+      <md-table-toolbar>
+        <h1 class="md-title">Users</h1>
+      </md-table-toolbar>
+
+      <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-cell md-label="ID" md-numeric>{{ item.id }}</md-table-cell>
+        <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+        <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
+        <md-table-cell md-label="Gender" md-sort-by="gender">{{ item.gender }}</md-table-cell>
+        <md-table-cell md-label="Job Title" md-sort-by="title">{{ item.title }}</md-table-cell>
+      </md-table-row>
+    </md-table>
+  </div>
 </template>
+
 <script>
-export default {
-  mounted() {
-    let myLatlng = new window.google.maps.LatLng(40.748817, -73.985428);
-    let mapOptions = {
-      zoom: 13,
-      center: myLatlng,
-      scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
-      styles: [
+  export default {
+    name: 'TableCustomSort',
+    data: () => ({
+      currentSort: 'name',
+      currentSortOrder: 'asc',
+      users: [
         {
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
+          id: 1,
+          name: 'Shawna Dubbin',
+          email: 'sdubbin0@geocities.com',
+          gender: 'Male',
+          title: 'Assistant Media Planner'
         },
         {
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#8ec3b9",
-            },
-          ],
+          id: 2,
+          name: 'Odette Demageard',
+          email: 'odemageard1@spotify.com',
+          gender: 'Female',
+          title: 'Account Coordinator'
         },
         {
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1a3646",
-            },
-          ],
+          id: 3,
+          name: 'Lonnie Izkovitz',
+          email: 'lizkovitz3@youtu.be',
+          gender: 'Female',
+          title: 'Operator'
         },
         {
-          featureType: "administrative.country",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878",
-            },
-          ],
+          id: 4,
+          name: 'Thatcher Stave',
+          email: 'tstave4@reference.com',
+          gender: 'Male',
+          title: 'Software Test Engineer III'
         },
         {
-          featureType: "administrative.land_parcel",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#64779e",
-            },
-          ],
-        },
-        {
-          featureType: "administrative.province",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#4b6878",
-            },
-          ],
-        },
-        {
-          featureType: "landscape.man_made",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#334e87",
-            },
-          ],
-        },
-        {
-          featureType: "landscape.natural",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#283d6a",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#6f9ba5",
-            },
-          ],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#3C7680",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#304a7d",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be",
-            },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#2c6675",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#9d2a80",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [
-            {
-              color: "#9d2a80",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#b0d5ce",
-            },
-          ],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#023e58",
-            },
-          ],
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#98a5be",
-            },
-          ],
-        },
-        {
-          featureType: "transit",
-          elementType: "labels.text.stroke",
-          stylers: [
-            {
-              color: "#1d2c4d",
-            },
-          ],
-        },
-        {
-          featureType: "transit.line",
-          elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#283d6a",
-            },
-          ],
-        },
-        {
-          featureType: "transit.station",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#3a4762",
-            },
-          ],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [
-            {
-              color: "#0e1626",
-            },
-          ],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [
-            {
-              color: "#4e6d70",
-            },
-          ],
-        },
-      ],
-    };
-    let map = new window.google.maps.Map(
-      document.getElementById("map"),
-      mapOptions
-    );
+          id: 5,
+          name: 'Clarinda Marieton',
+          email: 'cmarietonh@theatlantic.com',
+          gender: 'Female',
+          title: 'Paralegal'
+        }
+      ]
+    }),
+    methods: {
+      customSort (value) {
+        return value.sort((a, b) => {
+          const sortBy = this.currentSort
 
-    let marker = new window.google.maps.marker.AdvancedMarkerElement({
-      position: myLatlng,
-      title: "Hello World!",
-    });
+          if (this.currentSortOrder === 'desc') {
+            return a[sortBy].localeCompare(b[sortBy])
+          }
 
-    // To add the marker to the map, call setMap();
-    marker.setMap(map);
-  },
-};
+          return b[sortBy].localeCompare(a[sortBy])
+        })
+      }
+    }
+  }
 </script>
-<style></style>

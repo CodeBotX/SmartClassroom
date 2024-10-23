@@ -24,7 +24,8 @@
     "vue-i18n": "8.28.2",
     "vue-router": "3.6.5",
     "vue-router-prefetch": "1.6.3",
-    "vue2-transitions": "0.3.0"
+    "vue2-transitions": "0.3.0",
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.21.8",

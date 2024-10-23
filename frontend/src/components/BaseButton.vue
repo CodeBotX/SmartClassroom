@@ -15,6 +15,8 @@
       { 'btn-link': link },
       { disabled: disabled && tag !== 'button' },
     ]"
+
+    style=""
   >
     <slot name="loading">
       <i v-if="loading" class="fas fa-spinner fa-spin"></i>

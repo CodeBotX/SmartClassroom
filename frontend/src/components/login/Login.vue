@@ -68,7 +68,7 @@
 // import axios from 'axios';
 import axios from '../../services/axios';
 // const API_URL = 'https://classroom50.online';
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://smartclassroom.click/api';
 export default {
   data() {
     return {
@@ -175,10 +175,10 @@ export default {
 }
 
 /* Hiệu ứng khi focus vào input */
-/* .input-group input:focus {
+.input-group input:focus {
   border-color: #3498db;
   outline: none;
-} */
+}
 
 /* Nút đăng nhập */
 .login-btn {

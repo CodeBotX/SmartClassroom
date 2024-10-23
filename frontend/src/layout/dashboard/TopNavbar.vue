@@ -20,8 +20,10 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" style="color: black" href="#pablo">{{ routeName }}</a>
+        <a class="navbar-brand" style="color: white" href="#pablo">{{ routeName }}</a>
       </div>
+      
+
       <button
         class="navbar-toggler"
         type="button"
@@ -50,65 +52,13 @@
                 data-target="#searchModal"
               >
                 <i class="tim-icons icon-zoom-split"></i>
-              </button>
-            </div> -->
-            <!-- <modal
-              :show.sync="searchModalVisible"
-              class="modal-search"
-              id="searchModal"
-              :centered="false"
-              :show-close="true"
-            >
-              <input
-                slot="header"
-                v-model="searchQuery"
-                type="text"
-                class="form-control"
-                id="inlineFormInputGroup"
-                placeholder="SEARCH"
-              />
-            </modal> -->
-            <!-- <base-dropdown
-              tag="li"
-              :menu-on-right="!$rtl.isRTL"
-              title-tag="a"
-              class="nav-item"
-            >
-              <a
-                slot="title"
-                href="#"
-                class="dropdown-toggle nav-link"
-                data-toggle="dropdown"
-                aria-expanded="true"
-              >
-                <div class="notification d-none d-lg-block d-xl-block"></div>
-                <i class="tim-icons icon-sound-wave"></i>
-                <p class="d-lg-none">New Notifications</p>
-              </a>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >Mike John responded to your email</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >You have 5 more tasks</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >Your friend Michael is in town</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >Another notification</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Another one</a>
-              </li>
-            </base-dropdown> -->
+              </button> -->
+              <base-button @click="studyToggle" type="success" simple class="text-center ml-2">
+               <i class="tim-icons icon-atom"></i> Dạy học
+              </base-button>
+              
+              
+              <!-- You can choose types of search input -->
             <base-dropdown
               tag="li"
               :menu-on-right="!$rtl.isRTL"
@@ -123,11 +73,12 @@
                 data-toggle="dropdown"
                 aria-expanded="true"
               >
-                <div class="photo">
+                <div class="photo mr-3">
                   <img src="img/anime3.png" />
                 </div>
+                <span v-if="userData" :userData="userData">{{ userData.full_name }}</span>
                 <b class="caret d-none d-lg-block d-xl-block"></b>
-                <p class="d-lg-none">Log out</p>
+                <p v-if="userData" :userData="userData" class="d-lg-none">{{ userData.full_name }}</p>
               </a>
               <li class="nav-link">
                 
@@ -153,10 +104,20 @@
 import { CollapseTransition } from "vue2-transitions";
 import Modal from "@/components/Modal";
 
+import BaseButton from '../../components/BaseButton.vue';
+
 export default {
+  props: {
+    userData: {
+      type: Object,
+      required: true,
+      default: "User",
+    }
+  },
   components: {
     CollapseTransition,
     Modal,
+    BaseButton
   },
   computed: {
     routeName() {
@@ -195,9 +156,12 @@ export default {
       this.showMenu = !this.showMenu;
     },
     logout() {
-      localStorage.removeItem('authToken');  // Xóa token khỏi localStorage
+      localStorage.removeItem('access_token');  // Xóa token khỏi localStorage
+      // localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user_data');
       this.$notify({
           type: 'warning',
+          icon: 'tim-icons icon-bell-55',
           message: "Bạn đã đăng xuất",
           timeout: 3000,
           verticalAlign: 'top',
@@ -206,7 +170,33 @@ export default {
       this.$router.push('/login');  // Điều hướng về trang đăng nhập
       
     },
+    studyToggle(){
+      this.$notify({
+          type: 'success',
+          icon: 'tim-icons icon-bell-55',
+          message: "Bắt đầu dạy học",
+          timeout: 1000,
+          verticalAlign: 'top',
+          horizontalAlign: 'center',
+        });
+      this.$router.push('/study');  // Điều hướng về trang dạy học
+    },
   },
 };
 </script>
-<style></style>
+<style>
+/* .centered-button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+} */
+ .btn-demo {
+  padding: 10px 20px;
+}
+
+.search-bar .btn-demo {
+  margin-left: 10px; /* Khoảng cách giữa icon tìm kiếm và nút Dạy học */
+}
+</style>

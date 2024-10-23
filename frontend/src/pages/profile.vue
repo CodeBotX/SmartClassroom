@@ -10,8 +10,7 @@
 </template>
 <script>
 import axios from '../services/axios'; 
-// const API_URL = 'https://classroom50.online';
-const API_URL = 'http://127.0.0.1:8000';
+let API_URL = ""
 
 import EditProfileForm from "./Profile/EditProfileForm";
 import UserCard from "./Profile/UserCard";
@@ -20,20 +19,16 @@ export default {
     EditProfileForm,
     UserCard,
   },
+  computed: {
+    getApiUrl() {
+      API_URL =  this.$t("dashboard.apiURL");
+    },
+  },
   data() {
     return {
       userData: null, // Chứa thông tin người dùng
+      modal_test: null,
       model: {
-        company: "Creative Code Inc.",
-        email: "mike@email.com",
-        username: "michael23",
-        firstName: "Mike",
-        lastName: "Andrew",
-        address: "Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09",
-        city: "Melbourne",
-        country: "Australia",
-        about:
-          "Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.",
         user_id: null,
         full_name: null,
         phone_number: null,
@@ -41,6 +36,12 @@ export default {
         sex: null,
         nation: null,
         email: null,
+        role: null,
+        contract_types: null,
+        expertise_levels: null,
+        subjects: null,
+        old_email: null,
+        old_phone_number: null,
       },
       user: {
         fullName: "Mike Andrew",
@@ -69,21 +70,41 @@ export default {
         // this.userData.email = response.data.user.email;
         // this.userData.day_of_birth = response.data.user.day_of_birth;
         this.userData = response.data
+        this.model_test = response.data
+
         //fetch data to modal
         this.model.user_id = this.userData.user_id
         this.model.full_name = this.userData.full_name
         this.model.phone_number = this.userData.phone_number
+        this.model.old_phone_number = this.userData.phone_number
         this.model.day_of_birth = this.userData.day_of_birth
         this.model.sex = this.userData.sex
         this.model.nation = this.userData.nation
         this.model.email = this.userData.email
+        this.model.old_email = this.userData.email
+        this.model.contract_types = this.userData.contract_types
+        this.model.subjects = this.userData.subjects
+        this.model.expertise_levels = this.userData.expertise_levels
+
 
         //fetch data to user
         this.user.fullName = this.userData.full_name
-        if(this.userData.is_admin) this.user.title = "ADMIN"
-        if(this.userData.is_student) this.user.title = "HỌC SINH"
-        if(this.userData.is_parent) this.user.title = "PHỤ HUYNH"
-        if(this.userData.is_teacher) this.user.title = "GIÁO VIÊN"
+        if(this.userData.is_admin) {
+          this.user.title = "ADMIN"
+          this.model.role = "admins"
+        }
+        if(this.userData.is_student){
+          this.user.title = "HỌC SINH"
+          this.model.role = "students"
+        }
+        if(this.userData.is_parent){
+          this.user.title = "PHỤ HUYNH"
+          this.model.role = "parents"
+        }
+        if(this.userData.is_teacher){
+          this.user.title = "GIÁO VIÊN"
+          this.model.role = "teachers"
+        }
 
 
         console.log(this.userData)
@@ -92,6 +113,7 @@ export default {
         console.error("Error fetching user data:", error);
         this.$notify({
           type: 'danger',
+          icon: 'tim-icons icon-alert-circle-exc',
           message: "Lấy thông tin tài khoản thất bại. Vui lòng đăng nhập lại",
           timeout: 3000,
           verticalAlign: 'top',

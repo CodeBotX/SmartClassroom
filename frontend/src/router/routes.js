@@ -2,8 +2,15 @@ import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
 import Login from '../components/login/Login.vue'
+import StudyLayout from '@/layout/study/StudyLayout.vue'
+
+
 
 // Admin pages
+const Administration = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/Administration.vue");
+const EducationProgram = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/EducationProgram.vue");
 const Dashboard = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/Dashboard.vue");
 const Profile = () =>
@@ -36,9 +43,14 @@ const routes = [
     },
     children: [
       {
-        path: "demo",
-        name: "demo",
-        component: Dashboard,
+        path: "administration",
+        name: "administration",
+        component: Administration,
+      },
+      {
+        path: "education_program",
+        name: "education_program",
+        component: EducationProgram,
       },
       {
         path: "dashboard",
@@ -93,6 +105,21 @@ const routes = [
     name: 'login',
     path: '/login', 
     component: Login 
+  },
+  {
+    name: 'study',
+    path: '/study',
+    component: StudyLayout,
+    meta: { requiresAuth: true },
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem('access_token');
+      console.log(token)
+      if (token) {
+        next();  // Cho phép truy cập nếu có token
+      } else {
+        next('/login');  // Chuyển hướng tới trang đăng nhập nếu không có token
+      }
+    },
   },
   { path: "*", component: NotFound },
 ];
