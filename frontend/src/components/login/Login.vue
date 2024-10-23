@@ -57,6 +57,8 @@
                Don't have an account? <a href="#">Register</a>
             </p> -->
          </form>
+         <!-- Component Loading -->
+        <Loading :loading="isLoading" />
       </div>
 
 </template>
@@ -64,13 +66,18 @@
 <script>
 // import axios from 'axios';
 import axios from '../../services/axios';
+import Loading from '../../layout/loading/Loading.vue';
 let API_URL = ""
 export default {
+  components: {
+    Loading,
+  },
   data() {
     return {
       username: '',
       password: '',
       errorMessage: '',
+      isLoading: false,
     };
   },
   computed: {
@@ -80,11 +87,14 @@ export default {
   },
   methods: {
     async login() {
+      this.isLoading = true;  // Bắt đầu hiển thị loading
+
       try {
-        const response = await axios.post(API_URL+'/accounts/login/', {
+        const response = await axios.post(API_URL + '/accounts/login/', {
           username: this.username,
           password: this.password
-        })
+        });
+
         this.$notify({
           type: 'success',
           icon: 'tim-icons icon-check-2',
@@ -94,36 +104,32 @@ export default {
           horizontalAlign: 'center',
         });
 
-        // Lưu token vào localStorage
-        // localStorage.setItem('authToken', response.data.token);
-        console.log("access_token :"+response.data.access_token)
-        console.log("refresh_token :"+response.data.refresh_token)
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
 
-        // Chuyển hướng đến dashboard
         this.$router.push('/');
       } catch (error) {
-        
         if (error.response && error.response.status === 401) {
           this.$notify({
-          type: 'danger',
-          icon: 'tim-icons icon-alert-circle-exc',
-          message: "Tên đăng nhập hoặc mật khẩu không chính xác!",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'center',
-        });
+            type: 'danger',
+            icon: 'tim-icons icon-alert-circle-exc',
+            message: "Tên đăng nhập hoặc mật khẩu không chính xác!",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'center',
+          });
         } else {
           this.$notify({
-          type: 'danger',
-          icon: 'tim-icons icon-alert-circle-exc',
-          message: "Có lỗi xảy ra. Vui lòng thử lại sau",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'right',
-        });
+            type: 'danger',
+            icon: 'tim-icons icon-alert-circle-exc',
+            message: "Có lỗi xảy ra. Vui lòng thử lại sau",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'right',
+          });
         }
+      } finally {
+        this.isLoading = false;  // Kết thúc loading
       }
     },
   }
@@ -202,4 +208,14 @@ export default {
   background-color: #2980b9;
 }
 
+/* Blur background khi đang loading */
+.blur-background {
+  filter: blur(5px);
+}
+
+/* Định dạng CSS cho trang đăng nhập */
+.login {
+  position: relative;
+  z-index: 1;
+}
 </style>

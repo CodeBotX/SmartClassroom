@@ -1,4 +1,5 @@
 <template>
+<div>
   <nav
     class="navbar navbar-expand-lg navbar-absolute"
     :class="{ 'bg-white': showMenu, 'navbar-transparent': !showMenu }"
@@ -158,11 +159,14 @@
       </collapse-transition>
     </div>
   </nav>
+  <Loading :loading="isLoading" />
+  </div>
 </template>
 <script>
 import { CollapseTransition } from "vue2-transitions";
 import Modal from "@/components/Modal";
 import axios from '../../services/axios'; 
+import Loading from '../loading/Loading.vue';
 
 import BaseButton from '../../components/BaseButton.vue';
  
@@ -188,7 +192,8 @@ export default {
   components: {
     CollapseTransition,
     Modal,
-    BaseButton
+    BaseButton,
+    Loading
   },
   computed: {
     getApiUrl() {
@@ -208,6 +213,7 @@ export default {
       showMenu: false,
       searchModalVisible: false,
       searchQuery: "",
+      isLoading: false,
     };
   },
   methods: {
@@ -265,7 +271,7 @@ export default {
 
       return `${year}-${month}-${day}`;
     },
-    studyToggle(){
+    async studyToggle(){
       if(!this.userData.is_teacher){
         this.$notify({
           type: 'warning',
@@ -317,21 +323,24 @@ export default {
       // this.$router.push('/study');  // Điều hướng về trang dạy học
 
       // Call API để kiểm tra giáo viên có tiết học không
-      axios.get(API_URL + `/adminpanel/lessons/?user_id=${this.userData.user_id}&day=${this.getCurrentFormattedDate(currentDate)}&period=${currentPeriod}`, {
+      this.isLoading = true;
+      try {
+
+        const response = await axios.get(API_URL + `/adminpanel/lessons/?user_id=${this.userData.user_id}&day=${this.getCurrentFormattedDate(currentDate)}&period=${currentPeriod}`, {
+          
+        })
         
-      })
-      .then(response => {
-        if (response.data.length !== 0) {
-          localStorage.setItem('lesson_data', JSON.stringify(response.data[0]));
-          this.$notify({
-            type: 'success',
-            icon: 'tim-icons icon-bell-55',
-            message: "Bắt đầu dạy học lớp "+response.data[0].room,
-            timeout: 1000,
-            verticalAlign: 'top',
-            horizontalAlign: 'center',
-          });
-          this.$router.push('/study');
+          if (response.data.length !== 0) {
+            localStorage.setItem('lesson_data', JSON.stringify(response.data[0]));
+            this.$notify({
+              type: 'success',
+              icon: 'tim-icons icon-bell-55',
+              message: "Bắt đầu dạy học lớp "+response.data[0].room,
+              timeout: 1000,
+              verticalAlign: 'top',
+              horizontalAlign: 'center',
+            });
+            this.$router.push('/study');
         } else {
           this.$notify({
             type: 'warning',
@@ -342,8 +351,8 @@ export default {
             horizontalAlign: 'center',
           });
         }
-      })
-      .catch(error => {
+      }
+      catch(error) {
         this.$notify({
           type: 'danger',
           icon: 'tim-icons icon-bell-55',
@@ -352,7 +361,10 @@ export default {
           verticalAlign: 'top',
           horizontalAlign: 'center',
         });
-      });
+      }
+      finally {
+        this.isLoading = false;  // Kết thúc loading
+      }
     },
   },
 };
