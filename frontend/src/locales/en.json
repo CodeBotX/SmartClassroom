@@ -1,17 +1,19 @@
 {
   "dashboard": {
-    "apiURL" : "http://127.0.0.1:8000/api",
-    "completedTasks": "Completed Tasks",
-    "dailySales": "Daily Sales",
+    "apiURL" : "http://127.0.0.1:8000/api", 
+    "completedTasks": "Chương trình đào tạo",
+    "dailySales": "Thống kê giáo viên",
     "performance": "Performance",
     "simpleTable": "Simple Table",
-    "totalShipments": "Total Shipments",
-    "chartCategories": ["Accounts", "Purchases", "Sessions"],
+    "totalShipments": "Thống kê học sinh",
+    "chartCategories": ["Tài khoản", "Lượt truy cập", "Phiên làm việc"],
     "accountSetting": ["Reset password", "Đăng ký tài khoản", "Cập nhật trạng thái"],
     "userSetting": ["Học sinh", "Giáo viên", "Phụ huynh", "Admin"],
     "curriculum": ["Học kỳ", "Tuần học", "Bài giảng", "Tiết học", "Điểm số"],
     "administration": ["Quản trị tài khoản", "Quản trị người dùng", "Chương trình đào tạo"],
-    "educationProgram": ["Thời khóa biểu", "Thống kê", "Option3"],
+    "educationProgram": ["Thời khóa biểu", "Phân công giáo viên"],
+    "learningManagement": ["Thống kê điểm", "Quản lý điểm", "Option3"],
+    "learningOutcome": ["Thống kê điểm", "Xem điểm"],
     "tasks": "Tasks({count})",
     "today": "Today",
     "dropdown": {
@@ -109,9 +111,12 @@
   },
   "sidebar": {
     "title": "Creative Tim",
-    "shortTitle": "CT",
-    "dashboard": "dashboard",
-    "educationProgram": "Chương trình đào tạo",
+    "shortTitle": "CT",   
+    "dashboard": "Thống kê",
+    "educationProgram": "Quản lý đào tạo",
+    "learningManagement": "Quản lý học tập",
+    "learningOutcome": "Kết quả học tập",
+    "competitionResult": "Xếp hạng thi đua",
     "icons": "Icons",
     "maps": "Maps",
     "notifications": "Notifications",
@@ -119,6 +124,6 @@
     "tableList": "Table List",
     "typography": "Typography",
     "rtlSupport": "RTL Support",
-    "administration": "Quản trị"
+    "administration": "Quản trị hệ thống"
   }
 }

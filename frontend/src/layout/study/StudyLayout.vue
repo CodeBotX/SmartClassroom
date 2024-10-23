@@ -5,6 +5,9 @@
         <i class="tim-icons icon-minimal-left"></i> Trang chủ
       </base-button>
       <h1 class="title">Study Layout</h1>
+      <base-button @click="toggleEvaluate" class="dashboard-button btn-info" simple>
+        <i class="tim-icons icon-notes"></i> Đánh giá
+      </base-button>
       <div class="current-time">{{ currentTime }}</div>
     </div>
     
@@ -12,11 +15,12 @@
       <div v-for="(row, rowIndex) in desks" :key="rowIndex" class="row">
         <div v-for="(seat, columnIndex) in row" :key="columnIndex"
          :class="['seat', 
-                      { 'spacer': columnIndex === 2 || columnIndex === 5 }]"  
+                      { 'spacer': columnIndex === 1 || columnIndex === 3 || columnIndex === 5 || columnIndex === 7}]"  
          @dragover.prevent @drop="dropStudent(rowIndex, columnIndex)" @dragstart="dragStart(seat,rowIndex,columnIndex)">
           <base-button
             v-if="seat"
-            class="btn btn-info btn-simple student"
+            @click="scoring(seat)"
+            class="btn btn-success btn-simple student"
             draggable
             
           >
@@ -28,26 +32,277 @@
       <div class="teacher-desk">
         <h3>Bàn giáo viên</h3>
       </div>
+
+      <!-- Scoring Modal -->
+        <modal :show.sync="scoreModal"
+                body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-sm">
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0">
+                <template>
+                    <div class="text-muted mb-3">
+                        <h4 class="text-success">Chấm điểm</h4>
+                    </div>
+                </template>
+                <template>
+                        <div class="row">
+                            <div class="col-12" v-if="studentDetail">
+                              <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input disabled label="Id học sinh" v-model="studentDetail.id"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pr-md-1" >
+                                        <base-input disabled label="Họ và tên" v-model="studentDetail.full_name"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1" >
+                                        <base-input disabled label="Môn" v-model="studentDetail.subject"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input disabled label="Học kỳ" v-model="studentDetail.semester"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 pl-md-1">
+                                        <base-input label="Điểm" v-model="studentDetail.grade"></base-input>
+                                    </div>
+                                </div>
+                                <base-button @click="givenScore" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+        </modal>
+
+        <!-- Evaluating Modal -->
+        <modal :show.sync="evaluateModal"
+                body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-md">
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0">
+                <template>
+                    <div class="text-muted mb-3">
+                        <h4 class="text-success">Đánh giá tiết học</h4>
+                    </div>
+                </template>
+                <template>
+                        <div class="row">
+                            <div class="col-12" v-if="lessonDetail">
+                              <div class="row">
+                                    <div class="col-md-3 pr-md-1">
+                                        <base-input label="Bài số" v-model="lessonDetail.lessonNumber" placeholder="Bài số">
+                                        </base-input>
+                                    </div>
+                                    <div class="col-md-9 pr-md-1">
+                                        <base-input label="Tên bài học" v-model="lessonDetail.nameLesson" placeholder="Tên bài học">
+                                        </base-input>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-md-12 pr-md-1">
+                                        <base-input label="Điểm đánh giá (Số tự nhiên 0 -> 10)" v-model="lessonDetail.evaluate" placeholder="Điểm đánh giá">
+                                        </base-input>
+                                    </div>
+                              </div>
+                              <div class="row">
+                                    <div class="col-md-12 pr-md-1">
+                                        <base-input label="Nhận xét">
+                                          <textarea class="form-control" rows="3" v-model="lessonDetail.comment"></textarea>
+                                        </base-input>
+                                    </div>
+                              </div>
+                              <base-button @click="evaluating" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+        </modal>
     </div>
   </div>
 </template>
 
 <script>
 import axios from '../../services/axios'; 
+import Modal from '../../components/Modal.vue';
+
 let API_URL = ""
 
 export default {
+  components: { Modal },
   data() {
     return {
+      scoreModal : false,
+      evaluateModal: false,
+
+      lessonData: null,
+
+      lessonDetail: {
+        semester: null,
+        day: null,
+        room: null,
+        period_number: null,
+        lessonNumber: null,
+        nameLesson: null,
+        teacher: null,
+        comment: null,
+        evaluate: null
+
+      },
+
+      studentDetail: {
+        id: null,
+        full_name: null,
+        subject: null,
+        semester: null,
+        score_type: null,
+        grade: null,
+      },
+
       currentTime: this.formatTime(new Date()),
       positions: null,
-      desks: Array.from({ length: 5 }, () => Array(9).fill(null)),
+      desks: Array.from({ length: 5 }, () => Array(8).fill(null)),
       draggedStudent: null,
       draggedRow: null,
       draggedCol: null,
     };
   },
   methods: {
+    scoring(index){
+      this.studentDetail.id = index
+      this.studentDetail.subject = this.lessonData.subject
+      this.studentDetail.semester = this.lessonData.semester
+
+      this.scoreModal = true
+    },
+    givenScore(){
+      if(!this.studentDetail.grade){
+        this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Vui lòng nhập điểm cho học sinh",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+        });
+        return
+      }
+
+      const data = {
+        "student": this.studentDetail.id,
+        "subject": this.studentDetail.subject,
+        "semester": this.studentDetail.semester,
+        "score_type": "TX",
+        "grade": this.studentDetail.grade
+      }
+
+      console.log(data)
+      const token = localStorage.getItem("access_token");
+
+        axios
+        .post(API_URL+"/adminpanel/grades/", data,  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then(() => {
+          this.scoreModal = false
+          this.studentDetail.grade = null
+          this.$notify({
+                type: "success",
+                icon: 'tim-icons icon-bell-55',
+                message: "Chấm điểm cho học sinh " + this.studentDetail.id+ " thành công",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        })
+        .catch((error) => {
+          console.error("Error post grade data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Chấm điêm thất bại. Vui lòng thử lại sau",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+    },
+    toggleEvaluate(){
+      this.evaluateModal = true;
+    },
+    evaluating(){
+      if(!this.lessonDetail.evaluate) {
+        this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Vui lòng cho điểm đánh giá tiết học",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+        });
+        return
+      }
+      if(!this.lessonDetail.comment) {
+        this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Vui lòng cho nhận xét tiết học",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+        });
+        return
+      }
+
+      const data = {
+        "comment": this.lessonDetail.comment,
+        "evaluate": this.lessonDetail.evaluate,        
+        "lesson_number": this.lessonDetail.lessonNumber,
+        "name_lesson": this.lessonDetail.nameLesson
+      }
+      console.log(data)
+      
+      const token = localStorage.getItem("access_token");
+
+        axios
+        .patch(API_URL+`/adminpanel/lessons/${this.lessonData.id}/update/`, data,  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then(() => {
+          this.$notify({
+                type: "success",
+                icon: 'tim-icons icon-bell-55',
+                message: "Đánh giá tiết học thành công",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+              this.evaluateModal = false
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Đánh giá tiết học thất bại",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+    },
     async initializeData() {
       try {
         await this.getApiUrl();
@@ -171,7 +426,13 @@ export default {
       this.$router.push('/dashboard');  
     },
     async getPositionData() {
-      const roomName = "6A"; 
+      this.lessonData = JSON.parse(localStorage.getItem("lesson_data"));
+      console.log(this.lessonData)
+      this.lessonDetail.lessonNumber = this.lessonData.lesson_number
+      this.lessonDetail.nameLesson = this.lessonData.name_lesson
+      this.lessonDetail.evaluate = this.lessonData.evaluate
+      this.lessonDetail.comment = this.lessonData.comment
+      const roomName = this.lessonData.room
       const token = localStorage.getItem("access_token");
       try {
         // const response = await axios.get(`${API_URL}/rooms/${roomName}/allseatings/`, {
@@ -273,6 +534,6 @@ export default {
   right: 160px;
 }
 .spacer {
-  margin-right: 100px; /* Khoảng cách giữa các cột */
+  margin-right: 50px; /* Khoảng cách giữa các cột */
 }
 </style>

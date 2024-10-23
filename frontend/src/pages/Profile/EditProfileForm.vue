@@ -222,7 +222,7 @@ export default {
       // };
       const updateDataRole = {
         sex: this.model.sex,
-        nation: this.model.day_of_birth,
+        nation: this.model.nation,
         email: this.model.email,
         phone_number: this.model.phone_number,
         day_of_birth: this.model.day_of_birth,

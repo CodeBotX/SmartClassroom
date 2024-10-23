@@ -1,4 +1,6 @@
 import axios from 'axios';
+import router from '@/router/index.js';
+import Notification from '@/components/NotificationPlugin/Notification.vue';
 
 // const API_URL = "http://bkteaching.one/api";
 // const API_URL = "https://smartclassroom.click/api";
@@ -14,34 +16,24 @@ const instance = axios.create({
 async function refreshAccessToken(refreshToken) {
     try {
         const response = await instance.post('/accounts/api/token/refresh/', {
-            refresh: refreshToken
+            "refresh_token": refreshToken
         });
         const newAccessToken = response.data.access;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            // refresh_token không hợp lệ hoặc đã hết hạn
-            this.$notify({
-                type: "danger",
-                icon: 'tim-icons icon-check-2',
-                message: 'Refresh token không còn hiệu lực. Vui lòng đăng nhập lại.',
-                timeout: 3000,
-                verticalAlign: "top",
-                horizontalAlign: "center",
-            });
-            // Điều hướng đến trang đăng nhập
-            this.$router.push('/login');
+            // Kiểm tra xem người dùng có đang ở trang login không trước khi điều hướng
+            if (router.currentRoute.name !== 'login') {
+                // Notification({
+                //     message: 'Refresh token không còn hiệu lực. Vui lòng đăng nhập lại.',
+                //     type: 'danger',
+                // });
+                // Điều hướng đến trang đăng nhập
+                router.push('/login');
+            }
         } else {
-            // Xử lý lỗi khác
-            this.$notify({
-                type: "danger",
-                icon: 'tim-icons icon-check-2',
-                message: 'Lỗi làm mới token: ' + (error.response?.data?.detail || error.message),
-                timeout: 3000,
-                verticalAlign: "top",
-                horizontalAlign: "center",
-            });
+            return
         }
         throw error;
     }
@@ -61,7 +53,7 @@ instance.interceptors.response.use(
 
             if (!refreshToken) {
                 console.error("Refresh token không tồn tại.");
-                this.$router.push({ name: 'login' });
+                router.push({ name: 'login' });
                 return;
             }
             if (refreshToken) {
@@ -73,11 +65,11 @@ instance.interceptors.response.use(
                 } catch (refreshError) {
                     // Khi không thể làm mới token, điều hướng đến trang đăng nhập
                     console.log("Token refresh failed", refreshError);
-                    this.$router.push({ name: 'login' });
+                    router.push({ name: 'login' });
                 }
             } else {
                 // Nếu không có refresh token, điều hướng ra trang đăng nhập
-                this.$router.push({ name: 'login' });
+                router.push({ name: 'login' });
             }
         }
         return Promise.reject(error);

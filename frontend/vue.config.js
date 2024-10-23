@@ -1,6 +1,14 @@
 const webpack = require("webpack");
 
 module.exports = {
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      }
+    }
+  },
   lintOnSave: false,
   configureWebpack: {
     // Set up all the aliases we use in our app.

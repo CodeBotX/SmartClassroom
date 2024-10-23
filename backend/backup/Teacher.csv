@@ -1,0 +1,57 @@
+user_id,full_name,sex,day_of_birth,nation,active_status,contract_types,expertise_levels,subjects
+3501020793,Phạm Thị Quỳnh Anh,Nữ,1980-10-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3500090543,Trần Thị Ngọc Ánh,Nữ,1981-09-20,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501030854,Nguyễn Thị Bình,Nữ,1976-08-24,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Cao đẳng sư phạm,Ngữ văn
+3502926196,Trần Thanh Bình,Nam,1978-08-25,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020794,Trịnh Thị Kim Chuyên,Nữ,1979-11-19,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020795,Hoàng Thị Đam,Nữ,1981-10-21,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3502631624,Nguyễn Thị Dung,Nữ,1977-10-05,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020797,Trần Thị Duyên,Nữ,1982-11-20,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Sinh học
+3501020856,Đặng Linh Giang,Nữ,1975-11-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020798,Nguyễn Thị Hà Giang,Nữ,1976-04-10,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Tiếng Anh
+3501020799,Trần Thị Hương Giang,Nữ,1977-02-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020913,Nguyễn Huy Hà,Nam,1976-10-29,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020800,Trương Thị Hà,Nữ,1982-06-03,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020802,Nguyễn Thị Hằng,Nữ,1979-09-13,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020804,Trần Thị Hữu Hạnh,Nữ,1979-05-10,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Mỹ thuật
+3500822728,Trần Thị Hảo,Nữ,1980-06-13,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020805,Nguyễn Thị Thu Hiền,Nữ,1970-12-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Cao đẳng sư phạm,Âm nhạc
+3501020806,Tạ Thu Hiền,Nữ,1979-06-03,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Tin học
+3501020807,Trần Thị Hiền,Nữ,1973-07-30,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Cao đẳng sư phạm,Ngữ văn
+3501020808,Đoàn Thị Hoà,Nữ,1978-01-23,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Hóa học
+3501020809,Nguyễn Thị Thu Hoà,Nữ,1981-02-24,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Khoa học tự nhiên
+3501020836,Phan Lư Hoàng,Nam,1978-04-08,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020811,Ngô Thị Hồng,Nữ,1977-06-22,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020812,Bùi Hồng Vân Hương,Nữ,1980-11-29,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020838,Đinh Thị Hương,Nữ,1986-02-06,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Thể dục
+3502959355,Vũ Thị Hương,Nữ,1977-07-24,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020814,Hoàng Thị Thu Hường,Nữ,1980-06-01,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Địa lý
+3501020815,Trịnh Thị Thu Hường,Nữ,1979-09-29,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501017346,Đỗ Thị Thu Huyền,Nữ,1981-05-21,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3502631622,Hoàng Thị Thu Huyền,Nữ,1978-05-08,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Tiếng Anh
+3501020837,Trần Thị Lan,Nữ,1977-12-27,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Lịch sử
+3501020817,Mai Thị Lành,Nữ,1976-12-26,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Tiếng Anh
+3501020818,Nguyễn Thị Thuý Liệu,Nữ,1984-09-04,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Hóa học
+3500813510,Nguyễn Thị Loan,Nữ,1979-04-19,Kinh,Đang làm việc,Viên chức/Công chức HĐLV xác định thời hạn,Đại học sư phạm,Ngữ văn
+3502935950,Vũ Thị Luân,Nữ,1983-02-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Khoa học tự nhiên
+3501020819,Lại Thị Tuyết Mai,Nữ,1977-08-09,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501944116,Nguyễn Hùng Minh,Nam,1980-10-11,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020820,Nguyễn Thị Thuý Ngà,Nữ,1984-12-03,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3501020821,Phạm Thanh Ngân,Nữ,1972-03-02,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3500070820,Trần Thị Ngọc,Nữ,1981-12-09,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020824,Phạm Thị Nhài,Nữ,1975-06-28,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Công nghệ
+3501020825,Nguyễn Thị Hồng Nhung,Nữ,1971-10-30,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Tiếng Anh
+3501020826,Trần Thị Hồng Nhung,Nữ,1979-05-20,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Thể dục
+3501020827,Lê Thị Thanh Phương,Nữ,1971-11-03,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020829,Trần Công Phương,Nam,1978-04-09,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Vật lý
+3501553089,Mai Thị Phượng,Nữ,1974-01-08,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Thạc sĩ,Tiếng Anh
+3501020839,Phạm Thị Quyên,Nữ,1983-12-22,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020830,Nguyễn Thị Sâm,Nữ,1980-10-02,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020831,Trần Thị Hồng Tám,Nữ,1981-01-21,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Vật lý
+3501020832,Trịnh Thị Thơm,Nữ,1979-01-17,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3501020833,Ninh Ngọc Thủy,Nữ,1984-06-17,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Ngữ văn
+3502631587,Trần Thị Thu Thủy,Nữ,1977-09-22,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán
+3502960979,Lê Khánh Trường,Nam,1978-03-01,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Thể dục
+3501020834,Lê Thị Xuân,Nữ,1976-02-02,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Cao đẳng sư phạm,Tiếng Anh
+3500829442,Nguyễn Thị Xuân,Nữ,1977-07-06,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Sinh học
+3501020835,Đinh Thị Hải Yến,Nữ,1980-10-19,Kinh,Đang làm việc,Viên chức/Công chức HĐLV không xác định thời hạn,Đại học sư phạm,Toán

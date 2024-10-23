@@ -11,6 +11,12 @@ const Administration = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/Administration.vue");
 const EducationProgram = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/EducationProgram.vue");
+const LearingManagement = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/LearningManagement.vue");
+const LearningOutcome = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/LearningOutcome.vue");
+const CompetitionResult = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/CompetitionResult.vue");
 const Dashboard = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/Dashboard.vue");
 const Profile = () =>
@@ -30,7 +36,7 @@ const routes = [
     name: 'Dashboard',
     path: "/",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/profile",
     meta: { requiresAuth: true }, // Đặt thuộc tính requiresAuth cho các route cần bảo vệ
     beforeEnter: (to, from, next) => {
       const token = localStorage.getItem('access_token');
@@ -44,22 +50,37 @@ const routes = [
     children: [
       {
         path: "administration",
-        name: "administration",
+        name: "Quản trị hệ thống",
         component: Administration,
       },
       {
         path: "education_program",
-        name: "education_program",
+        name: "Quản lý đào tạo",
         component: EducationProgram,
       },
       {
+        path: "learning_management",
+        name: "Quản lý học tập",
+        component: LearingManagement,
+      },
+      {
+        path: "learning_outcome",
+        name: "Kết quả học tập",
+        component: LearningOutcome,
+      },
+      {
+        path: "competition_result",
+        name: "Xếp hạng thi đua",
+        component: CompetitionResult,
+      },
+      {
         path: "dashboard",
-        name: "dashboard",
+        name: "Thống kê",
         component: Dashboard,
       },
       {
         path: "profile",
-        name: "profile",
+        name: "Thông tin tài khoản",
         component: Profile,
       },
       {
