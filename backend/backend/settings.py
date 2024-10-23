@@ -163,8 +163,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'user_id',  # Sử dụng 'user_id' thay vì 'id'
     'USER_ID_CLAIM': 'user_id',  # ghi `user_id` vào trong token
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=240),  # Thời gian sống của access token
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Thời gian sống của refresh token
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=365 * 100),  # Thời gian sống của access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365 * 100),    # Thời gian sống của refresh token
     'ROTATE_REFRESH_TOKENS': False,                # Tùy chọn làm mới refresh token khi làm mới access token
     'BLACKLIST_AFTER_ROTATION': False,             # Có nên đưa refresh token vào blacklist sau khi bị làm mới
     'ALGORITHM': 'HS256',                          # Thuật toán mã hóa

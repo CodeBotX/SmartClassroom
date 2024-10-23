@@ -66,7 +66,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user_id = request.data.get("student_id")  
         device_id = request.data.get("device_id")
-        attendance_time = request.data.get("attendance_time")  # Mong đợi thời gian ở định dạng chuỗi
+        attendance_time = request.data.get("attendance_time")  
 
         if not user_id:
             return Response({"error": "Cần có ID người dùng."}, status=status.HTTP_400_BAD_REQUEST)
