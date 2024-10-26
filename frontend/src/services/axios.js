@@ -53,8 +53,12 @@ instance.interceptors.response.use(
 
             if (!refreshToken) {
                 console.error("Refresh token không tồn tại.");
-                router.push({ name: 'login' });
-                return;
+                if (router.currentRoute.name !== 'login') {
+                    router.push({ name: 'login' });
+                    return;
+                }else {
+                    return;
+                }
             }
             if (refreshToken) {
                 try {

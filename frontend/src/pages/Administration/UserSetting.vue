@@ -641,7 +641,7 @@ export default {
           this.$notify({
                 type: "warning",
                 icon: 'tim-icons icon-bell-55',
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
+                message: "Dữ liệu không tồn tại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
@@ -732,7 +732,7 @@ export default {
           this.$notify({
                 type: "warning",
                 icon: 'tim-icons icon-bell-55',
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
+                message: "Dữ liệu không tồn tại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",

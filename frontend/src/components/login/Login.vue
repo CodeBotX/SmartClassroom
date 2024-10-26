@@ -94,15 +94,18 @@ export default {
           username: this.username,
           password: this.password
         });
-
-        this.$notify({
-          type: 'success',
-          icon: 'tim-icons icon-check-2',
-          message: "Đăng nhập thành công",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'center',
-        });
+        
+        if(response.status==200){
+          this.$notify({
+            type: 'success',
+            icon: 'tim-icons icon-check-2',
+            message: "Đăng nhập thành công",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'center',
+          });
+        }
+        
 
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
@@ -218,4 +221,12 @@ export default {
   position: relative;
   z-index: 1;
 }
+
+input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    border: 1px solid transparent !important;
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+  }
 </style>

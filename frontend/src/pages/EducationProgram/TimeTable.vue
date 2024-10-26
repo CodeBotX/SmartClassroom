@@ -348,12 +348,29 @@ export default {
         this.createModal = true;
       },
       createLesson(){
+        let subject = null
+        if(this.lessonCreate.subject == "TOAN") subject = "Toán"
+        else if(this.lessonCreate.subject == "VAN") subject = "Ngữ Văn"
+        else if(this.lessonCreate.subject == "ANH") subject = "Tiếng Anh"
+        else if(this.lessonCreate.subject == "HOA") subject = "Hóa"
+        else if(this.lessonCreate.subject == "LY") subject = "Vật lý"
+        else if(this.lessonCreate.subject == "SINH") subject = "Sinh học"
+        else if(this.lessonCreate.subject == "DIA") subject = "Địa lý"
+        else if(this.lessonCreate.subject == "SU") subject = "Lịch sử"
+        else if(this.lessonCreate.subject == "GDCD") subject = "GDCD"
+        else if(this.lessonCreate.subject == "TD") subject = "Thể dục"
+        else if(this.lessonCreate.subject == "MT") subject = "Mỹ thuật"
+        else if(this.lessonCreate.subject == "AN") subject = "Âm nhạc"
+        else if(this.lessonCreate.subject == "TH") subject = "Tin học"
+        else if(this.lessonCreate.subject == "CN") subject = "Công nghệ"
+        else if(this.lessonCreate.subject == "HDTN-HN") subject = "Hoạt động trại nghiệm, hướng nghiệp"
+
         const data = {
-          "subject": this.lessonCreate.subject,
+          "subject": subject,
           "day": this.lessonCreate.day,      
           "semester": this.lessonCreate.semester,
           "room": this.lessonCreate.room,
-          "period_number": this.lessonCreate.period,
+          "period_number": `Tiết ${this.lessonCreate.period}`,
           "teacher": this.lessonCreate.teacher
         }
         console.log(data)

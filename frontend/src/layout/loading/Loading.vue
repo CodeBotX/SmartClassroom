@@ -3,7 +3,7 @@
     <div class="spinner-container">
       <div class="spinner"></div>
       <a href="#" class="loading-icon" aria-hidden="true">
-        <img src="@/assets/img/bg_2.jpg" alt="Loading Icon" class="loading-icon-img" /> <!-- Thêm icon bằng thẻ img -->
+        <img src="@/assets/img/icon_sm3.png" alt="Loading Icon" class="loading-icon-img" /> <!-- Thêm icon bằng thẻ img -->
       </a>
     </div>
   </div>
@@ -41,11 +41,11 @@ export default {
 
 .spinner {
   border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top: 5px solid #0d9fe8;
+  border-top: 8px solid #0d9fe8;
   border-radius: 50%;
   width: 100px; /* Đặt kích thước cho spinner */
   height: 100px; /* Đặt kích thước cho spinner */
-  animation: spin 1s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
@@ -62,8 +62,8 @@ export default {
 }
 
 .loading-icon-img {
-  width: 50px; /* Kích thước của icon */
-  height: 50px; /* Kích thước của icon */
+  transform: scale(1.7);
+  filter: brightness(1.1);
 }
 
 p {

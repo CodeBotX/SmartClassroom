@@ -15,12 +15,10 @@ class Semester(models.Model):
 
     def get_day_end(self):
         return self.day_begin + timedelta(weeks=self.number_of_weeks)
+    # @property
+    # def day_end(self):
+    #     return self.get_day_end()
     def get_week(self, input_date=None):
-        """
-        Tính tuần học dựa trên ngày bắt đầu học kỳ.
-        - Nếu `input_date` không có giá trị, dùng ngày hiện tại.
-        - Nếu `input_date` có giá trị, tính tuần học tại ngày đó.
-        """
         if input_date is None:
             input_date = date.today()  
         if input_date < self.day_begin:
@@ -76,14 +74,14 @@ class PlannedLesson(models.Model):
         return f"{self.subject} - Tiết {self.lesson_number}: {self.name_lesson} (Kỳ {self.semester})"
 
 # Bảng tiet hoc
-class Lesson(models.Model):#
+class Lesson(models.Model):
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
-    lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn
-    name_lesson = models.CharField(max_length=100, null=True, blank=True)  # Tên bài học
+    lesson_number = models.IntegerField(null=True, blank=True) 
+    name_lesson = models.CharField(max_length=100, null=True, blank=True) 
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     day = models.DateField()  
-    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')  # Tiết học
+    period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons') 
     teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) 
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)

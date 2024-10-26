@@ -20,8 +20,9 @@
           <base-button
             v-if="seat"
             @click="scoring(seat)"
-            class="btn btn-success btn-simple student"
+            class="btn btn-simple student"
             draggable
+            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': getAttendanceStatus(seat) === 2}"
             
           >
             {{ seat }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
@@ -134,8 +135,13 @@ let API_URL = ""
 
 export default {
   components: { Modal },
+  mounted() {
+    this.startLongPolling();
+  },
   data() {
     return {
+      isActive: false,
+      attendance: null,
       scoreModal : false,
       evaluateModal: false,
 
@@ -172,6 +178,98 @@ export default {
     };
   },
   methods: {
+    demo(){
+      return true;
+    },
+    getAttendanceStatus(studentId) {
+      // Lọc danh sách attendance dựa trên studentId
+      const studentAttendance = this.attendance.filter(
+        (att) => att.user === studentId
+      );
+
+      // Nếu không có dữ liệu, trả về trạng thái vắng mặt = 2
+      if (studentAttendance.length === 0) {
+        return 2;
+      }
+
+      // Kiểm tra trạng thái cuối cùng của sinh viên
+      const lastStatus = studentAttendance[studentAttendance.length - 1].status;
+      return lastStatus
+    },
+    async startLongPolling() {
+      let lastAttendance = []; 
+
+      while (true) {
+        try {
+          const token = localStorage.getItem("access_token");
+          const response = await axios.get(`${API_URL}/attendance/attendance/`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          // Đảm bảo response.data không phải là null
+          const newAttendance = response.data || []; // Nếu response.data là null thì sử dụng mảng rỗng
+
+          // So sánh dữ liệu mới với dữ liệu trước đó
+          if (JSON.stringify(newAttendance) !== JSON.stringify(lastAttendance)) {
+            // Tìm ra các phần tử khác nhau
+            const differences = this.getDifferences(lastAttendance, newAttendance);
+            if (differences.length > 0) {
+              this.attendance = newAttendance;
+              console.log('New attendance data:', this.attendance);
+
+              if(differences.length !== newAttendance.length){
+                // Thông báo nếu có thay đổi trạng thái
+                differences.forEach(difference => {
+                  if (difference.status === 1) {
+                    this.$notify({
+                        type: "success",
+                        icon: 'tim-icons icon-badge',
+                        title: "Điểm danh thành công",
+                        message: `Học sinh ${difference.user}`,
+                        timeout: 1000,
+                        verticalAlign: "bottom",
+                        horizontalAlign: "left",
+                    });
+                  }
+                });
+              }
+
+              // Cập nhật dữ liệu trước đó
+              lastAttendance = newAttendance;
+            }
+          }
+
+          // Tiếp tục polling
+        } catch (error) {
+          console.error('Error fetching attendance data:', error);
+          await this.delay(5000); // Tạm dừng nếu có lỗi
+        }
+      }
+    },
+
+    // Hàm để lấy ra các phần tử khác nhau
+    getDifferences(oldData, newData) {
+      const differences = [];
+
+      // Chuyển đổi dữ liệu cũ thành một đối tượng để dễ dàng so sánh
+      const oldDataMap = new Map(oldData.map(item => [item.id, item]));
+
+      // So sánh từng phần tử trong dữ liệu mới với dữ liệu cũ
+      newData.forEach(newItem => {
+        const oldItem = oldDataMap.get(newItem.id);
+        if (!oldItem || JSON.stringify(oldItem) !== JSON.stringify(newItem)) {
+          differences.push(newItem);
+        }
+      });
+
+      return differences;
+    },
+    delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
     scoring(index){
       this.studentDetail.id = index
       this.studentDetail.subject = this.lessonData.subject

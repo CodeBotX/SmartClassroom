@@ -9,6 +9,7 @@ import { BSpinner } from 'bootstrap-vue'
 
 import BlackDashboard from "./plugins/blackDashboard";
 import i18n from "./i18n";
+
 import "./registerServiceWorker";
 
 // import css
