@@ -26,7 +26,8 @@ class LessonFilter(filters.FilterSet):
     day_range = filters.DateFromToRangeFilter(field_name='day')  
     teacher = filters.CharFilter(field_name='teacher__user__id', lookup_expr='icontains')
     evaluate = filters.NumberFilter(field_name='evaluate')
+    period = filters.CharFilter(field_name='period__number', lookup_expr='iexact')
 
     class Meta:
         model = Lesson
-        fields = ['semester', 'subject', 'room', 'day_range', 'teacher', 'evaluate']
+        fields = ['semester', 'subject', 'room', 'day_range','day', 'teacher', 'evaluate','period']
