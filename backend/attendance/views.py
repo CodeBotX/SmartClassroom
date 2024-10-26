@@ -8,7 +8,9 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from datetime import timedelta
-
+from .filters import AttendanceFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 def get_current_lesson(room, current_time):
@@ -37,6 +39,10 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filterset_class = AttendanceFilter
+    ordering_fields = '__all__'
+    ordering = ['attendance_time']
     
     def create(self, request, *args, **kwargs):
         user_id = request.data.get("student_id")  
