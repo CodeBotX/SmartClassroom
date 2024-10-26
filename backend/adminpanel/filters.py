@@ -24,7 +24,7 @@ class LessonFilter(filters.FilterSet):
     room = filters.CharFilter(field_name='room__name', lookup_expr='iexact')
     day = django_filters.DateFilter(field_name='day')
     day_range = filters.DateFromToRangeFilter(field_name='day')  
-    teacher = filters.CharFilter(field_name='teacher__user__id', lookup_expr='icontains')
+    teacher = filters.CharFilter(field_name='teacher__user_id', lookup_expr='exact')
     evaluate = filters.NumberFilter(field_name='evaluate')
     period = filters.CharFilter(field_name='period__number', lookup_expr='iexact')
 
