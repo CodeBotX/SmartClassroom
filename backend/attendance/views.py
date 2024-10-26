@@ -12,6 +12,7 @@ from datetime import timedelta
 
 
 def get_current_lesson(room, current_time):
+    print("đã gọi hàm tìm lesson")
     current_day = current_time.date()
     current_period = Period.objects.filter(
         start_time__lte=current_time.time(),

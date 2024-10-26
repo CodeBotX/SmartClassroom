@@ -19,7 +19,6 @@ class Attendance(models.Model):
         verbose_name_plural = 'Danh sách điểm danh'
 
     def clean(self):
-        # Kiểm tra xem user có phải là học sinh không
         if not self.user.is_student:
             raise ValidationError('User must be a student.')
 

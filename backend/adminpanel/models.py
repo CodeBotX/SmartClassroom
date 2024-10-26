@@ -141,6 +141,7 @@ class Grades(models.Model):
 
 
 class TeacherAssignment(models.Model):
+    semester= models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='assignments')
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='assignments')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='assignments')
