@@ -14,6 +14,7 @@ from accounts.models import Student,Teacher
 from django.db.models import Avg
 from collections import defaultdict
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db import IntegrityError
 
 class SemesterViewSet(viewsets.ModelViewSet):
     authentication_classes = []
@@ -508,18 +509,31 @@ class TeacherAssignmentViewSet(viewsets.ModelViewSet):
     serializer_class = TeacherAssignmentSerializer
     authentication_classes = []  
     permission_classes = []  
-    # có thể cài đặt lọc ở filter.py
+    def create(self, request, *args, **kwargs):
+        room_name = request.data.get('room')
+        teacher_id = request.data.get('teacher')
+        semester = request.data.get('semester')
+        if not Semester.objects.filter(name=semester).exists():
+            return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not Room.objects.filter(name=room_name).exists():
+            return Response({'error': 'Phòng học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not Teacher.objects.filter(user_id=teacher_id).exists():
+            return Response({'error': 'Giáo viên không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
+    
+    # có thể đặt filter.py ở đây thay vì hàm lọc 
     def get_queryset(self):
         queryset = super().get_queryset()
         teacher_user_id = self.request.query_params.get('user_id')
         room = self.request.query_params.get('room')
         subject = self.request.query_params.get('subject')
-
+        semester = self.request.query_params.get('semester')
         if teacher_user_id:
             queryset = queryset.filter(teacher__user__user_id=teacher_user_id)
         if room:
             queryset = queryset.filter(room__name=room)
         if subject:
             queryset = queryset.filter(subject=subject)
-
+        if semester:
+            queryset = queryset.filter(semester__name=semester)
         return queryset

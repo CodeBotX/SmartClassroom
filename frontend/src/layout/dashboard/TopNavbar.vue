@@ -325,8 +325,7 @@ export default {
       // Call API để kiểm tra giáo viên có tiết học không
       this.isLoading = true;
       try {
-
-        const response = await axios.get(API_URL + `/adminpanel/lessons/?user_id=${this.userData.user_id}&day=${this.getCurrentFormattedDate(currentDate)}&period=${currentPeriod}`, {
+        const response = await axios.get(API_URL + `/adminpanel/lessons/?teacher=${this.userData.user_id}&day=${this.getCurrentFormattedDate(currentDate)}&period=${currentPeriod}`, {
           
         })
         

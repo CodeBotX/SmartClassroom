@@ -48,7 +48,7 @@ class PlannedLessonSerializer(serializers.ModelSerializer):
 class TeacherAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherAssignment
-        fields = ['teacher', 'room', 'subject']
+        fields = ['semester','teacher', 'room', 'subject']
 
 # Tiết học
 class PeriodSerializer(serializers.ModelSerializer):

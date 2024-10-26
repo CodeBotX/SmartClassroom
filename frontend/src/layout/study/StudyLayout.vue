@@ -145,6 +145,8 @@ export default {
       scoreModal : false,
       evaluateModal: false,
 
+      polling: false,
+
       lessonData: null,
 
       lessonDetail: {
@@ -198,8 +200,9 @@ export default {
     },
     async startLongPolling() {
       let lastAttendance = []; 
+      this.polling = true;
 
-      while (true) {
+      while (this.polling) {
         try {
           const token = localStorage.getItem("access_token");
           const response = await axios.get(`${API_URL}/attendance/attendance/`, {
@@ -521,6 +524,7 @@ export default {
       return date.toLocaleTimeString();
     },
     goToDashboard() {
+      this.polling = false
       this.$router.push('/dashboard');  
     },
     async getPositionData() {

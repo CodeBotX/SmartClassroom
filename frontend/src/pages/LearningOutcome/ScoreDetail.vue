@@ -41,21 +41,16 @@
           <base-table :data="scoreData" :columns="score_columns">
             <template slot="columns">
               <th>Môn</th>
-              <th>Thường xuyên</th>
-              <th>Giữa kỳ</th>
-              <th>Cuối kỳ</th>
-              <th class="text-right">Actions</th>
+              <th class="text-center">Thường xuyên</th>
+              <th class="text-center">Giữa kỳ</th>
+              <th class="text-center">Cuối kỳ</th>
             </template>
             <template slot-scope="{ row }">
-              <td>{{ row.subject }}</td>
-              <td>{{ row.TX ? row.TX : '-' }}</td> <!-- Hiển thị '-' nếu không có điểm -->
-              <td>{{ row.GK ? row.GK : '-' }}</td>
-              <td>{{ row.CK ? row.CK : '-' }}</td>
-              <td class="td-actions text-right">
-                <base-button type="info" class="btn-simple" size="md" icon @click="editScore(row)">
-                  <i class="tim-icons icon-pencil"></i>
-                </base-button>
-              </td>
+              <td> <div class="text-info"> {{ row.subject }}</div></td>
+
+              <td class="text-center">{{ row.tx.join(" | ") }}</td>
+              <td class="text-center">{{ row.gk.join(" ") }}</td>
+              <td class="text-center">{{ row.ck.join(" ") }}</td>
             </template>
           </base-table>
         </div>
@@ -81,8 +76,8 @@ export default {
     },
     data() {
         return {
-          scoreData: [], // Dữ liệu điểm đã được định dạng
-          score_columns: ['Môn', 'Thường xuyên', 'Giữa kỳ', 'Cuối kỳ', 'Actions'], // Cột của bảng
+          scoreData: this.initializeScoreData(), // Dữ liệu điểm đã được định dạng
+          score_columns: ['Môn', 'Thường xuyên', 'Giữa kỳ', 'Cuối kỳ'], // Cột của bảng
 
           roomSelected: null,
           semesterSelected: null,
@@ -94,23 +89,18 @@ export default {
           semesters: null,
           scoreTypes: ["TX", "GK", "CK"],
           subject: null,
-          
-
-          scoreRow: {
-            Toan: {
-              Tx: null,
-              Gk: null,
-              Ck: null,
-            },
-            Van: {
-              Tx: null,
-              Gk: null,
-              Ck: null
-            }
-          }
         };
     },
     methods: {
+      initializeScoreData() {
+        const subjects = ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'];
+        return Array.from({ length: 15 }, (_, index) => ({
+          subject: subjects[index],
+          tx: [],
+          gk: [],
+          ck: [],
+        }));
+      },
       async initializeData() {
         try {
           await this.getApiUrl();
@@ -157,47 +147,111 @@ export default {
           });
       },
       getScoreData(){
-        const token = localStorage.getItem("access_token");
-
-        axios
-          .get(API_URL + `/adminpanel/grades?user_id=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          })
-          .then((response) => {
-            // Xử lý dữ liệu để sắp xếp theo từng môn
-            this.scoreData = this.formatScoreData(response.data);
-          })
-          .catch((error) => {
-            console.error("Error getting score data:", error);
-            this.$notify({
-              type: "warning",
-              icon: 'tim-icons icon-bell-55',
-              message: "Lấy danh sách điểm thất bại",
-              timeout: 3000,
-              verticalAlign: "top",
-              horizontalAlign: "right",
-            });
-          });
+        const data = [
+              {
+                  "subject": "VAN",
+                  "score_type": "TX",
+                  "grade": [
+                      6.0,
+                      6.0,
+                      5.5,
+                      5.5,
+                      6.5,
+                      6.5
+                  ],
+                  "student": "0181635895",
+                  "semester": 20242
+              },
+              {
+                  "subject": "TOAN",
+                  "score_type": "TX",
+                  "grade": [
+                      10.0,
+                      8.0,
+                      9.0,
+                      9.0
+                  ],
+                  "student": "0181635895",
+                  "semester": 20242
+              },
+              {
+                  "subject": "TOAN",
+                  "score_type": "GK",
+                  "grade": [
+                      8.0
+                  ],
+                  "student": "0181635895",
+                  "semester": 20242
+              },
+              {
+                  "subject": "TOAN",
+                  "score_type": "CK",
+                  "grade": [
+                      8.0
+                  ],
+                  "student": "0181635895",
+                  "semester": 20242
+              }
+          ]
+          this.scoreData = this.formatScoreData(data);
       },
+      // getScoreData(){
+      //   const token = localStorage.getItem("access_token");
+      //   this.scoreData = this.initializeScoreData()
+
+      //   axios
+      //     .get(API_URL + `/adminpanel/grades?user_id=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //         "Content-Type": "application/json",
+      //       },
+      //     })
+      //     .then((response) => {
+      //       // Xử lý dữ liệu để sắp xếp theo từng môn
+      //       this.$notify({
+      //         type: "success",
+      //         icon: 'tim-icons icon-bell-55',
+      //         message: "Lấy bảng điểm thành công",
+      //         timeout: 3000,
+      //         verticalAlign: "top",
+      //         horizontalAlign: "right",
+      //       });
+      //       this.scoreData = this.formatScoreData(response.data);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error getting score data:", error);
+      //       this.$notify({
+      //         type: "warning",
+      //         icon: 'tim-icons icon-bell-55',
+      //         message: "Lấy danh sách điểm thất bại",
+      //         timeout: 3000,
+      //         verticalAlign: "top",
+      //         horizontalAlign: "right",
+      //       });
+      //     });
+      // },
       formatScoreData(data) {
-        // Khởi tạo một đối tượng để nhóm điểm theo môn
         const groupedScores = {};
 
         data.forEach(item => {
-            if (!groupedScores[item.subject]) {
-                groupedScores[item.subject] = {
-                    subject: item.subject,
-                    TX: null,  // Điểm thường xuyên
-                    GK: null,  // Điểm giữa kỳ
-                    CK: null   // Điểm cuối kỳ
-                };
-            }
+          // Kiểm tra xem môn học này đã tồn tại trong groupedScores chưa
+          if (!groupedScores[item.subject]) {
+            groupedScores[item.subject] = {
+              subject: item.subject,
+              tx: [],  // Điểm thường xuyên
+              gk: [],  // Điểm giữa kỳ
+              ck: []   // Điểm cuối kỳ
+            };
+          }
 
-            // Sắp xếp điểm vào đúng loại điểm (TX, GK, CK)
-            groupedScores[item.subject][item.score_type] = item.grade;
+          // Sắp xếp điểm vào đúng loại điểm (TX, GK, CK)
+          if (item.score_type === "TX") {
+            groupedScores[item.subject].tx = item.grade;
+          } else if (item.score_type === "GK") {
+            groupedScores[item.subject].gk = item.grade;
+          } else if (item.score_type === "CK") {
+            groupedScores[item.subject].ck = item.grade;
+          }
         });
 
         // Chuyển đổi đối tượng thành mảng để dễ hiển thị trong bảng

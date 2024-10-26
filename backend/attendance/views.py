@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import *
-from adminpanel.models import Lesson
+from adminpanel.models import Period, Lesson, Semester
 from accounts.models import CustomUser
 from .serializers import *
 from django.utils import timezone
@@ -10,91 +10,56 @@ from rest_framework.decorators import action
 from datetime import timedelta
 
 
+
 def get_current_lesson(room, current_time):
-        today = current_time.date()
-        lessons = Lesson.objects.filter(room=room, day=today)
-        for lesson in lessons:
-            if lesson.period:
-                if lesson.period.start_time <= current_time.time() <= lesson.period.end_time:
-                    return lesson  
-        return None  
+    print("đã gọi hàm tìm lesson")
+    current_day = current_time.date()
+    current_period = Period.objects.filter(
+        start_time__lte=current_time.time(),
+        end_time__gte=current_time.time()
+    ).first()
 
-#api điểm danh
-# class AttendanceViewSet(viewsets.ModelViewSet):
-#     authentication_classes = []
-#     permission_classes = []
-#     queryset = Attendance.objects.all()
-#     serializer_class = AttendanceSerializer
-#     def create(self, request, *args, **kwargs):
-#         user_id = request.data.get("student_id")  
-#         device_id = request.data.get("device_id")
+    if current_period:
+        semester_start = Semester.objects.filter(day_begin__lte=current_day).order_by('-day_begin').first()
+        semester_end = semester_start.get_day_end() if semester_start else None
 
-#         if not user_id:
-#             return Response({"error": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Lesson.objects.filter(
+            room=room,
+            day=current_day,
+            period=current_period,
+            semester=semester_start
+        ).first() if semester_start and semester_start.day_begin <= current_day <= semester_end else None
+    return None
 
-#         try:
-#             device = Device.objects.get(device_id=device_id)
-#             room = device.room
-#             current_time = timezone.now()
-
-#             lesson = get_current_lesson(room, current_time)
-
-#             if lesson:
-#                 user = get_object_or_404(CustomUser, user_id=user_id)
-#                 attendance = Attendance(
-#                     user=user,  
-#                     lesson=lesson,
-#                     status=request.data.get("status")
-#                 )
-#                 attendance.save()  
-#                 serializer = self.get_serializer(attendance)
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-#             else:
-#                 return Response({"error": "No active lesson at this time."}, status=status.HTTP_400_BAD_REQUEST)
-
-#         except Device.DoesNotExist:
-#             return Response({"error": "Device not found."}, status=status.HTTP_404_NOT_FOUND)
-#         except ValidationError as e:
-#             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class AttendanceViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
-
+    
     def create(self, request, *args, **kwargs):
         user_id = request.data.get("student_id")  
         device_id = request.data.get("device_id")
-        attendance_time = request.data.get("attendance_time")  
 
         if not user_id:
             return Response({"error": "Cần có ID người dùng."}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
             device = Device.objects.get(device_id=device_id)
             room = device.room
-            current_time = timezone.now()
-
+            current_time = timezone.now() 
             lesson = get_current_lesson(room, current_time)
-
             if lesson:
                 user = get_object_or_404(CustomUser, user_id=user_id)
-
-                # Chuyển đổi attendance_time từ chuỗi sang datetime
-                attendance_time = timezone.datetime.fromisoformat(attendance_time)
+                attendance_time = current_time
                 lesson_start_time = timezone.datetime.combine(lesson.day, lesson.period.start_time)
-
-                # Xác định trạng thái dựa trên thời gian điểm danh
+                lesson_start_time = lesson_start_time.replace(tzinfo=timezone.get_current_timezone())
                 if attendance_time <= lesson_start_time + timedelta(minutes=10):
-                    status_value = 1  # Có mặt
-                elif attendance_time <= lesson_start_time + timedelta(minutes=25):
-                    status_value = 2  # Đi muộn
+                    status_value = 1  
                 else:
-                    status_value = 3  # Vắng mặt
-
+                    status_value = 3  
                 attendance = Attendance(
-                    user=user,  
+                    user=user,
                     lesson=lesson,
                     status=status_value
                 )
@@ -103,13 +68,10 @@ class AttendanceViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response({"error": "Không có tiết học nào đang hoạt động vào thời điểm này."}, status=status.HTTP_400_BAD_REQUEST)
-
         except Device.DoesNotExist:
             return Response({"error": "Không tìm thấy thiết bị."}, status=status.HTTP_404_NOT_FOUND)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except ValueError:
-            return Response({"error": "Định dạng thời gian điểm danh không hợp lệ."}, status=status.HTTP_400_BAD_REQUEST)
 
 class DeviceViewSet(viewsets.ViewSet):
     authentication_classes = []

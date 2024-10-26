@@ -59,34 +59,34 @@
               <td class="text-center"> <div class="text-info">Tiết {{ row.period }}</div></td>
 
               <td class="text-center" v-if="row.monday">
-                <base-button @click="toggleDetail(row.monday.id, 0, row.period)" class="btn-simple text-secondary" type="default">{{ row.monday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.monday.id, 0, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.monday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(0, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(0, row.period)" class="btn-simple btn-lg" type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.tuesday">
-                <base-button @click="toggleDetail(row.tuesday.id, 1, row.period)" class="btn-simple text-secondary" type="default">{{ row.tuesday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.tuesday.id, 1, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.tuesday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(1, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(1, row.period)" class="btn-simple btn-lg" type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
 
               <td class="text-center" v-if="row.wednesday">
-                <base-button @click="toggleDetail(row.wednesday.id, 2, row.period)" class="btn-simple text-secondary" type="default">{{ row.wednesday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.wednesday.id, 2, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.wednesday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(2, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(2, row.period)" class="btn-simple btn-lg" type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
 
               <td class="text-center" v-if="row.thursday">
-                <base-button @click="toggleDetail(row.thursday.id, 3, row.period)" class="btn-simple text-secondary" type="default">{{ row.thursday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.thursday.id, 3, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.thursday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(3, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(3, row.period)" class="btn-simple btn-lg" type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.friday">
-                <base-button @click="toggleDetail(row.friday.id, 4, row.period)" class="btn-simple text-secondary" type="default">{{ row.friday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.friday.id, 4, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.friday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(4, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(4, row.period)" class="btn-simple btn-lg" type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.saturday">
-                <base-button @click="toggleDetail(row.saturday.id, 5, row.period)" class="btn-simple text-secondary" type="default">{{ row.saturday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.saturday.id, 5, row.period)" class="btn-simple btn-lg text-secondary" type="default">{{ row.saturday.subject}}</base-button></td>
               <td class="text-center" v-else>
-                <base-button @click="toggleCreate(5, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
+                <base-button @click="toggleCreate(5, row.period)" class="btn-simple btn-lg " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
             </template>
           </base-table>
         </div>
@@ -348,36 +348,23 @@ export default {
         this.createModal = true;
       },
       createLesson(){
-        let subject = null
-        if(this.lessonCreate.subject == "TOAN") subject = "Toán"
-        else if(this.lessonCreate.subject == "VAN") subject = "Ngữ Văn"
-        else if(this.lessonCreate.subject == "ANH") subject = "Tiếng Anh"
-        else if(this.lessonCreate.subject == "HOA") subject = "Hóa"
-        else if(this.lessonCreate.subject == "LY") subject = "Vật lý"
-        else if(this.lessonCreate.subject == "SINH") subject = "Sinh học"
-        else if(this.lessonCreate.subject == "DIA") subject = "Địa lý"
-        else if(this.lessonCreate.subject == "SU") subject = "Lịch sử"
-        else if(this.lessonCreate.subject == "GDCD") subject = "GDCD"
-        else if(this.lessonCreate.subject == "TD") subject = "Thể dục"
-        else if(this.lessonCreate.subject == "MT") subject = "Mỹ thuật"
-        else if(this.lessonCreate.subject == "AN") subject = "Âm nhạc"
-        else if(this.lessonCreate.subject == "TH") subject = "Tin học"
-        else if(this.lessonCreate.subject == "CN") subject = "Công nghệ"
-        else if(this.lessonCreate.subject == "HDTN-HN") subject = "Hoạt động trại nghiệm, hướng nghiệp"
 
-        const data = {
-          "subject": subject,
-          "day": this.lessonCreate.day,      
+        const date = new Date(this.lessonCreate.day)
+        const weekday = date.getDay();    
+
+        let data = {
+          "subject": this.lessonCreate.subject,
+          "weekday": weekday-1,      
           "semester": this.lessonCreate.semester,
           "room": this.lessonCreate.room,
-          "period_number": `Tiết ${this.lessonCreate.period}`,
+          "period": this.lessonCreate.period,
           "teacher": this.lessonCreate.teacher
         }
         console.log(data)
 
         const token = localStorage.getItem("access_token");
         axios
-        .post(API_URL+"/adminpanel/lessons/", data, {
+        .post(API_URL+"/adminpanel/lessons/create_schedule/", data, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
@@ -385,6 +372,7 @@ export default {
         })
         .then(() => {
           this.createModal = false
+          this.getTimeTable()
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
@@ -427,6 +415,7 @@ export default {
             },
           })
           .then((response) => {
+            this.getTimeTable();
             this.lessonDetail = response.data;
             this.detailModal = false
             this.$notify({

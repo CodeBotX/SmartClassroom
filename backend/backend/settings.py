@@ -118,9 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
-DATE_FORMAT = 'd/m/Y'  # dd/mm/yyyy
-DATETIME_FORMAT = 'd/m/Y H:i:s'  # dd/mm/yyyy hh:mm:ss
-TIME_FORMAT = 'H:i:s'  # hh:mm:ss
+# DATE_FORMAT = 'd/m/Y'  # dd/mm/yyyy
+# DATETIME_FORMAT = 'd/m/Y H:i:s'  # dd/mm/yyyy hh:mm:ss
+# TIME_FORMAT = 'H:i:s'  # hh:mm:ss
 
 USE_I18N = True
 
@@ -176,8 +176,4 @@ MEDIA_URL = '/media/'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-]
 
