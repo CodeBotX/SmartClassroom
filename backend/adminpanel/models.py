@@ -1,7 +1,6 @@
 from django.db import models
 from datetime import timedelta, date
 
-
 # Bảng học kỳ   
 class Semester(models.Model):
     name = models.IntegerField(primary_key=True)
@@ -15,9 +14,9 @@ class Semester(models.Model):
 
     def get_day_end(self):
         return self.day_begin + timedelta(weeks=self.number_of_weeks)
-    # @property
-    # def day_end(self):
-    #     return self.get_day_end()
+    @property
+    def day_end(self):
+        return self.get_day_end()
     def get_week(self, input_date=None):
         if input_date is None:
             input_date = date.today()  
