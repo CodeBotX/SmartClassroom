@@ -16,6 +16,8 @@
   "dependencies": {
     "ant-design-vue": "^4.2.5",
     "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue": "^2.23.1",
     "chart.js": "2.9.4",
     "eslint-plugin-vue": "9.11.0",
     "register-service-worker": "^1.7.2",
@@ -24,7 +26,9 @@
     "vue-i18n": "8.28.2",
     "vue-router": "3.6.5",
     "vue-router-prefetch": "1.6.3",
+    "vue-spinner": "^1.0.4",
     "vue2-transitions": "0.3.0",
+    "vue3-spinners": "^1.2.2",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {

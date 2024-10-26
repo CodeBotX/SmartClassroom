@@ -59,32 +59,32 @@
               <td class="text-center"> <div class="text-info">Tiết {{ row.period }}</div></td>
 
               <td class="text-center" v-if="row.monday">
-                <base-button @click="toggleDetail(row.monday.id)" class="btn-simple text-secondary" type="default">{{ row.monday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.monday.id, 0, row.period)" class="btn-simple text-secondary" type="default">{{ row.monday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(0, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.tuesday">
-                <base-button @click="toggleDetail(row.tuesday.id)" class="btn-simple text-secondary" type="default">{{ row.tuesday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.tuesday.id, 1, row.period)" class="btn-simple text-secondary" type="default">{{ row.tuesday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(1, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
 
               <td class="text-center" v-if="row.wednesday">
-                <base-button @click="toggleDetail(row.wednesday.id)" class="btn-simple text-secondary" type="default">{{ row.wednesday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.wednesday.id, 2, row.period)" class="btn-simple text-secondary" type="default">{{ row.wednesday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(2, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
 
               <td class="text-center" v-if="row.thursday">
-                <base-button @click="toggleDetail(row.thursday.id)" class="btn-simple text-secondary" type="default">{{ row.thursday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.thursday.id, 3, row.period)" class="btn-simple text-secondary" type="default">{{ row.thursday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(3, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.friday">
-                <base-button @click="toggleDetail(row.friday.id)" class="btn-simple text-secondary" type="default">{{ row.friday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.friday.id, 4, row.period)" class="btn-simple text-secondary" type="default">{{ row.friday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(4, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
               
               <td class="text-center" v-if="row.saturday">
-                <base-button @click="toggleDetail(row.saturday.id)" class="btn-simple text-secondary" type="default">{{ row.saturday.subject}}</base-button></td>
+                <base-button @click="toggleDetail(row.saturday.id, 5, row.period)" class="btn-simple text-secondary" type="default">{{ row.saturday.subject}}</base-button></td>
               <td class="text-center" v-else>
                 <base-button @click="toggleCreate(5, row.period)" class="btn-simple " type="default"> <i class="tim-icons icon-simple-add"></i> </base-button></td>
             </template>
@@ -110,9 +110,9 @@
                             <div class="col-12" v-if="lessonDetail">
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1" >
-                                        <base-input label="Môn">
-                                          <select v-model="lessonDetail.subject" class="form-control">
-                                            <option class="text-info" v-for="(subject, index) in subjects" :key="index" :value="subject">{{subject}}</option>
+                                        <base-input label="Môn" >
+                                          <select class="form-control" v-model="lessonDetail.subject">
+                                            <option class="text-info" v-for="(subject, index) in subjects" :key="index">{{subject}}</option>
                                           </select>
                                         </base-input>
                                     </div>
@@ -122,23 +122,22 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1">
-                                        <base-input label="Bài số" v-model="lessonDetail.lesson_number"></base-input>
+                                        <base-input label="Giáo viên (chưa dùng đc)" >
+                                          <select class="form-control" v-model="lessonDetail.teacher">
+                                            <option class="text-info">giao viên1</option>
+                                            <option class="text-info">giao viên2</option>
+                                          </select>
+                                        </base-input>
                                     </div>
                                     <div class="col-md-6 pl-md-1">
-                                        <base-input label="Tên bài học" v-model="lessonDetail.name_lesson"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Giáo viên" v-model="lessonDetail.teacher"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Đánh giá" v-model="lessonDetail.evaluate"></base-input>
+                                        <base-input label="Đánh giá" v-model="lessonDetail.evaluate" disabled></base-input>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 pr-md-1">
-                                        <base-input label="Nhận xét" v-model="lessonDetail.comment"></base-input>
+                                        <base-input label="Nhận xét"> 
+                                          <textarea class="form-control" rows="3" v-model="lessonDetail.comment" disabled></textarea>
+                                        </base-input>
                                     </div>
                                 </div>
                                 <base-button @click="updateLesson" type="secondary" fill>Xác nhận</base-button>
@@ -166,8 +165,8 @@
                             <div class="col-12" v-if="lessonCreate">
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1" >
-                                        <base-input label="Môn">
-                                          <select v-model="lessonCreate.subject" class="form-control">
+                                        <base-input label="Môn" >
+                                          <select class="form-control" v-model="lessonCreate.subject">
                                             <option class="text-info" v-for="(subject, index) in subjects" :key="index" :value="subject">{{subject}}</option>
                                           </select>
                                         </base-input>
@@ -178,23 +177,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1">
-                                        <base-input disabled label="Học kỳ" v-model="lessonCreate.semester"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input disabled label="Lớp" v-model="lessonCreate.room"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Bài số" v-model="lessonCreate.lesson_number"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Tên bài học" v-model="lessonCreate.name_lesson"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Giáo viên" v-model="lessonCreate.teacher"></base-input>
+                                        <base-input label="Giáo viên (chưa dùng đc)">
+                                          <select class="form-control" v-model="lessonCreate.teacher">
+                                            <option class="text-info">giao viên1</option>
+                                            <option class="text-info">giao viên2</option>
+                                          </select>
+                                        </base-input>
                                     </div>
                                     <div class="col-md-6 pl-md-1">
                                         <base-input disabled label="Tiết" v-model="lessonCreate.period"></base-input>
@@ -240,6 +228,8 @@ export default {
           detailModal: false,
           createModal: false,
 
+          teacherOption: null,
+
           lessonDetail: null,
           lessonCreate: {
             "subject": null,
@@ -252,7 +242,7 @@ export default {
             "teacher": null
           },
 
-          subjects: ['Toan', 'Van', 'Anh', 'Hoa', 'Ly', 'Sinh', 'Dia', 'Su', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
+          subjects: ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
 
           timetableData: this.initializeTimetableData(),
           timetable_columns: [
@@ -282,12 +272,12 @@ export default {
           resolve();
         });
       },
-      toggleDetail(index){
+      toggleDetail(id_lesson, day, period ){
         this.detailModal = true;
 
         const token = localStorage.getItem("access_token");
         axios
-        .get(API_URL+"/adminpanel/lessons/"+index+"/", {
+        .get(API_URL+"/adminpanel/lessons/"+id_lesson+"/", {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
@@ -295,6 +285,31 @@ export default {
         })
         .then((response) => {
           this.lessonDetail = response.data
+
+        })
+        .catch((error) => {
+          console.error("Error get lesson data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Thông tin tiết học không tồn tại. Vui lòng thử lại sau",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+
+        axios
+        .get(API_URL+"/adminpanel/lessons/"+id_lesson+"/", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.lessonDetail = response.data
+
         })
         .catch((error) => {
           console.error("Error get lesson data :", error);
@@ -540,6 +555,7 @@ export default {
           })
           .then((response) => {
             this.lessons = response.data;
+            console.log(this.lessons)
             if(response.data.length === 0) {
               this.$notify({
               type: "warning",

@@ -20,9 +20,9 @@
       <slot name="image-bottom"></slot>
     </div>
     <slot name="raw-content"></slot>
-    <div class="card-footer" :class="footerClasses" v-if="$slots.footer">
+    <!-- <div class="card-footer" :class="footerClasses" v-if="$slots.footer">
       <slot name="footer"></slot>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

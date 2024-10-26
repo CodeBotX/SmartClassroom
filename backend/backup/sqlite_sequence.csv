@@ -1,0 +1,14 @@
+name,seq
+django_migrations,43
+django_content_type,24
+auth_permission,96
+auth_group,0
+django_admin_log,0
+attendance,0
+attendance_device,0
+Appdocuments_category,0
+room_students,0
+adminpanel_classsubjectteacherassignment,0
+adminpanel_plannedlesson,0
+adminpanel_lesson,0
+grades,0

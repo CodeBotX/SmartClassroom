@@ -1,0 +1,8 @@
+# db.sqlite3
+# backup.sql
+# .gitignore
+# backup.sql
+# backup
+# restore.py
+# export.py
+# */migrations/

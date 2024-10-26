@@ -2,15 +2,30 @@
   <div class="wrapper">
     <side-bar>
       <template slot="links" >
-        <sidebar-link 
+        <sidebar-link v-if="userData && userData.is_admin" 
           to="/administration"
           :name="$t('sidebar.administration')"
           icon="tim-icons icon-bank"
         />
-        <sidebar-link 
+        <sidebar-link  v-if="userData && userData.is_admin"
           to="/education_program"
           :name="$t('sidebar.educationProgram')"
           icon="tim-icons icon-book-bookmark"
+        />
+        <sidebar-link v-if="userData && userData.is_teacher"
+          to="/learning_management"
+          :name="$t('sidebar.learningManagement')"
+          icon="tim-icons icon-pencil"
+        />
+        <sidebar-link v-if="userData && (userData.is_student || userData.is_parent)"
+          to="/learning_outcome"
+          :name="$t('sidebar.learningOutcome')"
+          icon="tim-icons icon-paper"
+        />
+        <sidebar-link 
+          to="/competition_result"
+          :name="$t('sidebar.competitionResult')"
+          icon="tim-icons icon-chart-bar-32"
         />
         <sidebar-link
           to="/dashboard"
@@ -32,7 +47,7 @@
           :name="$t('sidebar.notifications')"
           icon="tim-icons icon-bell-55"
         />
-        <sidebar-link
+        <!-- <sidebar-link
           to="/profile"
           :name="$t('sidebar.userProfile')"
           icon="tim-icons icon-single-02"
@@ -51,7 +66,7 @@
           to="/dashboard?enableRTL=true"
           :name="$t('sidebar.rtlSupport')"
           icon="tim-icons icon-world"
-        />
+        /> -->
       </template>
     </side-bar>
     <div class="main-panel">
@@ -66,6 +81,7 @@
 <style lang="scss"></style>
 <script>
 import axios from '../../services/axios'; 
+
 let API_URL = ""
 
 

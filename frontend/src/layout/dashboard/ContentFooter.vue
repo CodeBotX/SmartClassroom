@@ -4,7 +4,7 @@
       <!-- <ul class="nav">
         <li class="nav-item">
           <a class="nav-link" href="http://www.creative-tim.com">
-            Creative Tim
+            Trần Quốc Toản
           </a>
         </li>
         <li class="nav-item">
@@ -18,11 +18,8 @@
       </ul> -->
       <div class="copyright">
         © {{ year }} made with <i class="tim-icons icon-heart-2"></i> by
-        <a href="https://www.binarcode.com" target="_blank" rel="noopener"
-          >Binar Code</a
-        >&nbsp;&
-        <a href="https://www.creative-tim.com" target="_blank" rel="noopener"
-          >Creative Tim</a
+        <a href="" target="_blank" rel="noopener"
+          >Tran Quoc Toan secondary school development team</a
         >
         for a better web.
       </div>

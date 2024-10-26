@@ -29,7 +29,7 @@
                   <i class="ri-user-3-line login__icon"></i>
 
                   <div class="login__box-input">
-                     <input type="text" required class="login__input" id="login-email" placeholder=" " v-model="username">
+                     <input type="text" required class="login__input" id="login-email" placeholder="" v-model="username">
                      <label for="login-email" class="login__label">Tên đăng nhập</label>
                   </div>
                </div>
@@ -60,6 +60,8 @@
                Don't have an account? <a href="#">Register</a>
             </p> -->
          </form>
+         <!-- Component Loading -->
+        <Loading :loading="isLoading" />
       </div>
 
 </template>
@@ -67,59 +69,68 @@
 <script>
 // import axios from 'axios';
 import axios from '../../services/axios';
-// const API_URL = 'https://classroom50.online';
+import Loading from '../../layout/loading/Loading.vue';
 const API_URL = 'https://smartclassroom.click/api';
 export default {
+  components: {
+    Loading,
+  },
   data() {
     return {
       username: '',
       password: '',
       errorMessage: '',
+      isLoading: false,
     };
   },
   methods: {
     async login() {
+      this.isLoading = true;  // Bắt đầu hiển thị loading
+
       try {
-        const response = await axios.post(API_URL+'/accounts/login/', {
+        const response = await axios.post(API_URL + '/accounts/login/', {
           username: this.username,
           password: this.password
-        })
-        this.$notify({
+        });
+
+        if (response.status===200) 
+        {
+          this.$notify({
           type: 'success',
           message: "Đăng nhập thành công",
           timeout: 3000,
           verticalAlign: 'top',
           horizontalAlign: 'center',
         });
+        }
+        
 
-        // Lưu token vào localStorage
-        // localStorage.setItem('authToken', response.data.token);
-        console.log("access_token :"+response.data.access_token)
-        console.log("refresh_token :"+response.data.refresh_token)
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
 
-        // Chuyển hướng đến dashboard
         this.$router.push('/');
       } catch (error) {
-        
         if (error.response && error.response.status === 401) {
           this.$notify({
-          type: 'danger',
-          message: "Tên đăng nhập hoặc mật khẩu không chính xác!",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'center',
-        });
+            type: 'danger',
+            icon: 'tim-icons icon-alert-circle-exc',
+            message: "Tên đăng nhập hoặc mật khẩu không chính xác!",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'center',
+          });
         } else {
           this.$notify({
-          type: 'danger',
-          message: "Có lỗi xảy ra. Vui lòng thử lại sau",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'right',
-        });
+            type: 'danger',
+            icon: 'tim-icons icon-alert-circle-exc',
+            message: "Có lỗi xảy ra. Vui lòng thử lại sau",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'right',
+          });
         }
+      } finally {
+        this.isLoading = false;  // Kết thúc loading
       }
     },
   }
@@ -198,4 +209,23 @@ export default {
   background-color: #2980b9;
 }
 
+/* Blur background khi đang loading */
+.blur-background {
+  filter: blur(5px);
+}
+
+/* Định dạng CSS cho trang đăng nhập */
+.login {
+  position: relative;
+  z-index: 1;
+}
+
+
+input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    border: 1px solid transparent !important;
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+  }
 </style>

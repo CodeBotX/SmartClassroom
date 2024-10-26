@@ -2,7 +2,7 @@
   <div class="row">
      <div class="row">
       <div class="col-md-6">
-        <h3>Quản trị hệ thống</h3>
+        <h3>Quản lý đào tạo</h3>
       </div>
       <div class="col-md-6">
         <div
@@ -33,7 +33,7 @@
       <time-table> </time-table>
     </div>
     <div class="col-md-12" v-if="bigLineChart.activeIndex === 1">
-      <user-setting ></user-setting>
+      <teacher-division> </teacher-division>
     </div>
     <div class="col-md-12" v-if="bigLineChart.activeIndex === 2">
       <curriculum ></curriculum>
@@ -46,13 +46,15 @@ import UserSetting from './Administration/UserSetting.vue'
 import Curriculum from './Administration/Curriculum.vue';
 import config from "@/config";
 import TimeTable from './EducationProgram/TimeTable.vue';
+import TeacherDivision from './EducationProgram/TeacherDivision.vue';
 
 
 export default {
   components: { 
     UserSetting,
     Curriculum,
-    TimeTable
+    TimeTable,
+    TeacherDivision
   },
   computed: {
     adminstrationOption() {

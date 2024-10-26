@@ -35,6 +35,7 @@ class Semester(models.Model):
     def __str__(self):
         day_end = self.get_day_end()
         return f"{self.name}"
+
    
 # # Bảng môn học (choice)
 class SubjectChoices(models.TextChoices):
@@ -71,12 +72,11 @@ class PlannedLesson(models.Model):
         unique_together = ('subject', 'semester', 'lesson_number','room')
         verbose_name = 'Planned Lesson'
         verbose_name_plural = 'Planned Lessons'
-
     def __str__(self):
         return f"{self.subject} - Tiết {self.lesson_number}: {self.name_lesson} (Kỳ {self.semester})"
 
 # Bảng tiet hoc
-class Lesson(models.Model):
+class Lesson(models.Model):#
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lessons')
     subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
     lesson_number = models.IntegerField(null=True, blank=True)  # Tiết thứ bao nhiêu trong môn
@@ -84,7 +84,7 @@ class Lesson(models.Model):
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='lessons')
     day = models.DateField()  
     period = models.ForeignKey(Period, on_delete=models.CASCADE, related_name='lessons')  # Tiết học
-    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) # cần được sửa lại là customuser is_teacher
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, null=True, blank=True) 
     comment = models.TextField(null=True, blank=True)
     evaluate = models.IntegerField(null=True, blank=True)
 
@@ -99,8 +99,8 @@ class Lesson(models.Model):
 # -------------------------------------------------------------------------------
 class ScoreType(models.TextChoices):
     TX = 'TX', 'Đánh giá thường xuyên'
-    GK = 'GiuaKy', 'Điểm giữa kỳ'
-    CK = 'CuoiKy', 'Điểm cuối kỳ'
+    GK = 'GK', 'Điểm giữa kỳ'
+    CK = 'CK', 'Điểm cuối kỳ'
 # Bảng điểm
 class Grades(models.Model):
     student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='grades') 
@@ -111,7 +111,6 @@ class Grades(models.Model):
 
     class Meta:
         db_table = 'grades'
-        unique_together = ('student', 'subject', 'semester', 'score_type') 
         verbose_name = 'Điểm'
         verbose_name_plural = 'grades'
     
@@ -143,3 +142,11 @@ class Grades(models.Model):
     def __str__(self):
         return f"{self.student.full_name} - Môn {self.get_subject_display()} - {self.get_score_type_display()} - Điểm: {self.grade}"
 
+
+class TeacherAssignment(models.Model):
+    room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, related_name='assignments')
+    subject = models.CharField(max_length=20, choices=SubjectChoices.choices)
+    teacher = models.ForeignKey('accounts.Teacher', on_delete=models.CASCADE, related_name='assignments')
+
+    class Meta:
+        unique_together = ('room', 'subject')  
