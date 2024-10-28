@@ -111,7 +111,7 @@
 
         <base-button
           @click="updateUser"
-          type="primary"
+          type="success"
           fill
           :disabled="this.hasEmailError()"
           >Lưu</base-button

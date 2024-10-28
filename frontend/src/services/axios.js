@@ -57,7 +57,7 @@ instance.interceptors.response.use(
                     router.push({ name: 'login' });
                     return;
                 }else {
-                    return
+                    return;
                 }
             }
             if (refreshToken) {

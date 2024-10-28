@@ -39,169 +39,137 @@
               <th class="text-right">Actions</th>
             </template>
             <template slot-scope="{ row }">
-              <td>{{ row.semester }}</td>
+              <td>{{ row.name }}</td>
               <td>{{ row.day_begin }}</td>
               <td>{{ row.number_of_weeks }}</td>
               <td class="td-actions text-right">
-                <base-button type="info" size="sm" icon @click="toggleStudentDetail(row.user)">
-                  <i class="tim-icons icon-single-02"></i>
-                </base-button>
-                <base-button type="success" size="sm" icon @click="toggleStudentUpdate(row.user)">
+                <base-button type="success" size="sm" icon @click="toggleUpdate(row.name)">
                   <i class="tim-icons icon-settings"></i>
                 </base-button>
-                <base-button type="danger" size="sm" icon @click="toggleStudentRemove(row.user)">
+                <base-button type="danger" size="sm" icon @click="toggleRemove(row.name)">
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
               </td>
             </template>
           </base-table>
         </div>
-        <!-- Student Detail Modal -->
-        <modal :show.sync="modals.studentDetailModal"
-               body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-sm">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0">
-                <template>
-                    <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Thông tin học sinh</h4>
-                    </div>
-                </template>
-                <template v-if="modals.studentDetail">
-                    <fieldset disabled>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="ID" v-model="modals.studentDetail.user"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Họ và tên" v-model="modals.studentDetail.full_name"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Lớp" v-model="modals.studentDetail.room"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Giới tính" v-model="modals.studentDetail.sex"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Ngày sinh" v-model="modals.studentDetail.day_of_birth"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Trạng thái" v-model="modals.studentDetail.active_status"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 pr-md-1">
-                                        <base-input label="Phụ huynh" v-model="modals.studentDetail.parent"></base-input>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>  
-                </template>
-            </card>
-        </modal>
 
-        <!-- Student Update Modal -->
-        <modal :show.sync="modals.studentUpdateModal"
-               body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-sm">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0">
-                <template>
-                    <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Cập nhật học sinh</h4>
-                    </div>
-                </template>
-                <template v-if="modals.studentDetail">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="ID" v-model="modals.studentDetail.user"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Họ và tên" v-model="modals.studentDetail.full_name"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Lớp" v-model="modals.studentDetail.room"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Giới tính" v-model="modals.studentDetail.sex"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input label="Ngày sinh" v-model="modals.studentDetail.day_of_birth"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input label="Trạng thái" v-model="modals.studentDetail.active_status"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 pr-md-1">
-                                        <base-input label="Phụ huynh" v-model="modals.studentDetail.parent"></base-input>
-                                    </div>
-                                </div>
-                                <base-button @click="updateStudent" type="secondary" fill>Xác nhận</base-button>
-                            </div>
-                        </div>
-                </template>
-            </card>
-        </modal>
-
-        <!-- Student Remove Modal -->
-        <modal :show.sync="modals.studentRemoveModal">
-            <h4 slot="header" class="modal-title" id="modal-title-default">Xác nhận xóa học sinh này</h4>
-            <template slot="footer">
-                <base-button type="secondary" @click="removeStudent">Xác nhận</base-button>
-                <base-button type="danger" class="ml-auto" @click="modals.studentRemoveModal = false">Hủy
-                </base-button>
-            </template>
-        </modal>
-
-        <!-- STUDY WEEK -->
+        <!-- Lớp học -->
         <div v-if="bigLineChart.activeIndex === 1">
-          <base-table :data="studyweekData" :columns="studyweek_columns">
+          <base-table :data="roomData" :columns="room_columns">
             <template slot="columns">
-              <th>ID</th>
-              <th>Họ và tên</th>
-              <th>Giới tính</th>
-              <th>Ngày sinh</th>
-              <th>Môn dạy</th>
-              <th class="text-right">Actions</th>
+              <th>Lớp học</th>
+              <th>Sĩ số lớp</th>
+              <th>Giáo viên chủ nhiệm</th>
+              <!-- <th class="text-right">Actions</th> -->
             </template>
             <template slot-scope="{ row }">
-              <td>{{ row.user }}</td>
-              <td>{{ row.full_name }}</td>
-              <td>{{ row.sex }}</td>
-              <td>{{ row.day_of_birth }}</td>
-              <td>{{ row.subjects }}</td>
-              <td class="td-actions text-right">
-                <base-button type="info" size="sm" icon>
-                  <i class="tim-icons icon-single-02"></i>
-                </base-button>
-                <base-button type="success" size="sm" icon>
+              <td>{{ row.name }}</td>
+              <td>{{ row.students.length }}</td>
+              <td>{{ row.homeroom_teacher }}</td>
+              <!-- <td class="td-actions text-right">
+                <base-button type="success" size="sm" icon @click="toggleUpdate(row.name)">
                   <i class="tim-icons icon-settings"></i>
                 </base-button>
-                <base-button type="danger" size="sm" icon>
+                <base-button type="danger" size="sm" icon @click="toggleRemove(row.name)">
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
-              </td>
+              </td> -->
             </template>
           </base-table>
         </div>
+
+        <!-- Update Modal -->
+        <modal :show.sync="modals.updateModal"
+               body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-sm">
+               <!-- Semester -->
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 0">
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Cập nhật học kỳ</h4>
+                    </div>
+                </template>
+                <template v-if="modals.semesterDetail">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-12 pr-md-1">
+                                        <base-input label="Học kỳ" v-model="modals.semesterDetail.name"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Ngày bắt đầu" v-model="modals.semesterDetail.day_begin" type="date"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Số tuần" v-model="modals.semesterDetail.number_of_weeks"></base-input>
+                                    </div>
+                                </div>
+                                <base-button @click="updateObject" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+
+            <!-- PlannedLessson -->
+
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 2">
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Cập nhật bài giảng</h4>
+                    </div>
+                </template>
+                <template v-if="modals.plannedLessonDetail">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Môn">
+                                          <select class="form-control" v-model="modals.plannedLessonDetail.subject">
+                                            <option class="text-info" v-for="(subject, index) in subjects" :key="index">{{subject}}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Học kỳ">
+                                          <select class="form-control" v-model="modals.plannedLessonDetail.semester">
+                                            <option class="text-info" v-for="(semester, index) in semesters" :key="index" :value="semester.name">{{ semester.name }}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Bài số" v-model="modals.plannedLessonDetail.lesson_number"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Tên bài" v-model="modals.plannedLessonDetail.name_lesson"></base-input>
+                                    </div>
+                                </div>
+                                <base-button @click="updateObject" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+        </modal>
+
+        <!-- Remove Modal -->
+        <modal :show.sync="modals.removeModal">
+            <h4 slot="header" class="modal-title" id="modal-title-default" v-if="this.bigLineChart.activeIndex === 0">Xóa nhận xóa học kỳ này </h4>
+            <h4 slot="header" class="modal-title" id="modal-title-default" v-if="this.bigLineChart.activeIndex === 2">Xóa nhận xóa bài giảng này </h4>
+            <template slot="footer">
+                <base-button type="secondary" @click="removeObject">Xác nhận</base-button>
+                <base-button type="danger" class="ml-auto" @click="modals.removeModal = false">Hủy
+                </base-button>
+            </template>
+        </modal>
 
         <!-- BÀI GIẢNG -->
         <div v-if="bigLineChart.activeIndex === 2">
@@ -221,13 +189,10 @@
               <td>{{ row.name_lesson }}</td>
               <td>{{ row.semester }}</td>
               <td class="td-actions text-right">
-                <base-button type="info" size="sm" icon>
-                  <i class="tim-icons icon-single-02"></i>
-                </base-button>
-                <base-button type="success" size="sm" icon>
+                <base-button type="success" size="sm" icon @click="toggleUpdate(row.id)">
                   <i class="tim-icons icon-settings"></i>
                 </base-button>
-                <base-button type="danger" size="sm" icon>
+                <base-button type="danger" size="sm" icon @click="toggleRemove(row.id)">
                   <i class="tim-icons icon-simple-remove"></i>
                 </base-button>
               </td>
@@ -235,37 +200,6 @@
           </base-table>
         </div>
 
-        <!-- ADMIN -->
-        <div v-if="bigLineChart.activeIndex === 3">
-          <base-table :data="adminData" :columns="admin_columns">
-            <template slot="columns">
-              <th>ID</th>
-              <th>Họ và tên</th>
-              <th>Giới tính</th>
-              <th>Ngày sinh</th>
-              <th>Chức vụ</th>
-              <th class="text-right">Actions</th>
-            </template>
-            <template slot-scope="{ row }">
-              <td>{{ row.user }}</td>
-              <td>{{ row.full_name }}</td>
-              <td>{{ row.sex }}</td>
-              <td>{{ row.day_of_birth }}</td>
-              <td>{{ row.description }}</td>
-              <td class="td-actions text-right">
-                <base-button type="info" size="sm" icon>
-                  <i class="tim-icons icon-single-02"></i>
-                </base-button>
-                <base-button type="success" size="sm" icon>
-                  <i class="tim-icons icon-settings"></i>
-                </base-button>
-                <base-button type="danger" size="sm" icon>
-                  <i class="tim-icons icon-simple-remove"></i>
-                </base-button>
-              </td>
-            </template>
-          </base-table>
-        </div>
 
       </card>
     </div>
@@ -285,33 +219,32 @@ import BaseInput from '../../components/Inputs/BaseInput.vue';
 
 export default {
   components: { Card, BaseTable, Modal, BaseInput },
-  computed: {
-    getApiUrl() {
-      API_URL =  this.$t("dashboard.apiURL");
-    },
+  mounted() {
+      this.initializeData();
   },
   data() {
     return {
     modals: {
-        studentDetailModal: false,
-        studentUpdateModal: false,
-        studentRemoveModal: false,
-        idStudentRemove: null,
+        updateModal: false,
+        removeModal: false,
+        idRemove: null,
 
         teacherModal: false,
         parentModal: false,
-        studentDetail: null,
+        semesterDetail: null,
         teacherDetail: null,
-        parentDetail: null,
+        plannedLessonDetail: null,
     },
+    subjects: ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
     semester_columns: ["semester", "day_begin", "number_of_weeks"],
-    studyweek_columns: ["user", "full_name", "sex", "day_of_birth", "subjects", "actions"],
+    room_columns: ["name", "students", "homeroom_teacher"],
     plannedlesson_columns: ["id", "subject", "lesson_number", "name_lesson", "semester"],
     lesson_columns: ["user", "full_name", "sex", "day_of_birth", "description"],
       semesterData: null,
-      studyweekData: null,
+      roomData: null,
       plannedlessonData: null,
       lessonData: null,
+      deviceData: null,
       gradeData: null,
       bigLineChart: {
         allData: [
@@ -351,131 +284,199 @@ export default {
     },
   },
   methods: {
-    removeStudent(){
+    async initializeData() {
+        try {
+          await this.getApiUrl();
+          await this.getSemesterData();
+        } catch (error) {
+          console.error('Error initializing data:', error);
+        }
+      },
+      getApiUrl() {
+        return new Promise((resolve) => {
+          API_URL = this.$t("dashboard.apiURL");
+          resolve();
+        });
+      },
+      getSemesterData() {
+        if (this.semesters) return;
         const token = localStorage.getItem("access_token");
+
         axios
-        .delete(API_URL+"/accounts/students/"+this.modals.idStudentRemove+"/", {
+          .get(API_URL + "/adminpanel/semesters/", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.semesters = response.data;
+          })
+          .catch((error) => {
+            console.error("Error getting semester data:", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy dữ liệu học kỳ thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+      },
+    removeObject(){
+        const token = localStorage.getItem("access_token");
+
+        let apiUrl = ""; // API URL sẽ thay đổi dựa trên loại đăng ký
+        if (this.bigLineChart.activeIndex === 0) {
+          apiUrl = API_URL + "/adminpanel/semesters/" + this.modals.idRemove + "/";
+        } else if (this.bigLineChart.activeIndex === 2) {
+          apiUrl = API_URL + "/adminpanel/planned-lessons/" + this.modals.idRemove + "/";
+        }
+
+        axios
+        .delete(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
+          let message = "";
+
+          if (this.bigLineChart.activeIndex === 0) {
+            message = "Xóa học kỳ thành công"
+          } else if (this.bigLineChart.activeIndex === 2) {
+            message = "Xóa bài giảng thành công"
+          }
             this.$notify({
                 type: "success",
-                message: "Xóa học sinh thành công",
+                icon: 'tim-icons icon-check-2',
+                message: message,
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
-          this.modals.studentRemoveModal = false
-          this.initBigChart(0)
+          this.modals.removeModal = false
+          this.initBigChart(this.bigLineChart.activeIndex)
         })
         .catch((error) => {
           console.error("Error get user data :", error);
 
           this.$notify({
                 type: "warning",
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
+                message: "Xóa dữ liệu thất bại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
         });
     },
-    updateStudent(){
-        const dataUser = this.modals.studentDetail;
+    updateObject(){
+        let data = null;
+        let apiUrl = "";
+        // const data = this.modals.studentDetail;
 
+        if(this.bigLineChart.activeIndex ===0 ){
+          apiUrl = API_URL + `/adminpanel/semesters/${this.modals.semesterDetail.name}/`
+          data = this.modals.semesterDetail
+        } else if (this.bigLineChart.activeIndex === 1) {
+          apiUrl = API_URL + "/accounts/teachers/" + this.modals.teacherDetail.user + "/";
+          data = this.modals.teacherDetail
+        } else if (this.bigLineChart.activeIndex === 2) {
+          apiUrl = API_URL + "/adminpanel/planned-lessons/" + this.modals.plannedLessonDetail.id + "/";
+          data = this.modals.plannedLessonDetail
+        }
         const token = localStorage.getItem("access_token");
         axios
-        .patch(API_URL+"/accounts/students/"+this.modals.studentDetail.user+"/", dataUser, {
+        .patch(apiUrl, data, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
+          let message = "";
+          if (this.bigLineChart.activeIndex === 0) {
+            this.modals.semesterDetail = response.data
+            message = "Cập nhật thông tin học kỳ thành công"
+          } else if (this.bigLineChart.activeIndex === 1) {
+            this.modals.teacherDetail = response.data
+            message = "Cập nhật thông tin giáo viên thành công"
+          } else if (this.bigLineChart.activeIndex === 2) {
+            this.modals.plannedLessonDetail = response.data
+            message = "Cập nhật thông tin bài giảng thành công"
+          }
+
             this.$notify({
                 type: "success",
-                message: "Cập nhật thông tin học sinh thành công",
+                icon: 'tim-icons icon-check-2',
+                message: message,
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
 
-          this.modals.studentDetail = response.data
-
-          this.initBigChart(0)
+          this.modals.updateModal = false
+          this.initBigChart(this.bigLineChart.activeIndex)
         })
         .catch((error) => {
           console.error("Error get user data :", error);
 
           this.$notify({
                 type: "warning",
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
+                message: "Dữ liệu không tồn tại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
         });
     },
-    toggleStudentDetail(index){
-        this.modals.studentDetailModal = true;
+    toggleUpdate(index){
+        this.modals.updateModal = true;
+
+        let apiUrl = ""; // API URL sẽ thay đổi dựa trên loại đăng ký
+        if (this.bigLineChart.activeIndex === 0) {
+          apiUrl = API_URL + "/adminpanel/semesters/" + index + "/";
+        } else if (this.bigLineChart.activeIndex === 1) {
+          apiUrl = API_URL + "/accounts/teachers/" + index + "/";
+        } else if (this.bigLineChart.activeIndex === 2) {
+          apiUrl = API_URL + "/adminpanel/planned-lessons/" + index + "/";
+        }
 
         const token = localStorage.getItem("access_token");
         axios
-        .get(API_URL+"/accounts/students/"+index+"/", {
+        .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
-          this.modals.studentDetail = response.data
-          console.log(this.modals.studentDetail)
+
+          if (this.bigLineChart.activeIndex === 0) {
+            this.modals.semesterDetail = response.data
+          } else if (this.bigLineChart.activeIndex === 1) {
+            this.modals.teacherDetail = response.data
+          } else if (this.bigLineChart.activeIndex === 2) {
+            this.modals.plannedLessonDetail = response.data
+          }
         })
         .catch((error) => {
-          console.error("Error get user data :", error);
+          console.error("Error get data :", error);
 
           this.$notify({
                 type: "warning",
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
+                message: "Dữ liệu không tồn tại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
         });
     },
-    toggleStudentUpdate(index){
-        this.modals.studentUpdateModal = true;
-
-        const token = localStorage.getItem("access_token");
-        axios
-        .get(API_URL+"/accounts/students/"+index+"/", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.modals.studentDetail = response.data
-          console.log(this.modals.studentDetail)
-        })
-        .catch((error) => {
-          console.error("Error get user data :", error);
-
-          this.$notify({
-                type: "warning",
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
-                timeout: 3000,
-                verticalAlign: "top",
-                horizontalAlign: "right",
-              });
-        });
-    },
-    toggleStudentRemove(index){
-        this.modals.studentRemoveModal = true;
-        this.modals.idStudentRemove = index;
+    toggleRemove(index){
+        this.modals.removeModal = true;
+        this.modals.idRemove = index;
     },
     initBigChart(index) {
       let chartData = {
@@ -519,7 +520,7 @@ export default {
       if (this.bigLineChart.activeIndex === 0) {
         apiUrl = API_URL + "/adminpanel/semesters/";
       } else if (this.bigLineChart.activeIndex === 1) {
-        apiUrl = API_URL + "/adminpanel/studyweeks/";
+        apiUrl = API_URL + "/rooms/roomset/";
       } else if (this.bigLineChart.activeIndex === 2) {
         apiUrl = API_URL + "/adminpanel/planned-lessons/";
       } else if (this.bigLineChart.activeIndex === 3) {
@@ -539,10 +540,9 @@ export default {
         })
         .then((response) => {
           if(this.bigLineChart.activeIndex === 0) this.semesterData = response.data
-          else if(this.bigLineChart.activeIndex === 1) this.studyweekData = response.data
+          else if(this.bigLineChart.activeIndex === 1) this.roomData = response.data
           else if(this.bigLineChart.activeIndex === 2) this.plannedlessonData = response.data
-          else if(this.bigLineChart.activeIndex === 3) this.lessonData = response.data
-          else if(this.bigLineChart.activeIndex === 4) this.gradeData = response.data
+          else if(this.bigLineChart.activeIndex === 3) this.deviceData = response.data
           
         })
         .catch((error) => {
@@ -555,159 +555,6 @@ export default {
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
-        });
-    },
-    resetPassword() {
-      const token = localStorage.getItem("access_token");
-      const resetPasswordData = {
-        user_id: this.id_user_reset,
-      };
-
-      axios
-        .post(API_URL + "/accounts/admin-reset-password/", resetPasswordData, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.$notify({
-            type: "success",
-            message: response.data.detail,
-            timeout: 3000,
-            verticalAlign: "top",
-            horizontalAlign: "right",
-          });
-          this.isEditingResetPassword = false; // Tắt chế độ chỉnh sửa
-
-          this.user_id_reset = null;
-        })
-        .catch((error) => {
-          console.error("Error reset password user :", error);
-
-          // this.isEditingPassword = false; // Tắt chế độ chỉnh sửa
-          if (error.response && error.response.data) {
-            if (error.response.status === 401) {
-              this.$notify({
-                group: "auth",
-                title: "Thông báo",
-                text: "Bạn không có quyền thực hiện thao tác này",
-                type: "warn",
-                duration: 3000,
-              });
-            }
-            if (error.response.status === 404) {
-              this.$notify({
-                type: "warning",
-                message: "Người dụng không tồn tại. Vui lòng thử lại",
-                timeout: 3000,
-                verticalAlign: "top",
-                horizontalAlign: "right",
-              });
-            }
-          } else {
-            this.$notify({
-              type: "danger",
-              message: "Reset mật khẩu không thành công. Vui lòng thử lại sau.",
-              timeout: 3000,
-              verticalAlign: "top",
-              horizontalAlign: "right",
-            });
-          }
-        });
-    },
-    triggerFileUpload() {
-      this.$refs.fileInput.click(); // Trigger file input click event
-    },
-    handleFileUpload(event) {
-      this.selectedFile = event.target.files[0]; // Get selected file
-    },
-    registerAccounts() {
-      if (!this.selectedFile) {
-        this.$notify({
-          type: "warning",
-          message: "Vui lòng tải lên tệp Excel",
-          timeout: 3000,
-          verticalAlign: "top",
-          horizontalAlign: "center",
-        });
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-
-      let apiUrl = ""; // API URL sẽ thay đổi dựa trên loại đăng ký
-      if (this.registrationType === "student") {
-        apiUrl = API_URL + "/accounts/register-student/";
-      } else if (this.registrationType === "teacher") {
-        apiUrl = API_URL + "/accounts/register-teacher/";
-      } else if (this.registrationType === "parent") {
-        apiUrl = API_URL + "/accounts/register-parent/";
-      }
-
-      const token = localStorage.getItem("access_token");
-
-      axios
-        .post(apiUrl, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          this.$notify({
-            type: "success",
-            message: response.data.detail,
-            timeout: 3000,
-            verticalAlign: "top",
-            horizontalAlign: "right",
-          });
-        })
-        .catch((error) => {
-          console.error("Error registering accounts:", error);
-          if (error.response) {
-            if (error.response && error.response.data) {
-              // Kiểm tra lỗi validate_file từ backend
-              if (error.response.data.file) {
-                const errorMessage = error.response.data.file[0]; // Lấy thông báo lỗi từ trường file
-                this.$notify({
-                  type: "danger",
-                  message: errorMessage,
-                  timeout: 3000,
-                  verticalAlign: "top",
-                  horizontalAlign: "right",
-                });
-              } else {
-                const errorMessage =
-                  "Vui lòng kiểm tra lại cấu trúc file và loại đối tượng đăng ký ";
-                this.$notify({
-                  type: "danger",
-                  message: errorMessage,
-                  timeout: 3000,
-                  verticalAlign: "top",
-                  horizontalAlign: "right",
-                });
-              }
-            } else {
-              // Thông báo lỗi nếu không nhận được phản hồi cụ thể từ backend
-              this.$notify({
-                type: "danger",
-                message: "Lỗi không xác định. Vui lòng thử lại.",
-                timeout: 3000,
-                verticalAlign: "top",
-                horizontalAlign: "right",
-              });
-            }
-          } else {
-            this.$notify({
-              type: "warning",
-              message: "Có lỗi xảy ra. Vui lòng thử lại sau",
-              timeout: 3000,
-              verticalAlign: "top",
-              horizontalAlign: "right",
-            });
-          }
         });
     },
   },

@@ -5,7 +5,7 @@
         <template slot="header">
           <div class="row">
             <div class="col-md-5">
-              <h3>Thống kê điểm {{ roomSelected ? " Lớp "+ roomSelected.name : "" }} </h3>
+              <h3>Thống kê điểm {{ roomSelected ? " Lớp "+ roomSelected : "" }} </h3>
             </div>
             <div class="col-md-7">
               <div class="row">
@@ -19,7 +19,7 @@
                 <div class="col-md-3 pl-md-1 text-center">
                   <base-input label="Lớp">
                     <select class="btn btn-simple btn-sm btn-success" v-model="roomSelected">
-                    <option class="text-info" v-for="(room, index) in roomOption" :key="index" :value="room" >{{ room.name }}</option>
+                    <option class="text-info" v-for="(room, index) in roomOption" :key="index" :value="room" >{{ room }}</option>
                     </select>
                   </base-input>
                 </div>
@@ -75,7 +75,7 @@ export default {
     },
     data() {
         return {
-          roomSelected: "6A",
+          roomSelected: null,
           semesterSelected: null,
           scoreTypeSelected: null,
 
@@ -83,7 +83,7 @@ export default {
 
           divisionData: null,
           userData: null,
-          roomOption: null,
+          roomOption: [],
           semesters: null,
           scoreTypes: ["TX", "GK", "CK"],
           subject: "VAN",
@@ -198,6 +198,14 @@ export default {
             };
             this.$refs.bigChart.updateGradients(chartData);
             this.blueBarChart.chartData = chartData;
+            this.$notify({
+              type: "success",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lọc thành công thống kê điểm",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
           })
           .catch((error) => {
             console.error("Error getting statistic:", error);
@@ -213,7 +221,6 @@ export default {
       },
       getUserData(){
         this.userData = JSON.parse(localStorage.getItem('user_data'));
-        
       },
       getApiUrl() {
         return new Promise((resolve) => {
@@ -225,8 +232,8 @@ export default {
         const token = localStorage.getItem("access_token");
 
         axios
-          .get(API_URL + `/adminpanel/assignments/${this.userData.user_id}`, {
-            //  .get(API_URL + `/adminpanel/assignments/?user_id=${this.userData.user_id}/`, {
+          // .get(API_URL + `/adminpanel/assignments/${this.userData.user_id}`, {
+             .get(API_URL + `/adminpanel/assignments/?user_id=${this.userData.user_id}`, {
           
             headers: {
               Authorization: `Bearer ${token}`,
@@ -235,8 +242,12 @@ export default {
           })
           .then((response) => {
             this.divisionData = response.data
-            this.roomOption = this.divisionData.rooms;
-            this.subject = this.divisionData.subject
+            console.log(response.data)
+            // các thành phần con của divisionData là 1 object và có 1 trường room
+            //lấy ra các room trong các thành phần con đó cho vào roomOption (arr)
+            this.roomOption = this.divisionData.map(item => item.room);
+            this.subject = this.divisionData[0].subject
+            console.log("room"+this.roomOption)
           })
           .catch((error) => {
             console.error("Error getting room data:", error);

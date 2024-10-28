@@ -92,16 +92,16 @@ export default {
           username: this.username,
           password: this.password
         });
-
-        if (response.status===200) 
-        {
+        
+        if(response.status==200){
           this.$notify({
-          type: 'success',
-          message: "Đăng nhập thành công",
-          timeout: 3000,
-          verticalAlign: 'top',
-          horizontalAlign: 'center',
-        });
+            type: 'success',
+            icon: 'tim-icons icon-check-2',
+            message: "Đăng nhập thành công",
+            timeout: 3000,
+            verticalAlign: 'top',
+            horizontalAlign: 'center',
+          });
         }
         
 
@@ -219,7 +219,6 @@ export default {
   position: relative;
   z-index: 1;
 }
-
 
 input:-webkit-autofill,
   input:-webkit-autofill:focus {

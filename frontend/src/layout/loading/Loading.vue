@@ -41,11 +41,11 @@ export default {
 
 .spinner {
   border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top: 5px solid #0d9fe8;
+  border-top: 8px solid #0d9fe8;
   border-radius: 50%;
   width: 100px; /* Đặt kích thước cho spinner */
   height: 100px; /* Đặt kích thước cho spinner */
-  animation: spin 1s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
