@@ -17,6 +17,7 @@ class Attendance(models.Model):
         db_table = 'attendance'
         verbose_name = 'Điểm danh'
         verbose_name_plural = 'Danh sách điểm danh'
+        unique_together = ('user', 'lesson')
 
     def clean(self):
         if not self.user.is_student:
@@ -32,7 +33,7 @@ class Attendance(models.Model):
     
     
 class Device(models.Model):
-    device_id = models.CharField(max_length=50, unique=True)
+    device_id = models.CharField(max_length=50, primary_key=True)
     room = models.ForeignKey('rooms.Room', on_delete=models.CASCADE, null=True, blank=True, related_name='devices')
 
     def __str__(self):

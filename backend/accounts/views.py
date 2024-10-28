@@ -454,7 +454,7 @@ class AdminPasswordResetView(APIView):
                 new_password = user.user_id  # Reset mật khẩu về mã định danh
                 user.set_password(new_password)
                 user.save()
-                return Response({"detail": f"Mật khẩu của người dùng {user.full_name} đã được reset thành công."}, status=status.HTTP_200_OK)
+                return Response({"detail": f"Mật khẩu của người dùng {user.user_id} đã được reset thành công."}, status=status.HTTP_200_OK)
             except CustomUser.DoesNotExist:
                 return Response({"error": "Người dùng không tồn tại."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

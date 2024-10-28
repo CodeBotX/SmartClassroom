@@ -47,30 +47,30 @@ id,content_type_id,codename,name
 46,12,change_tokenproxy,Can change Token
 47,12,delete_tokenproxy,Can delete Token
 48,12,view_tokenproxy,Can view Token
-49,13,add_semester,Can add Semester
-50,13,change_semester,Can change Semester
-51,13,delete_semester,Can delete Semester
-52,13,view_semester,Can view Semester
-53,14,add_period,Can add period
-54,14,change_period,Can change period
-55,14,delete_period,Can delete period
-56,14,view_period,Can view period
-57,15,add_plannedlesson,Can add Planned Lesson
-58,15,change_plannedlesson,Can change Planned Lesson
-59,15,delete_plannedlesson,Can delete Planned Lesson
-60,15,view_plannedlesson,Can view Planned Lesson
-61,16,add_lesson,Can add Lesson
-62,16,change_lesson,Can change Lesson
-63,16,delete_lesson,Can delete Lesson
-64,16,view_lesson,Can view Lesson
-65,17,add_grades,Can add Điểm
-66,17,change_grades,Can change Điểm
-67,17,delete_grades,Can delete Điểm
-68,17,view_grades,Can view Điểm
-69,18,add_teacherassignment,Can add teacher assignment
-70,18,change_teacherassignment,Can change teacher assignment
-71,18,delete_teacherassignment,Can delete teacher assignment
-72,18,view_teacherassignment,Can view teacher assignment
+49,13,add_classsubjectteacherassignment,Can add Phân công
+50,13,change_classsubjectteacherassignment,Can change Phân công
+51,13,delete_classsubjectteacherassignment,Can delete Phân công
+52,13,view_classsubjectteacherassignment,Can view Phân công
+53,14,add_grades,Can add Điểm
+54,14,change_grades,Can change Điểm
+55,14,delete_grades,Can delete Điểm
+56,14,view_grades,Can view Điểm
+57,15,add_lesson,Can add Lesson
+58,15,change_lesson,Can change Lesson
+59,15,delete_lesson,Can delete Lesson
+60,15,view_lesson,Can view Lesson
+61,16,add_period,Can add period
+62,16,change_period,Can change period
+63,16,delete_period,Can delete period
+64,16,view_period,Can view period
+65,17,add_plannedlesson,Can add Planned Lesson
+66,17,change_plannedlesson,Can change Planned Lesson
+67,17,delete_plannedlesson,Can delete Planned Lesson
+68,17,view_plannedlesson,Can view Planned Lesson
+69,18,add_semester,Can add Semester
+70,18,change_semester,Can change Semester
+71,18,delete_semester,Can delete Semester
+72,18,view_semester,Can view Semester
 73,19,add_room,Can add room
 74,19,change_room,Can change room
 75,19,delete_room,Can delete room
@@ -79,14 +79,14 @@ id,content_type_id,codename,name
 78,20,change_seatingposition,Can change Seating Position
 79,20,delete_seatingposition,Can delete Seating Position
 80,20,view_seatingposition,Can view Seating Position
-81,21,add_attendance,Can add Điểm danh
-82,21,change_attendance,Can change Điểm danh
-83,21,delete_attendance,Can delete Điểm danh
-84,21,view_attendance,Can view Điểm danh
-85,22,add_device,Can add device
-86,22,change_device,Can change device
-87,22,delete_device,Can delete device
-88,22,view_device,Can view device
+81,21,add_device,Can add device
+82,21,change_device,Can change device
+83,21,delete_device,Can delete device
+84,21,view_device,Can view device
+85,22,add_attendance,Can add Điểm danh
+86,22,change_attendance,Can change Điểm danh
+87,22,delete_attendance,Can delete Điểm danh
+88,22,view_attendance,Can view Điểm danh
 89,23,add_category,Can add category
 90,23,change_category,Can change category
 91,23,delete_category,Can delete category

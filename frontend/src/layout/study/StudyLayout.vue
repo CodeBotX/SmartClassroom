@@ -19,10 +19,10 @@
          @dragover.prevent @drop="dropStudent(rowIndex, columnIndex)" @dragstart="dragStart(seat,rowIndex,columnIndex)">
           <base-button
             v-if="seat"
-            @click="scoring(seat)"
+            @click="scoringAndEnroll(seat)"
             class="btn btn-simple student"
             draggable
-            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': getAttendanceStatus(seat) === 2}"
+            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': getAttendanceStatus(seat) === 3 , 'btn-warning': getAttendanceStatus(seat) === 2}"
             
           >
             {{ seat }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
@@ -36,47 +36,94 @@
 
       <!-- Scoring Modal -->
         <modal :show.sync="scoreModal"
-                body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-sm">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0">
-                <template>
-                    <div class="text-muted mb-3">
-                        <h4 class="text-success">Chấm điểm</h4>
-                    </div>
-                </template>
-                <template>
+       body-classes="p-0"
+       modal-classes="modal-dialog-centered modal-lg">
+    <card type="secondary"
+          header-classes="bg-white pb-5"
+          body-classes="px-lg-5 py-lg-5"
+          class="border-0 mb-0">
+        <template>
+            <div class="text-muted mb-3">
+                <h4 class="text-success">Chấm điểm và Điểm danh</h4>
+            </div>
+        </template>
+        <template>
+            <div class="row">
+                <!-- Card bên trái: Chấm điểm -->
+                <div class="col-md-8">
+                    <card type="secondary" header-classes="bg-white pb-2" class="border-0 mb-0">
+                        <template>
+                            <div class="text-muted mb-3">
+                                <h5>Chấm điểm</h5>
+                            </div>
+                        </template>
                         <div class="row">
-                            <div class="col-12" v-if="studentDetail">
-                              <div class="row">
-                                    <div class="col-md-6 pr-md-1">
-                                        <base-input disabled label="Id học sinh" v-model="studentDetail.id"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pr-md-1" >
-                                        <base-input disabled label="Họ và tên" v-model="studentDetail.full_name"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 pr-md-1" >
-                                        <base-input disabled label="Môn" v-model="studentDetail.subject"></base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <base-input disabled label="Học kỳ" v-model="studentDetail.semester"></base-input>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 pl-md-1">
-                                        <base-input label="Điểm" v-model="studentDetail.grade"></base-input>
-                                    </div>
-                                </div>
-                                <base-button @click="givenScore" type="secondary" fill>Xác nhận</base-button>
+                            <div class="col-md-6">
+                                <base-input disabled label="Id học sinh" v-model="studentDetail.id"></base-input>
+                            </div>
+                            <div class="col-md-6">
+                                <base-input disabled label="Họ và tên" v-model="studentDetail.full_name"></base-input>
                             </div>
                         </div>
-                </template>
-            </card>
-        </modal>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <base-input disabled label="Môn" v-model="studentDetail.subject"></base-input>
+                            </div>
+                            <div class="col-md-6">
+                                <base-input disabled label="Học kỳ" v-model="studentDetail.semester"></base-input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <base-input label="Điểm" v-model="studentDetail.grade"></base-input>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-4">
+                            <base-button @click="givenScore" type="secondary" fill>Xác nhận</base-button>
+                        </div>
+                    </card>
+                </div>
+
+                <!-- Card bên phải: Trạng thái điểm danh -->
+                <div class="col-md-4">
+                  <card type="secondary" header-classes="bg-white pb-2" class="border-0 mb-0">
+                      <template>
+                          <div class="text-muted mb-3">
+                              <h5>Trạng thái điểm danh</h5>
+                          </div>
+                      </template>
+                      <div class="container text-center"> <!-- Thêm class text-center -->
+                          <div class="row justify-content-center"> <!-- Căn giữa với justify-content-center -->
+                              <div class="col-xs-12">
+                                  <div class="switch">
+                                      <input id="switch-present" name="attendance" type="radio" value="1" v-model="newStatus" class="switch-input" @change="updateStatus" />
+                                      <label for="switch-present" class="switch-label switch-label-y"><i class="tim-icons icon-check-2"></i></label>
+                                      
+                                      <input id="switch-late" name="attendance" type="radio" value="2" v-model="newStatus" class="switch-input" @change="updateStatus"/>
+                                      <label for="switch-late" class="switch-label switch-label-i"><i class="tim-icons icon-simple-delete"></i></label>
+                                      
+                                      <input id="switch-absent" name="attendance" type="radio" value="3" v-model="newStatus" class="switch-input" @change="updateStatus"/>
+                                      <label for="switch-absent" class="switch-label switch-label-n"><i class="tim-icons icon-simple-remove"></i></label>
+                                      
+                                      <span class="switch-selector"></span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="text-muted mt-2">
+                          <span v-if="newStatus == 1" class="text-success">Có mặt</span>
+                          <span v-if="newStatus == 2" class="text-warning">Đi muộn</span>
+                          <span v-if="newStatus == 3" class="text-danger">Vắng mặt</span>
+                      </div>
+                  </card>
+              </div>
+            </div>
+        </template>
+    </card>
+</modal>
+
+
+
 
         <!-- Evaluating Modal -->
         <modal :show.sync="evaluateModal"
@@ -135,11 +182,12 @@ let API_URL = ""
 
 export default {
   components: { Modal },
-  mounted() {
-    this.startLongPolling();
-  },
   data() {
     return {
+      currentStatus: null,
+      newStatus: null,
+      attendanceStatus: 1,
+
       isActive: false,
       attendance: null,
       scoreModal : false,
@@ -180,18 +228,20 @@ export default {
     };
   },
   methods: {
+    
     demo(){
       return true;
     },
     getAttendanceStatus(studentId) {
       // Lọc danh sách attendance dựa trên studentId
+      if(!this.attendance) return 0;
       const studentAttendance = this.attendance.filter(
         (att) => att.user === studentId
       );
 
-      // Nếu không có dữ liệu, trả về trạng thái vắng mặt = 2
+      // Nếu không có dữ liệu, trả về trạng thái vắng mặt = 3
       if (studentAttendance.length === 0) {
-        return 2;
+        return 0;
       }
 
       // Kiểm tra trạng thái cuối cùng của sinh viên
@@ -199,59 +249,57 @@ export default {
       return lastStatus
     },
     async startLongPolling() {
-      let lastAttendance = []; 
-      this.polling = true;
+  let lastAttendance = [];
+  this.polling = true;
 
-      while (this.polling) {
-        try {
-          const token = localStorage.getItem("access_token");
-          const response = await axios.get(`${API_URL}/attendance/attendance/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
+  // Sử dụng setInterval với khoảng thời gian 500ms
+  this.pollingInterval = setInterval(async () => {
+    if (!this.polling) {
+      clearInterval(this.pollingInterval);
+      return;
+    }
 
-          // Đảm bảo response.data không phải là null
-          const newAttendance = response.data || []; // Nếu response.data là null thì sử dụng mảng rỗng
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await axios.get(`${API_URL}/attendance/attendance/?lesson=${this.lessonData.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-          // So sánh dữ liệu mới với dữ liệu trước đó
-          if (JSON.stringify(newAttendance) !== JSON.stringify(lastAttendance)) {
-            // Tìm ra các phần tử khác nhau
-            const differences = this.getDifferences(lastAttendance, newAttendance);
-            if (differences.length > 0) {
-              this.attendance = newAttendance;
-              console.log('New attendance data:', this.attendance);
+      const newAttendance = response.data || [];
 
-              if(differences.length !== newAttendance.length){
-                // Thông báo nếu có thay đổi trạng thái
-                differences.forEach(difference => {
-                  if (difference.status === 1) {
-                    this.$notify({
-                        type: "success",
-                        icon: 'tim-icons icon-badge',
-                        title: "Điểm danh thành công",
-                        message: `Học sinh ${difference.user}`,
-                        timeout: 1000,
-                        verticalAlign: "bottom",
-                        horizontalAlign: "left",
-                    });
-                  }
+      if (JSON.stringify(newAttendance) !== JSON.stringify(lastAttendance)) {
+        const differences = this.getDifferences(lastAttendance, newAttendance);
+        if (differences.length > 0) {
+          this.attendance = newAttendance;
+          console.log('New attendance data:', this.attendance);
+
+          if (differences.length !== newAttendance.length) {
+            differences.forEach(difference => {
+              if (difference.status === 1 && difference.lesson == this.lessonData.id) {
+                this.$notify({
+                  type: "success",
+                  icon: 'tim-icons icon-badge',
+                  title: "Điểm danh thành công",
+                  message: `Học sinh ${difference.user}`,
+                  timeout: 1000,
+                  verticalAlign: "bottom",
+                  horizontalAlign: "left",
                 });
               }
-
-              // Cập nhật dữ liệu trước đó
-              lastAttendance = newAttendance;
-            }
+            });
           }
-
-          // Tiếp tục polling
-        } catch (error) {
-          console.error('Error fetching attendance data:', error);
-          await this.delay(5000); // Tạm dừng nếu có lỗi
+          lastAttendance = newAttendance;
         }
       }
-    },
+
+    } catch (error) {
+      console.error('Error fetching attendance data:', error);
+    }
+  }, 500); // Polling mỗi 0.5 giây
+},
 
     // Hàm để lấy ra các phần tử khác nhau
     getDifferences(oldData, newData) {
@@ -273,12 +321,108 @@ export default {
     delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
-    scoring(index){
+    scoringAndEnroll(index){
       this.studentDetail.id = index
       this.studentDetail.subject = this.lessonData.subject
       this.studentDetail.semester = this.lessonData.semester
 
+      this.currentStatus = this.getAttendanceStatus(index);
+      this.newStatus = this.currentStatus;
+      console.log("current and new"+this.currentStatus)
+
       this.scoreModal = true
+    },
+    updateStatus(){
+      console.log("current"+this.currentStatus)
+      console.log("new"+this.newStatus)
+      if(this.currentStatus == this.newStatus) return 
+      else {
+        //update status
+        let data = {
+          "lesson_id": this.lessonData.id,
+          "student_id": this.studentDetail.id,
+          "new_status": this.newStatus
+        }
+        const token = localStorage.getItem("access_token");
+        
+        console.log(data)
+
+        axios
+        .post(API_URL+"/attendance/attendance/update/", data,  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then(() => {
+          this.currentStatus = this.newStatus 
+          this.$notify({
+                type: "success",
+                icon: 'tim-icons icon-bell-55',
+                message: "Đổi trạng thái học sinh " + this.studentDetail.id+ " thành công",
+                timeout: 1000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        })
+        .catch((error) => {
+          console.error("Error post grade data :", error);
+          if(this.currentStatus == 0){
+            this.createStatus()
+            return
+          }
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Đổi trạng thái thất bại. Vui lòng thử lại sau",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+      }
+    },
+    createStatus(){
+      let data = {
+          "student_id": this.studentDetail.id,  
+          "device_id": "as7dchu8d"
+        }
+        const token = localStorage.getItem("access_token");
+        
+        console.log(data)
+
+        axios
+        .post(API_URL+"/attendance/attendance/", data,  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.currentStatus = response.data.status
+          this.newStatus = this.currentStatus
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Thêm trạng thái điểm danh thành công",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        })
+        .catch((error) => {
+          console.error("Error post grade data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Thêm trạng thái điểm danh thất bại",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
     },
     givenScore(){
       if(!this.studentDetail.grade){
@@ -408,6 +552,7 @@ export default {
       try {
         await this.getApiUrl();
         await this.getPositionData();
+        this.startLongPolling()
       } catch (error) {
         console.error('Error initializing data:', error);
       }
@@ -637,5 +782,82 @@ export default {
 }
 .spacer {
   margin-right: 50px; /* Khoảng cách giữa các cột */
+}
+
+.container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.switch {
+    position: relative;
+    height: 32px;
+    width: 210px;
+    margin: 20px auto;
+    background: #d7d7d789;
+    border-radius: 32px;
+}
+
+.switch-label {
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 70px; /* Thay đổi giá trị này để mở rộng chiều rộng của label */
+    line-height: 32px; /* Giữ cho icon được căn giữa trong switch */
+    font-size: 24px; /* Tăng kích thước chữ nếu cần */
+    color: #676a6c;
+    text-align: center;
+    cursor: pointer;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch-input:checked + .switch-label {
+  color: #fff;
+  transition: color 0.15s ease-out, text-shadow 0.15s ease-out;
+}
+
+.switch-input:checked + .switch-label-y ~ .switch-selector {
+  transform: translateX(0%);
+  background-color: #1ab394; /* Màu xanh cho 'Có mặt' */
+}
+
+.switch-input:checked + .switch-label-i ~ .switch-selector {
+  transform: translateX(100%);
+  background-color: #f8ac59; /* Màu vàng cho 'Đi muộn' */
+}
+
+.switch-input:checked + .switch-label-n ~ .switch-selector {
+  transform: translateX(200%);
+  background-color: #ed5565; /* Màu đỏ cho 'Vắng mặt' */
+}
+
+.switch-selector {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 33.33%;
+  height: 32px;
+  border-radius: 32px;
+  background-color: #1ab394;
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.switch-label {
+    white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
+}
+
+.switch-label i {
+    font-size: 12px; /* Điều chỉnh kích thước icon */
+    line-height: 32px; /* Giữ cho icon được căn giữa trong switch */
+    transition: font-size 0.3s; /* Hiệu ứng chuyển đổi khi thay đổi kích thước */
+}
+
+/* Tùy chọn cho trạng thái checked */
+.switch-input:checked + .switch-label i {
+    font-size: 28px; /* Kích thước lớn hơn khi được chọn */
 }
 </style>

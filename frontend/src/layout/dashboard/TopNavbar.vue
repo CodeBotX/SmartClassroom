@@ -178,7 +178,7 @@ const classPeriods = [
   { period: 3, start: { hour: 9, minute: 0 }, end: { hour: 9, minute: 45 } },  // Tiết 3
   { period: 4, start: { hour: 10, minute: 0 }, end: { hour: 10, minute: 45 } },  // Tiết 4
   { period: 5, start: { hour: 11, minute: 0 }, end: { hour: 11, minute: 45 } },  // Tiết 5
-  { period: 6, start: { hour: 11, minute: 45 }, end: { hour: 23, minute: 99 } },  // Tiết 5
+  { period: 6, start: { hour: 0, minute: 0 }, end: { hour: 23, minute: 59 } },  // Tiết 5
 ];
 
 export default {
