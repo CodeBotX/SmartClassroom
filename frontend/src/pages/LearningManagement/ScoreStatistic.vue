@@ -241,13 +241,23 @@ export default {
             },
           })
           .then((response) => {
+            if(response.data.length == 0){
+              this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Giáo viên chưa được phân công lớp dạy",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+            return
+            }
             this.divisionData = response.data
-            console.log(response.data)
             // các thành phần con của divisionData là 1 object và có 1 trường room
             //lấy ra các room trong các thành phần con đó cho vào roomOption (arr)
             this.roomOption = this.divisionData.map(item => item.room);
             this.subject = this.divisionData[0].subject
-            console.log("room"+this.roomOption)
+            
           })
           .catch((error) => {
             console.error("Error getting room data:", error);

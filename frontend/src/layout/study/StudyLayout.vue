@@ -403,7 +403,7 @@ export default {
           this.currentStatus = response.data.status
           this.newStatus = this.currentStatus
           this.$notify({
-                type: "warning",
+                type: "succees",
                 icon: 'tim-icons icon-bell-55',
                 message: "Thêm trạng thái điểm danh thành công",
                 timeout: 3000,

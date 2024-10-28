@@ -3,8 +3,8 @@ import router from '@/router/index.js';
 import Notification from '@/components/NotificationPlugin/Notification.vue';
 
 // const API_URL = "http://bkteaching.one/api";
-// const API_URL = "https://smartclassroom.click/api";
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://smartclassroom.click/api";
+// const API_URL = "http://127.0.0.1:8000/api";
 
 const instance = axios.create({
     baseURL: API_URL,  // URL của API Django
