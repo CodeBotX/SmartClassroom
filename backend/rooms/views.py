@@ -6,6 +6,7 @@ from rest_framework import status
 from accounts.models import Student
 from rest_framework.decorators import action
 from rest_framework import generics
+from accounts.serializers import StudentSerializer
 # api room
 class RoomViewSet(viewsets.ModelViewSet):
     authencation_classes = []
@@ -63,7 +64,16 @@ class RoomViewSet(viewsets.ModelViewSet):
         room.students.add(*students)
 
         return Response({'message': 'Students added successfully.'}, status=status.HTTP_200_OK)
+    @action(detail=True, methods=['get'], url_path='students')
+    def get_students(self, request, pk=None):
+        try:
+            room = self.get_object()
+        except Room.DoesNotExist:
+            return Response({'error': 'Room not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+        students = room.students.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 

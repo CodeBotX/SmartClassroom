@@ -121,8 +121,7 @@ TIME_ZONE = 'Asia/Ho_Chi_Minh'
 # DATE_FORMAT = 'd/m/Y'  # dd/mm/yyyy
 # DATETIME_FORMAT = 'd/m/Y H:i:s'  # dd/mm/yyyy hh:mm:ss
 # TIME_FORMAT = 'H:i:s'  # hh:mm:ss
-
-USE_I18N = True
+# USE_I18N = True
 
 USE_TZ = True
 

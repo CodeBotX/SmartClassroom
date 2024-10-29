@@ -16,7 +16,7 @@ from rest_framework import filters
 def get_current_lesson(device_id, current_time):
     current_day = current_time.date()
     current_time_value = current_time.time()
-
+    print(current_time_value)
     current_period = Period.objects.filter(
         start_time__lte=current_time_value,
         end_time__gte=current_time_value
@@ -34,7 +34,6 @@ def get_current_lesson(device_id, current_time):
     except Device.DoesNotExist:
         print("Không tìm thấy thiết bị.")
         return None
-
 
     # Tìm học kỳ theo ngày hiện tại
     semester = Semester.objects.filter(day_begin__lte=current_day).order_by('-day_begin').first()
@@ -68,13 +67,11 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         if not user_id:
             return Response({"error": "Cần có ID người dùng."}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            current_time = timezone.now() 
+            current_time = timezone.localtime(timezone.now())
             lesson = get_current_lesson(device_id, current_time)
             
             if lesson:
                 user = get_object_or_404(CustomUser, user_id=user_id)
-
-                # Kiểm tra nếu bản ghi điểm danh đã tồn tại
                 if Attendance.objects.filter(user=user, lesson=lesson).exists():
                     return Response({"error": "Thông tin điểm danh đã tồn tại."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,7 +79,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
                 lesson_start_time = timezone.datetime.combine(lesson.day, lesson.period.start_time)
                 lesson_start_time = lesson_start_time.replace(tzinfo=timezone.get_current_timezone())
 
-                status_value = 1 if attendance_time <= lesson_start_time + timedelta(minutes=10) else 3
+                status_value = 1 if attendance_time <= lesson_start_time + timedelta(minutes=10) else 2       
 
                 attendance = Attendance(
                     user=user,
