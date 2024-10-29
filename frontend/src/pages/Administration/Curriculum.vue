@@ -52,6 +52,9 @@
               </td>
             </template>
           </base-table>
+          <base-button type="default" size="sm" icon @click="toggleCreate()">
+                  <i class="tim-icons icon-simple-add"></i>
+          </base-button>
         </div>
 
         <!-- Lớp học -->
@@ -61,23 +64,109 @@
               <th>Lớp học</th>
               <th>Sĩ số lớp</th>
               <th>Giáo viên chủ nhiệm</th>
+              <th class="text-right">Actions</th>
               <!-- <th class="text-right">Actions</th> -->
             </template>
             <template slot-scope="{ row }">
               <td>{{ row.name }}</td>
               <td>{{ row.students.length }}</td>
               <td>{{ row.homeroom_teacher }}</td>
-              <!-- <td class="td-actions text-right">
-                <base-button type="success" size="sm" icon @click="toggleUpdate(row.name)">
-                  <i class="tim-icons icon-settings"></i>
-                </base-button>
-                <base-button type="danger" size="sm" icon @click="toggleRemove(row.name)">
-                  <i class="tim-icons icon-simple-remove"></i>
+              <td class="td-actions text-right">
+                <base-button @click="toggleSeatingDetail(row.name)" class="dashboard-button btn-info" simple>
+                  <i class="tim-icons icon-notes"></i>Quản lý chỗ ngồi
                 </base-button>
               </td> -->
             </template>
           </base-table>
         </div>
+
+        <!-- Create Modal -->
+        <modal :show.sync="modals.createModal"
+               body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-sm">
+               <!-- Semester -->
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 0">
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Thêm học kỳ</h4>
+                    </div>
+                </template>
+                <template>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-12 pr-md-1">
+                                        <base-input label="Học kỳ" v-model="modals.semesterCreate.name"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Ngày bắt đầu" v-model="modals.semesterCreate.day_begin" type="date"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Số tuần" v-model="modals.semesterCreate.number_of_weeks"></base-input>
+                                    </div>
+                                </div>
+                                <base-button @click="createObject" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+
+            <!-- PlannedLessson -->
+
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 2">
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Thêm bài giảng</h4>
+                    </div>
+                </template>
+                <template>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-4 pr-md-1">
+                                        <base-input label="Môn">
+                                          <select class="form-control" v-model="modals.plannedLessonCreate.subject">
+                                            <option class="text-info" v-for="(subject, index) in subjects" :key="index">{{subject}}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                    <div class="col-md-4 pl-md-1">
+                                        <base-input label="Học kỳ">
+                                          <select class="form-control" v-model="modals.plannedLessonCreate.semester">
+                                            <option class="text-info" v-for="(semester, index) in semesters" :key="index" :value="semester.name">{{ semester.name }}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                    <div class="col-md-4 pl-md-1">
+                                        <base-input label="Lớp">
+                                          <select class="form-control" v-model="modals.plannedLessonCreate.room">
+                                            <option class="text-info" v-for="(room, index) in rooms" :key="index" :value="room.name">{{ room.name }}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Bài số" type="number" v-model="modals.plannedLessonCreate.lesson_number"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Tên bài" v-model="modals.plannedLessonCreate.name_lesson"></base-input>
+                                    </div>
+                                </div>
+                                <base-button @click="createObject" type="secondary" fill>Xác nhận</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+        </modal>
 
         <!-- Update Modal -->
         <modal :show.sync="modals.updateModal"
@@ -130,17 +219,24 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-md-6 pr-md-1">
+                                    <div class="col-md-4 pr-md-1">
                                         <base-input label="Môn">
                                           <select class="form-control" v-model="modals.plannedLessonDetail.subject">
                                             <option class="text-info" v-for="(subject, index) in subjects" :key="index">{{subject}}</option>
                                           </select>
                                         </base-input>
                                     </div>
-                                    <div class="col-md-6 pl-md-1">
+                                    <div class="col-md-4 pl-md-1">
                                         <base-input label="Học kỳ">
                                           <select class="form-control" v-model="modals.plannedLessonDetail.semester">
                                             <option class="text-info" v-for="(semester, index) in semesters" :key="index" :value="semester.name">{{ semester.name }}</option>
+                                          </select>
+                                        </base-input>
+                                    </div>
+                                    <div class="col-md-4 pl-md-1">
+                                        <base-input label="Lớp">
+                                          <select class="form-control" v-model="modals.plannedLessonDetail.room">
+                                            <option class="text-info" v-for="(room, index) in rooms" :key="index" :value="room.name">{{ room.name }}</option>
                                           </select>
                                         </base-input>
                                     </div>
@@ -171,6 +267,39 @@
             </template>
         </modal>
 
+        <!-- Seating Modal -->
+        <modal :show.sync="modals.seatingModal"
+                body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-md">
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0">
+                <template>
+                    <div class="text-muted mb-3">
+                        <h4 class="text-success text-">Quản lý chỗ ngồi</h4>
+                    </div>
+                </template>
+                <template>
+                      <base-table :data="seatingData" :columns="seating_columns">
+                        <template slot="columns">
+                          <th>Học sinh</th>
+                          <th class="text-center">Hàng</th>
+                          <th class="text-center">Cột</th>
+                        </template>
+                        <template slot-scope="{ row }">
+                          <td> <div class="text-info"> {{ row.student }}</div></td>
+                          <td class="text-center">{{ row.row }}</td>
+                          <td class="text-center">{{ row.column }}</td>
+                        </template>
+                      </base-table>
+                      <!-- <base-button type="default" size="sm" icon @click="toggleCreateSeating()">
+                              <i class="tim-icons icon-simple-add"></i>
+                      </base-button> -->
+                </template>
+            </card>
+        </modal>
+
         <!-- BÀI GIẢNG -->
         <div v-if="bigLineChart.activeIndex === 2">
           <base-table :data="plannedlessonData" :columns="plannedlesson_columns">
@@ -180,6 +309,7 @@
               <th>Bài số</th>
               <th>Tên bài học</th>
               <th>Học kỳ</th>
+              <th>Lớp</th>
               <th class="text-right">Actions</th>
             </template>
             <template slot-scope="{ row }">
@@ -188,6 +318,7 @@
               <td>{{ row.lesson_number }}</td>
               <td>{{ row.name_lesson }}</td>
               <td>{{ row.semester }}</td>
+              <td>{{ row.room }}</td>
               <td class="td-actions text-right">
                 <base-button type="success" size="sm" icon @click="toggleUpdate(row.id)">
                   <i class="tim-icons icon-settings"></i>
@@ -198,6 +329,9 @@
               </td>
             </template>
           </base-table>
+          <base-button type="default" size="sm" icon @click="toggleCreate()">
+                  <i class="tim-icons icon-simple-add"></i>
+          </base-button>
         </div>
 
 
@@ -225,9 +359,26 @@ export default {
   data() {
     return {
     modals: {
+        seatingModal: false,
+        
+        createModal: false,
         updateModal: false,
         removeModal: false,
         idRemove: null,
+
+        semesterCreate: {
+          name: null,
+          day_begin: null,
+          number_of_weeks: null
+        },
+
+        plannedLessonCreate: {
+          semester: null,
+          subject: null,
+          name_lesson: null,
+          lesson_number: null,
+          room: null,
+        },
 
         teacherModal: false,
         parentModal: false,
@@ -235,10 +386,14 @@ export default {
         teacherDetail: null,
         plannedLessonDetail: null,
     },
+    seatingData: null,
+    rooms: null,
+    seating_columns: ["student", "row", "column"],
     subjects: ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
+    subjects_2: ['Toán', 'Ngữ Văn', 'Tiếng Anh', 'Hóa', 'Sinh học', 'Địa lý', 'Lịch sử', 'GDCD', 'Thể dục', 'Mỹ thuật', 'Âm nhạc', 'Tin học', 'Mỹ thuật'],
     semester_columns: ["semester", "day_begin", "number_of_weeks"],
     room_columns: ["name", "students", "homeroom_teacher"],
-    plannedlesson_columns: ["id", "subject", "lesson_number", "name_lesson", "semester"],
+    plannedlesson_columns: ["id", "subject", "lesson_number", "name_lesson", "semester", "room"],
     lesson_columns: ["user", "full_name", "sex", "day_of_birth", "description"],
       semesterData: null,
       roomData: null,
@@ -288,6 +443,7 @@ export default {
         try {
           await this.getApiUrl();
           await this.getSemesterData();
+          await this.getRoomData();
         } catch (error) {
           console.error('Error initializing data:', error);
         }
@@ -318,6 +474,62 @@ export default {
               type: "warning",
               icon: 'tim-icons icon-bell-55',
               message: "Lấy dữ liệu học kỳ thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+      },
+      async getPositionData(index) {
+        
+        const token = localStorage.getItem("access_token");
+        try {
+          // const response = await axios.get(`${API_URL}/rooms/${roomName}/allseatings/`, {
+          const response = await axios.get(`${API_URL}/rooms/seating-positions/?room=${index}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          if (response.data.length === 0) {
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Không tồn tại danh sách chỗ ngồi của lớp",
+              timeout: 3000,
+              verticalAlign: "bottom",
+              horizontalAlign: "right",
+            });
+          } 
+          else {
+            this.seatingData = response.data;
+          }
+          
+          
+        } catch (error) {
+          console.error("Error getting seating data:", error);
+        }
+      },
+      getRoomData() {
+        if (this.rooms) return;
+        const token = localStorage.getItem("access_token");
+
+        axios
+          .get(API_URL + "/rooms/roomset/", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.rooms = response.data;
+          })
+          .catch((error) => {
+            console.error("Error getting room data:", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy danh sách lớp học thất bại",
               timeout: 3000,
               verticalAlign: "top",
               horizontalAlign: "right",
@@ -366,6 +578,58 @@ export default {
           this.$notify({
                 type: "warning",
                 message: "Xóa dữ liệu thất bại. Vui lòng thử lại",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+    },
+    createObject(){
+        let apiUrl = "";
+        let data =null
+        if(this.bigLineChart.activeIndex ===0 ){
+          apiUrl = API_URL + `/adminpanel/semesters/`
+          data = this.modals.semesterCreate
+        } else if (this.bigLineChart.activeIndex === 2) {
+          apiUrl = API_URL + "/adminpanel/planned-lessons/";
+          data = this.modals.plannedLessonCreate
+        }
+
+        console.log(data)
+        const token = localStorage.getItem("access_token");
+        axios
+        .post(apiUrl, data, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          let message = "";
+          if (this.bigLineChart.activeIndex === 0) {
+            message = "Thêm học kỳ thành công"
+          } else if (this.bigLineChart.activeIndex === 2) {
+            message = "Thêm bài giảng thành công"
+          }
+
+            this.$notify({
+                type: "success",
+                icon: 'tim-icons icon-check-2',
+                message: message,
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+
+          this.modals.createModal = false
+          this.initBigChart(this.bigLineChart.activeIndex)
+        })
+        .catch((error) => {
+          console.error("Error create data :", error);
+
+          this.$notify({
+                type: "warning",
+                message: "Thêm dữ liệu thất bại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
@@ -421,7 +685,7 @@ export default {
           this.initBigChart(this.bigLineChart.activeIndex)
         })
         .catch((error) => {
-          console.error("Error get user data :", error);
+          console.error("Error get data :", error);
 
           this.$notify({
                 type: "warning",
@@ -431,6 +695,13 @@ export default {
                 horizontalAlign: "right",
               });
         });
+    },
+     toggleSeatingDetail(){
+      this.modals.seatingModal = true;
+      this.getPositionData();
+    },
+    toggleCreate(){
+      this.modals.createModal = true;
     },
     toggleUpdate(index){
         this.modals.updateModal = true;
