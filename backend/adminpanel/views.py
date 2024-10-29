@@ -8,13 +8,13 @@ from .serializers import *
 from rest_framework.decorators import action
 from django.db import transaction
 from datetime import timedelta
-from .filters import LessonFilter 
-from rest_framework import filters
+from .filters import *
+
 from accounts.models import Student,Teacher
 from django.db.models import Avg
-from collections import defaultdict
+
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db import IntegrityError
+
 
 class SemesterViewSet(viewsets.ModelViewSet):
     authentication_classes = []
@@ -40,6 +40,8 @@ class GradesViewSet(viewsets.ModelViewSet):
     permission_classes = []
     queryset = Grades.objects.all()
     serializer_class = GradesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = GradesFilter
     # tạo điểm
     @transaction.atomic  
     def create(self, request, *args, **kwargs):
@@ -86,77 +88,6 @@ class GradesViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # def list(self, request):
-
-    #     user_id = request.query_params.get('user_id')
-    #     semester_name = request.query_params.get('semester_name')
-    #     subject = request.query_params.get('subject')
-    #     room_name = request.query_params.get('room_name')
-    #     score_type = request.query_params.get('score_type')
-    #     top_students = request.query_params.get('top_students')
-
-    #     if not semester_name:
-    #         return Response({'error': 'Thiếu semester_name.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    #     try:
-    #         semester = Semester.objects.get(name=semester_name)
-
-    #         if user_id:
-    #             try:
-    #                 student = Student.objects.get(user__user_id=user_id)
-    #                 grades_query = Grades.objects.filter(student=student, semester=semester)
-
-    #                 if score_type:
-    #                     grades_query = grades_query.filter(score_type=score_type)
-
-    #                 serializer = GradesSerializer(grades_query, many=True)
-    #                 return Response(serializer.data, status=status.HTTP_200_OK)
-    #             except Student.DoesNotExist:
-    #                 return Response({'error': 'Học sinh không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-    #         elif room_name:
-    #             try:
-    #                 room = Room.objects.get(name=room_name)
-    #                 students = room.students.all()
-
-    #                 results = {}
-    #                 no_scores = []  
-
-    #                 for student in students:
-    #                     average_score = Grades.objects.filter(
-    #                         student=student,
-    #                         subject=subject,
-    #                         semester=semester
-    #                     ).aggregate(avg_score=Avg('grade'))['avg_score']
-
-    #                     if average_score is None:
-    #                         no_scores.append(student.full_name)
-    #                     else:
-    #                         results[student.full_name] = average_score
-
-    #                 sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
-    #                 return Response({
-    #                     'sorted_results': sorted_results,
-    #                     'no_scores': no_scores
-    #                 }, status=status.HTTP_200_OK)
-
-    #             except Room.DoesNotExist:
-    #                 return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-    #         elif top_students:
-    #             if subject not in SubjectChoices.values:
-    #                 return Response({'error': 'Môn học không hợp lệ.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    #             students = Grades.objects.filter(subject=subject, semester=semester)\
-    #                 .values('student__full_name')\
-    #                 .annotate(avg_score=Avg('grade'))\
-    #                 .order_by('-avg_score')[:30]
-
-    #             return Response({'top_students': list(students)}, status=status.HTTP_200_OK)
-
-    #         else:
-    #             return Response({'error': 'Thiếu các tham số bắt buộc.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    #     except Semester.DoesNotExist:
-    #         return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
     
     def list(self, request):
         user_id = request.query_params.get('user_id')
@@ -321,7 +252,6 @@ class GradesViewSet(viewsets.ModelViewSet):
                 elif 9.5 <= grade <= 10:
                     count_95_10 += 1
 
-            # Trả về kết quả thống kê
             return Response({
                 "0.0-0.5": count_0_05,
                 "0.5-1.0": count_05_1,
@@ -350,8 +280,7 @@ class GradesViewSet(viewsets.ModelViewSet):
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
         
-
-
+#-----------------------------------------------------------------------------------------------
 
 
 class PlannedLessonViewSet(viewsets.ModelViewSet):
