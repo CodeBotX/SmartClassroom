@@ -146,117 +146,148 @@ export default {
             });
           });
       },
-      getScoreData(){
-        const data = [
-              {
-                  "subject": "VAN",
-                  "score_type": "TX",
-                  "grade": [
-                      6.0,
-                      6.0,
-                      5.5,
-                      5.5,
-                      6.5,
-                      6.5
-                  ],
-                  "student": "0181635895",
-                  "semester": 20242
-              },
-              {
-                  "subject": "TOAN",
-                  "score_type": "TX",
-                  "grade": [
-                      10.0,
-                      8.0,
-                      9.0,
-                      9.0
-                  ],
-                  "student": "0181635895",
-                  "semester": 20242
-              },
-              {
-                  "subject": "TOAN",
-                  "score_type": "GK",
-                  "grade": [
-                      8.0
-                  ],
-                  "student": "0181635895",
-                  "semester": 20242
-              },
-              {
-                  "subject": "TOAN",
-                  "score_type": "CK",
-                  "grade": [
-                      8.0
-                  ],
-                  "student": "0181635895",
-                  "semester": 20242
-              }
-          ]
-          this.scoreData = this.formatScoreData(data);
-      },
       // getScoreData(){
-      //   const token = localStorage.getItem("access_token");
-      //   this.scoreData = this.initializeScoreData()
+      //   const data = [
+      //         {
+      //             "subject": "VAN",
+      //             "score_type": "TX",
+      //             "grade": [
+      //                 6.0,
+      //                 6.0,
+      //                 5.5,
+      //                 5.5,
+      //                 6.5,
+      //                 6.5
+      //             ],
+      //             "student": "0181635895",
+      //             "semester": 20242
+      //         },
+      //         {
+      //             "subject": "TOAN",
+      //             "score_type": "TX",
+      //             "grade": [
+      //                 10.0,
+      //                 8.0,
+      //                 9.0,
+      //                 9.0
+      //             ],
+      //             "student": "0181635895",
+      //             "semester": 20242
+      //         },
+      //         {
+      //             "subject": "TOAN",
+      //             "score_type": "GK",
+      //             "grade": [
+      //                 8.0
+      //             ],
+      //             "student": "0181635895",
+      //             "semester": 20242
+      //         },
+      //         {
+      //             "subject": "TOAN",
+      //             "score_type": "CK",
+      //             "grade": [
+      //                 8.0
+      //             ],
+      //             "student": "0181635895",
+      //             "semester": 20242
+      //         }
+      //     ]
+      //     this.scoreData = this.formatScoreData(data);
+      // },
+      getScoreData(){
+        const token = localStorage.getItem("access_token");
+        this.scoreData = this.initializeScoreData()
 
-      //   axios
-      //     .get(API_URL + `/adminpanel/grades?user_id=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
-      //       headers: {
-      //         Authorization: `Bearer ${token}`,
-      //         "Content-Type": "application/json",
-      //       },
-      //     })
-      //     .then((response) => {
-      //       // Xử lý dữ liệu để sắp xếp theo từng môn
-      //       this.$notify({
-      //         type: "success",
-      //         icon: 'tim-icons icon-bell-55',
-      //         message: "Lấy bảng điểm thành công",
-      //         timeout: 3000,
-      //         verticalAlign: "top",
-      //         horizontalAlign: "right",
-      //       });
-      //       this.scoreData = this.formatScoreData(response.data);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error getting score data:", error);
-      //       this.$notify({
-      //         type: "warning",
-      //         icon: 'tim-icons icon-bell-55',
-      //         message: "Lấy danh sách điểm thất bại",
-      //         timeout: 3000,
-      //         verticalAlign: "top",
-      //         horizontalAlign: "right",
-      //       });
-      //     });
+        axios
+          .get(API_URL + `/adminpanel/grades?user_id=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            // Xử lý dữ liệu để sắp xếp theo từng môn
+            this.$notify({
+              type: "success",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy bảng điểm thành công",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+            this.scoreData = this.formatScoreData(response.data);
+          })
+          .catch((error) => {
+            console.error("Error getting score data:", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy danh sách điểm thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+      },
+      // formatScoreData(data) {
+      //   const groupedScores = {};
+
+      //   data.forEach(item => {
+      //     // Kiểm tra xem môn học này đã tồn tại trong groupedScores chưa
+      //     if (!groupedScores[item.subject]) {
+      //       groupedScores[item.subject] = {
+      //         subject: item.subject,
+      //         tx: [],  // Điểm thường xuyên
+      //         gk: [],  // Điểm giữa kỳ
+      //         ck: []   // Điểm cuối kỳ
+      //       };
+      //     }
+
+      //     // Sắp xếp điểm vào đúng loại điểm (TX, GK, CK)
+      //     if (item.score_type === "TX") {
+      //       groupedScores[item.subject].tx = item.grade;
+      //     } else if (item.score_type === "GK") {
+      //       groupedScores[item.subject].gk = item.grade;
+      //     } else if (item.score_type === "CK") {
+      //       groupedScores[item.subject].ck = item.grade;
+      //     }
+      //   });
+
+      //   // Chuyển đổi đối tượng thành mảng để dễ hiển thị trong bảng
+      //   return Object.values(groupedScores);
       // },
       formatScoreData(data) {
-        const groupedScores = {};
+          const groupedScores = {};
 
-        data.forEach(item => {
-          // Kiểm tra xem môn học này đã tồn tại trong groupedScores chưa
-          if (!groupedScores[item.subject]) {
-            groupedScores[item.subject] = {
-              subject: item.subject,
-              tx: [],  // Điểm thường xuyên
-              gk: [],  // Điểm giữa kỳ
-              ck: []   // Điểm cuối kỳ
+          // Khởi tạo với tất cả các môn để đảm bảo mỗi môn đều có một dòng trong bảng
+          this.initializeScoreData().forEach(subjectEntry => {
+            groupedScores[subjectEntry.subject] = {
+              subject: subjectEntry.subject,
+              tx: [],
+              gk: [],
+              ck: []
             };
-          }
+          });
 
-          // Sắp xếp điểm vào đúng loại điểm (TX, GK, CK)
-          if (item.score_type === "TX") {
-            groupedScores[item.subject].tx = item.grade;
-          } else if (item.score_type === "GK") {
-            groupedScores[item.subject].gk = item.grade;
-          } else if (item.score_type === "CK") {
-            groupedScores[item.subject].ck = item.grade;
-          }
-        });
+          // Cập nhật dữ liệu điểm thực tế từ API
+          data.forEach(item => {
+            if (groupedScores[item.subject]) {
+              // Thêm điểm vào đúng loại (TX, GK, CK)
+              if (item.score_type === "TX") {
+                groupedScores[item.subject].tx = item.grade;
+              } else if (item.score_type === "GK") {
+                groupedScores[item.subject].gk = item.grade;
+              } else if (item.score_type === "CK") {
+                groupedScores[item.subject].ck = item.grade;
+              }
+            }
+          });
 
-        // Chuyển đổi đối tượng thành mảng để dễ hiển thị trong bảng
-        return Object.values(groupedScores);
+          // Chuyển đổi đối tượng groupedScores thành mảng để dễ hiển thị trong bảng
+          return Object.values(groupedScores);
       },
+
     },
 };
 </script>

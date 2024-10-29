@@ -1,17 +1,43 @@
 <template>
+  
+
+  <!-- <div class="wrapper study" style="background-color: ">
+      <div class="navbar">
+          <div>
+            <base-button @click="goToDashboard" class="dashboard-button btn-success" simple>
+              <i class="tim-icons icon-minimal-left"></i> Trang chủ
+            </base-button>
+          </div>
+          <div class="title">
+            <h1 class="font-weight-bold">Dạy học</h1>
+          </div>
+
+          <div class="current-time" style=" width: 180px">{{ currentTime }}</div>
+      </div>
+    
+      <div class="classroom-layout mt-3"></div>
+   -->
+  
+  
   <div class="wrapper study">
-    <div class="header">
-      <base-button @click="goToDashboard" class="dashboard-button btn-primary" simple>
-        <i class="tim-icons icon-minimal-left"></i> Trang chủ
-      </base-button>
-      <h1 class="title">Study Layout</h1>
-      <base-button @click="toggleEvaluate" class="dashboard-button btn-info" simple>
-        <i class="tim-icons icon-notes"></i> Đánh giá
-      </base-button>
-      <div class="current-time">{{ currentTime }}</div>
+    <div class="navbar">
+      <div>
+        <base-button @click="goToDashboard" class="dashboard-button btn-success" simple>
+          <i class="tim-icons icon-minimal-left"></i> Trang chủ
+        </base-button>
+      </div>
+      <div class="title">
+        <h1 class="font-weight-bold">DẠY HỌC</h1>
+      </div>
+      <div>
+        <base-button @click="toggleEvaluate" class="dashboard-button btn-info" simple>
+          <i class="tim-icons icon-notes"></i> Đánh giá
+        </base-button>
+      </div>
+      <div class="current-time" style=" width: 180px">{{ currentTime }}</div>
     </div>
     
-    <div class="classroom-layout">
+    <div class="classroom-layout mt-3">
       <div v-for="(row, rowIndex) in desks" :key="rowIndex" class="row">
         <div v-for="(seat, columnIndex) in row" :key="columnIndex"
          :class="['seat', 
@@ -22,7 +48,7 @@
             @click="scoringAndEnroll(seat)"
             class="btn btn-simple student"
             draggable
-            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': getAttendanceStatus(seat) === 3 , 'btn-warning': getAttendanceStatus(seat) === 2}"
+            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': (getAttendanceStatus(seat) === 3) || (!getAttendanceStatus(seat)) , 'btn-warning': getAttendanceStatus(seat) === 2,}"
             
           >
             {{ seat }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
@@ -182,6 +208,9 @@ let API_URL = ""
 
 export default {
   components: { Modal },
+  mounted() {
+    this.startLongPolling();
+  },
   data() {
     return {
       currentStatus: null,
@@ -716,7 +745,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .study {
   text-align: center;
   position: relative;

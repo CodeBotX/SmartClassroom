@@ -17,6 +17,11 @@
           :name="$t('sidebar.learningManagement')"
           icon="tim-icons icon-pencil"
         />
+        <sidebar-link v-if="userData && userData.is_teacher"
+          to="/homeroom_teacher"
+          :name="$t('sidebar.homeroomTeacher')"
+          icon="tim-icons icon-components"
+        />
         <sidebar-link v-if="userData && (userData.is_student || userData.is_parent)"
           to="/learning_outcome"
           :name="$t('sidebar.learningOutcome')"
@@ -47,7 +52,7 @@
           :name="$t('sidebar.notifications')"
           icon="tim-icons icon-bell-55"
         />
-        <sidebar-link
+        <!-- <sidebar-link
           to="/profile"
           :name="$t('sidebar.userProfile')"
           icon="tim-icons icon-single-02"
@@ -66,7 +71,7 @@
           to="/dashboard?enableRTL=true"
           :name="$t('sidebar.rtlSupport')"
           icon="tim-icons icon-world"
-        />
+        /> -->
       </template>
     </side-bar>
     <div class="main-panel">

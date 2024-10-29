@@ -75,7 +75,7 @@
                 <base-button @click="toggleSeatingDetail(row.name)" class="dashboard-button btn-info" simple>
                   <i class="tim-icons icon-notes"></i>Quản lý chỗ ngồi
                 </base-button>
-              </td>
+              </td> -->
             </template>
           </base-table>
         </div>
@@ -685,7 +685,7 @@ export default {
           this.initBigChart(this.bigLineChart.activeIndex)
         })
         .catch((error) => {
-          console.error("Error get user data :", error);
+          console.error("Error get data :", error);
 
           this.$notify({
                 type: "warning",

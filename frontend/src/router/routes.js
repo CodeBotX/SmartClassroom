@@ -15,12 +15,14 @@ const LearingManagement = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/LearningManagement.vue");
 const LearningOutcome = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/LearningOutcome.vue");
+const HomeroomTeacher = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/HomeroomTeacher.vue");
 const CompetitionResult = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/CompetitionResult.vue");
 const Dashboard = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/Dashboard.vue");
 const Profile = () =>
-  import(/* webpackChunkName: "common" */ "@/pages/Profile.vue");
+  import(/* webpackChunkName: "common" */ "@/pages/profile.vue");
 const Notifications = () =>
   import(/* webpackChunkName: "common" */ "@/pages/Notifications.vue");
 const Icons = () =>
@@ -67,6 +69,11 @@ const routes = [
         path: "learning_outcome",
         name: "Kết quả học tập",
         component: LearningOutcome,
+      },
+      {
+        path: "homeroom_teacher",
+        name: "Quản lý lớp",
+        component: HomeroomTeacher,
       },
       {
         path: "competition_result",

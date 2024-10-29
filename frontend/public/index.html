@@ -4,11 +4,6 @@
   <head>
     <meta charset="utf-8" />
     <link
-      rel="apple-touch-icon"
-      sizes="76x76"
-      href="<%= webpackConfig.output.publicPath %>apple-icon.png"
-    />
-    <link
       rel="icon"
       type="image/png"
       sizes="96x96"
@@ -25,10 +20,14 @@
     />
 
     <!--  Fonts and icons     -->
-    <link
+    <!-- <link
       href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800"
       rel="stylesheet"
-    />
+    /> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link
       href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
       rel="stylesheet"
@@ -40,7 +39,7 @@
     />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
   </head>
-  <body>
+  <body style="background-color: #2D3A4F;">
     <div class="wrapper" id="app"></div>
     <!-- built files will be auto injected -->
     <!--  Google Maps Plugin    -->

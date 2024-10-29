@@ -3,7 +3,7 @@
     <div class="spinner-container">
       <div class="spinner"></div>
       <a href="#" class="loading-icon" aria-hidden="true">
-        <img src="@/assets/img/icon_sm3.png" alt="Loading Icon" class="loading-icon-img" /> <!-- Thêm icon bằng thẻ img -->
+        <img src="@/assets/img/SMALL_CL4.png" alt="Loading Icon" class="loading-icon-img" /> <!-- Thêm icon bằng thẻ img -->
       </a>
     </div>
   </div>
@@ -62,8 +62,7 @@ export default {
 }
 
 .loading-icon-img {
-  transform: scale(1.7);
-  filter: brightness(1.1);
+  transform: scale(1.5);
 }
 
 p {

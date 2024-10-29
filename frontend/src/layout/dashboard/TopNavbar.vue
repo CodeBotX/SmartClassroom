@@ -21,7 +21,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="#pablo">{{ routeName }}</a>
+        <a class="navbar-brand" style="color: white" href="#pablo">{{ routeName }}</a>
       </div>
       
 
@@ -42,13 +42,11 @@
       <collapse-transition>
         <div class="collapse navbar-collapse show" v-show="showMenu">
           <ul class="navbar-nav" :class="$rtl.isRTL ? 'mr-auto' : 'ml-auto'">
-            <div
+            <!-- <div
               class="search-bar input-group"
               @click="searchModalVisible = true"
             >
-              <!-- <input type="text" class="form-control" placeholder="Search...">
-              <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
-              <!-- <button
+              <button
                 class="btn btn-link"
                 id="search-button"
                 data-toggle="modal"
@@ -62,64 +60,6 @@
               
               
               <!-- You can choose types of search input -->
-            </div>
-            <!-- <modal
-              :show.sync="searchModalVisible"
-              class="modal-search"
-              id="searchModal"
-              :centered="false"
-              :show-close="true"
-            >
-              <input
-                slot="header"
-                v-model="searchQuery"
-                type="text"
-                class="form-control"
-                id="inlineFormInputGroup"
-                placeholder="SEARCH"
-              />
-            </modal> -->
-            <base-dropdown
-              tag="li"
-              :menu-on-right="!$rtl.isRTL"
-              title-tag="a"
-              class="nav-item"
-            >
-              <a
-                slot="title"
-                href="#"
-                class="dropdown-toggle nav-link"
-                data-toggle="dropdown"
-                aria-expanded="true"
-              >
-                <div class="notification d-none d-lg-block d-xl-block"></div>
-                <i class="tim-icons icon-sound-wave"></i>
-                <p class="d-lg-none"> </p>
-              </a>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >{{userData.full_name}}</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >You have 5 more tasks</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >Your friend Michael is in town</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item"
-                  >Another notification</a
-                >
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Another one</a>
-              </li>
-            </base-dropdown>
             <base-dropdown
               tag="li"
               :menu-on-right="!$rtl.isRTL"
@@ -134,11 +74,12 @@
                 data-toggle="dropdown"
                 aria-expanded="true"
               >
-                <div class="photo">
+                <div class="photo mr-3">
                   <img src="img/anime3.png" />
                 </div>
-                <b class="caret d-none d-lg-block d-xl-block"></b>
-                <p class="d-lg-none">Log out</p>
+                <span v-if="userData" :userData="userData" class="mr-5">{{ userData.full_name }}</span>
+                <span class="caret d-none d-lg-block d-xl-block"> </span>
+                <p v-if="userData" :userData="userData" class="d-lg-none">{{ userData.full_name }}</p>
               </a>
               <li class="nav-link">
                 

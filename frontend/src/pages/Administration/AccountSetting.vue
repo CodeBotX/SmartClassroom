@@ -31,7 +31,7 @@
 
         <!-- ĐỔI MẬT KHẨU -->
         <div v-if="bigLineChart.activeIndex === 0">
-          <h4 class="title text-primary">
+          <h4 class="title text-success">
             Reset mật khẩu
           </h4>
           <div class="row">
@@ -52,7 +52,7 @@
 
         <!-- ĐĂNG KÝ TÀI KHOẢN -->
         <div v-if="bigLineChart.activeIndex === 1">
-          <h4 class="title text-primary">Đăng ký tài khoản</h4>
+          <h4 class="title text-success">Đăng ký tài khoản</h4>
 
           <!-- Choose registration type -->
           <div class="row">
@@ -77,7 +77,7 @@
           <!-- Button to Upload File -->
           <div class="row mt-4">
             <div class="col-md-6 pr-md-1">
-              <base-button type="primary" @click="triggerFileUpload" simple>
+              <base-button type="success" @click="triggerFileUpload" simple>
               <i class="tim-icons icon-attach-87"></i> Upload file Excel
               </base-button>
               <p v-if="selectedFile">{{ selectedFile.name }}</p>
