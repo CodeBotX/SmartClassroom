@@ -134,7 +134,7 @@ class SeatingPositionListView(generics.ListAPIView):
             room = Room.objects.get(name=room_name)
             return SeatingPosition.objects.filter(room=room)
         except Room.DoesNotExist:
-            return SeatingPosition.objects.none()  # Hoặc có thể raise 404
+            return SeatingPosition.objects.none()  
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
