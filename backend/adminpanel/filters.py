@@ -19,7 +19,6 @@ class LessonFilter(filters.FilterSet):
         model = Lesson
         fields = ['semester', 'subject', 'room', 'day_range','day', 'teacher', 'evaluate','period']
 
-
 class GradesFilter(django_filters.FilterSet):
     student = django_filters.CharFilter(field_name='student__user__user_id', lookup_expr='exact')
     subject = django_filters.CharFilter(field_name='subject', lookup_expr='exact')

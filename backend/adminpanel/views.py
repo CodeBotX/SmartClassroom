@@ -12,7 +12,7 @@ from .filters import *
 
 from accounts.models import Student,Teacher
 from django.db.models import Avg
-
+from collections import defaultdict
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -35,6 +35,252 @@ class SemesterViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+# class GradesViewSet(viewsets.ModelViewSet):
+#     authentication_classes = []
+#     permission_classes = []
+#     queryset = Grades.objects.all()
+#     serializer_class = GradesSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_class = GradesFilter
+#     # tạo điểm
+#     @transaction.atomic  
+#     def create(self, request, *args, **kwargs):
+#         data = request.data
+#         if isinstance(data, list):
+#             serializer = GradesSerializer(data=data, many=True)
+#         else:
+#             serializer = GradesSerializer(data=data)
+
+#         if serializer.is_valid():
+#             if isinstance(data, list):
+#                 for item in data:
+#                     student = item.get('student')
+#                     subject = item.get('subject')
+#                     semester = item.get('semester')
+#                     score_type = item.get('score_type')
+#                     if score_type in [ScoreType.GK, ScoreType.CK]:
+#                         existing_grade = Grades.objects.filter(
+#                             student=student, subject=subject, semester=semester, score_type=score_type
+#                         ).exists()
+#                         if existing_grade:
+#                             return Response(
+#                                 {"detail": f"Điểm {score_type} đã tồn tại cho học sinh {student} trong môn {subject}."},
+#                                 status=status.HTTP_400_BAD_REQUEST
+#                             )
+#             else:
+#                 student = serializer.validated_data.get('student')
+#                 subject = serializer.validated_data.get('subject')
+#                 semester = serializer.validated_data.get('semester')
+#                 score_type = serializer.validated_data.get('score_type')
+
+#                 if score_type in [ScoreType.GK, ScoreType.CK]:
+#                     existing_grade = Grades.objects.filter(
+#                         student=student, subject=subject, semester=semester, score_type=score_type
+#                     ).exists()
+#                     if existing_grade:
+#                         return Response(
+#                             {"detail": f"Điểm {score_type} đã tồn tại cho học sinh {student} trong môn {subject}."},
+#                             status=status.HTTP_400_BAD_REQUEST
+#                         )
+
+#             serializer.save() 
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+#     def list(self, request):
+#         user_id = request.query_params.get('user_id')
+#         semester_name = request.query_params.get('semester_name')
+#         subject = request.query_params.get('subject')
+#         room_name = request.query_params.get('room_name')
+#         score_type = request.query_params.get('score_type')
+#         top_students = request.query_params.get('top_students')
+
+#         if not semester_name:
+#             return Response({'error': 'Thiếu semester_name.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             semester = Semester.objects.get(name=semester_name)
+
+#             if user_id:
+#                 try:
+#                     student = Student.objects.get(user__user_id=user_id)
+#                     grades_query = Grades.objects.filter(student=student, semester=semester)
+#                     if score_type:
+#                         grades_query = grades_query.filter(score_type=score_type)
+
+#                     # Tạo một dictionary để gom nhóm các điểm
+#                     grouped_grades = {}
+#                     for grade in grades_query:
+#                         key = (grade.subject, grade.score_type, grade.semester.name)
+#                         if key not in grouped_grades:
+#                             grouped_grades[key] = {
+#                                 "subject": grade.subject,
+#                                 "score_type": grade.score_type,
+#                                 "grade": [],
+#                                 "student": grade.student.user.user_id,
+#                                 "semester": grade.semester.name,
+#                             }
+#                         grouped_grades[key]["grade"].append(grade.grade)
+
+#                     # Chuyển đổi dictionary thành list
+#                     grouped_grades_list = list(grouped_grades.values())
+#                     return Response(grouped_grades_list, status=status.HTTP_200_OK)
+
+#                 except Student.DoesNotExist:
+#                     return Response({'error': 'Học sinh không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+
+#             elif room_name:
+#                 try:
+#                     room = Room.objects.get(name=room_name)
+#                     students = room.students.all()
+
+#                     results = {}
+#                     no_scores = []
+
+#                     for student in students:
+#                         average_score = Grades.objects.filter(
+#                             student=student,
+#                             subject=subject,
+#                             semester=semester
+#                         ).aggregate(avg_score=Avg('grade'))['avg_score']
+
+#                         if average_score is None:
+#                             no_scores.append(student.full_name)
+#                         else:
+#                             results[student.full_name] = average_score
+
+#                     sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+#                     return Response({
+#                         'sorted_results': sorted_results,
+#                         'no_scores': no_scores
+#                     }, status=status.HTTP_200_OK)
+
+#                 except Room.DoesNotExist:
+#                     return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+
+#             elif top_students:
+#                 if subject not in SubjectChoices.values:
+#                     return Response({'error': 'Môn học không hợp lệ.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#                 students = Grades.objects.filter(subject=subject, semester=semester)\
+#                     .values('student__full_name')\
+#                     .annotate(avg_score=Avg('grade'))\
+#                     .order_by('-avg_score')[:30]
+
+#                 return Response({'top_students': list(students)}, status=status.HTTP_200_OK)
+
+#             else:
+#                 return Response({'error': 'Thiếu các tham số bắt buộc.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         except Semester.DoesNotExist:
+#             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        
+#     @action(detail=False, methods=['get'], url_path='statistics')
+#     def get_statistics(self, request):
+#         semester_name = request.query_params.get('semester_name')
+#         room_name = request.query_params.get('room_name')
+#         subject = request.query_params.get('subject')
+#         score_type = request.query_params.get('score_type')
+
+#         if not semester_name or not room_name or not subject or not score_type:
+#             return Response({'error': 'Thiếu tham số: semester_name, room_name, subject hoặc score_type.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         try:
+#             room = Room.objects.get(name=room_name)
+#             semester = Semester.objects.get(name=semester_name)
+
+#             students = room.students.all()
+
+#             # Khởi tạo các biến đếm cho từng khoảng
+#             count_0_05, count_05_1, count_1_15, count_15_2 = 0, 0, 0, 0
+#             count_2_25, count_25_3, count_3_35, count_35_4 = 0, 0, 0, 0
+#             count_4_45, count_45_5, count_5_55, count_55_6 = 0, 0, 0, 0
+#             count_6_65, count_65_7, count_7_75, count_75_8 = 0, 0, 0, 0
+#             count_8_85, count_85_9, count_9_95, count_95_10 = 0, 0, 0, 0
+
+#             # Lọc điểm theo học sinh, môn học, học kỳ và loại điểm
+#             grades = Grades.objects.filter(
+#                 student__in=students,
+#                 subject=subject,
+#                 semester=semester,
+#                 score_type=score_type
+#             ).values_list('grade', flat=True)
+
+#             # Duyệt qua từng điểm và phân loại vào các khoảng
+#             for grade in grades:
+#                 if 0 <= grade < 0.5:
+#                     count_0_05 += 1
+#                 elif 0.5 <= grade < 1.0:
+#                     count_05_1 += 1
+#                 elif 1.0 <= grade < 1.5:
+#                     count_1_15 += 1
+#                 elif 1.5 <= grade < 2.0:
+#                     count_15_2 += 1
+#                 elif 2.0 <= grade < 2.5:
+#                     count_2_25 += 1
+#                 elif 2.5 <= grade < 3.0:
+#                     count_25_3 += 1
+#                 elif 3.0 <= grade < 3.5:
+#                     count_3_35 += 1
+#                 elif 3.5 <= grade < 4.0:
+#                     count_35_4 += 1
+#                 elif 4.0 <= grade < 4.5:
+#                     count_4_45 += 1
+#                 elif 4.5 <= grade < 5.0:
+#                     count_45_5 += 1
+#                 elif 5.0 <= grade < 5.5:
+#                     count_5_55 += 1
+#                 elif 5.5 <= grade < 6.0:
+#                     count_55_6 += 1
+#                 elif 6.0 <= grade < 6.5:
+#                     count_6_65 += 1
+#                 elif 6.5 <= grade < 7.0:
+#                     count_65_7 += 1
+#                 elif 7.0 <= grade < 7.5:
+#                     count_7_75 += 1
+#                 elif 7.5 <= grade < 8.0:
+#                     count_75_8 += 1
+#                 elif 8.0 <= grade < 8.5:
+#                     count_8_85 += 1
+#                 elif 8.5 <= grade < 9.0:
+#                     count_85_9 += 1
+#                 elif 9.0 <= grade < 9.5:
+#                     count_9_95 += 1
+#                 elif 9.5 <= grade <= 10:
+#                     count_95_10 += 1
+
+#             return Response({
+#                 "0.0-0.5": count_0_05,
+#                 "0.5-1.0": count_05_1,
+#                 "1.0-1.5": count_1_15,
+#                 "1.5-2.0": count_15_2,
+#                 "2.0-2.5": count_2_25,
+#                 "2.5-3.0": count_25_3,
+#                 "3.0-3.5": count_3_35,
+#                 "3.5-4.0": count_35_4,
+#                 "4.0-4.5": count_4_45,
+#                 "4.5-5.0": count_45_5,
+#                 "5.0-5.5": count_5_55,
+#                 "5.5-6.0": count_55_6,
+#                 "6.0-6.5": count_6_65,
+#                 "6.5-7.0": count_65_7,
+#                 "7.0-7.5": count_7_75,
+#                 "7.5-8.0": count_75_8,
+#                 "8.0-8.5": count_8_85,
+#                 "8.5-9.0": count_85_9,
+#                 "9.0-9.5": count_9_95,
+#                 "9.5-10.0": count_95_10
+#             }, status=status.HTTP_200_OK)
+
+#         except Room.DoesNotExist:
+#             return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+#         except Semester.DoesNotExist:
+#             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+        
+
 class GradesViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
@@ -42,7 +288,6 @@ class GradesViewSet(viewsets.ModelViewSet):
     serializer_class = GradesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = GradesFilter
-    # tạo điểm
     @transaction.atomic  
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -88,96 +333,93 @@ class GradesViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
-    def list(self, request):
-        user_id = request.query_params.get('user_id')
+    def list(self, request, *args, **kwargs):
+        
         semester_name = request.query_params.get('semester_name')
         subject = request.query_params.get('subject')
         room_name = request.query_params.get('room_name')
-        score_type = request.query_params.get('score_type')
         top_students = request.query_params.get('top_students')
-
+        
+        
         if not semester_name:
             return Response({'error': 'Thiếu semester_name.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             semester = Semester.objects.get(name=semester_name)
 
-            if user_id:
-                try:
-                    student = Student.objects.get(user__user_id=user_id)
-                    grades_query = Grades.objects.filter(student=student, semester=semester)
-                    if score_type:
-                        grades_query = grades_query.filter(score_type=score_type)
+            # Top students
+            if top_students:
+                subject = request.query_params.get('subject')
+                if subject:
+                    return self._get_top_students(semester, subject)
+                return Response({'error': 'Thiếu subject.'}, status=status.HTTP_400_BAD_REQUEST)
 
-                    # Tạo một dictionary để gom nhóm các điểm
-                    grouped_grades = {}
-                    for grade in grades_query:
-                        key = (grade.subject, grade.score_type, grade.semester.name)
-                        if key not in grouped_grades:
-                            grouped_grades[key] = {
-                                "subject": grade.subject,
-                                "score_type": grade.score_type,
-                                "grade": [],
-                                "student": grade.student.user.user_id,
-                                "semester": grade.semester.name,
-                            }
-                        grouped_grades[key]["grade"].append(grade.grade)
+            # Room grades
+            if room_name:
+                subject = request.query_params.get('subject')
+                if subject:
+                    return self._get_room_grades(room_name, semester, subject)
+                return Response({'error': 'Thiếu subject.'}, status=status.HTTP_400_BAD_REQUEST)
 
-                    # Chuyển đổi dictionary thành list
-                    grouped_grades_list = list(grouped_grades.values())
-                    return Response(grouped_grades_list, status=status.HTTP_200_OK)
-
-                except Student.DoesNotExist:
-                    return Response({'error': 'Học sinh không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-
-            elif room_name:
-                try:
-                    room = Room.objects.get(name=room_name)
-                    students = room.students.all()
-
-                    results = {}
-                    no_scores = []
-
-                    for student in students:
-                        average_score = Grades.objects.filter(
-                            student=student,
-                            subject=subject,
-                            semester=semester
-                        ).aggregate(avg_score=Avg('grade'))['avg_score']
-
-                        if average_score is None:
-                            no_scores.append(student.full_name)
-                        else:
-                            results[student.full_name] = average_score
-
-                    sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
-                    return Response({
-                        'sorted_results': sorted_results,
-                        'no_scores': no_scores
-                    }, status=status.HTTP_200_OK)
-
-                except Room.DoesNotExist:
-                    return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-
-            elif top_students:
-                if subject not in SubjectChoices.values:
-                    return Response({'error': 'Môn học không hợp lệ.'}, status=status.HTTP_400_BAD_REQUEST)
-
-                students = Grades.objects.filter(subject=subject, semester=semester)\
-                    .values('student__full_name')\
-                    .annotate(avg_score=Avg('grade'))\
-                    .order_by('-avg_score')[:30]
-
-                return Response({'top_students': list(students)}, status=status.HTTP_200_OK)
-
-            else:
-                return Response({'error': 'Thiếu các tham số bắt buộc.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Lọc và gom nhóm điểm
+            response_data = self._group_grades(request, semester)
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-        
-        
+
+    def _get_top_students(self, semester, subject):
+        top_students = Grades.objects.filter(subject=subject, semester=semester)\
+            .values('student__full_name')\
+            .annotate(avg_score=Avg('grade'))\
+            .order_by('-avg_score')[:30]
+
+        return Response({'top_students': list(top_students)}, status=status.HTTP_200_OK)
+
+    def _get_room_grades(self, room_name, semester, subject):
+        try:
+            room = Room.objects.get(name=room_name)
+            students = room.students.all()
+
+            results = {}
+            no_scores = []
+
+            for student in students:
+                avg_score = Grades.objects.filter(
+                    student=student,
+                    subject=subject,
+                    semester=semester
+                ).aggregate(avg_score=Avg('grade'))['avg_score']
+
+                if avg_score is None:
+                    no_scores.append(student.full_name)
+                else:
+                    results[student.full_name] = avg_score
+
+            sorted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+            return Response({'sorted_results': sorted_results, 'no_scores': no_scores}, status=status.HTTP_200_OK)
+
+        except Room.DoesNotExist:
+            return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+
+    def _group_grades(self, request, semester):
+        grades_query = self.filter_queryset(self.get_queryset().filter(semester=semester))
+        grouped_grades = defaultdict(lambda: {
+            "subject": None,
+            "score_type": None,
+            "grade": [],
+            "student": None,
+            "semester": semester.name,
+        })
+
+        for grade in grades_query:
+            key = (grade.subject, grade.score_type, grade.student.user.user_id)
+            grouped_grades[key]["subject"] = grade.subject
+            grouped_grades[key]["score_type"] = grade.score_type
+            grouped_grades[key]["student"] = grade.student.user.user_id
+            grouped_grades[key]["grade"].append(grade.grade)
+
+        return list(grouped_grades.values())
     @action(detail=False, methods=['get'], url_path='statistics')
     def get_statistics(self, request):
         semester_name = request.query_params.get('semester_name')
@@ -185,23 +427,19 @@ class GradesViewSet(viewsets.ModelViewSet):
         subject = request.query_params.get('subject')
         score_type = request.query_params.get('score_type')
 
-        if not semester_name or not room_name or not subject or not score_type:
-            return Response({'error': 'Thiếu tham số: semester_name, room_name, subject hoặc score_type.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Kiểm tra các tham số bắt buộc
+        if not all([semester_name, room_name, subject, score_type]):
+            return Response(
+                {'error': 'Thiếu tham số: semester_name, room_name, subject hoặc score_type.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
             room = Room.objects.get(name=room_name)
             semester = Semester.objects.get(name=semester_name)
-
             students = room.students.all()
 
-            # Khởi tạo các biến đếm cho từng khoảng
-            count_0_05, count_05_1, count_1_15, count_15_2 = 0, 0, 0, 0
-            count_2_25, count_25_3, count_3_35, count_35_4 = 0, 0, 0, 0
-            count_4_45, count_45_5, count_5_55, count_55_6 = 0, 0, 0, 0
-            count_6_65, count_65_7, count_7_75, count_75_8 = 0, 0, 0, 0
-            count_8_85, count_85_9, count_9_95, count_95_10 = 0, 0, 0, 0
-
-            # Lọc điểm theo học sinh, môn học, học kỳ và loại điểm
+            # Lọc các điểm dựa trên các điều kiện
             grades = Grades.objects.filter(
                 student__in=students,
                 subject=subject,
@@ -209,78 +447,23 @@ class GradesViewSet(viewsets.ModelViewSet):
                 score_type=score_type
             ).values_list('grade', flat=True)
 
-            # Duyệt qua từng điểm và phân loại vào các khoảng
+            # Khởi tạo các biến đếm cho từng khoảng điểm
+            grade_counts = {f"{i/2}-{(i+1)/2}": 0 for i in range(20)}
             for grade in grades:
-                if 0 <= grade < 0.5:
-                    count_0_05 += 1
-                elif 0.5 <= grade < 1.0:
-                    count_05_1 += 1
-                elif 1.0 <= grade < 1.5:
-                    count_1_15 += 1
-                elif 1.5 <= grade < 2.0:
-                    count_15_2 += 1
-                elif 2.0 <= grade < 2.5:
-                    count_2_25 += 1
-                elif 2.5 <= grade < 3.0:
-                    count_25_3 += 1
-                elif 3.0 <= grade < 3.5:
-                    count_3_35 += 1
-                elif 3.5 <= grade < 4.0:
-                    count_35_4 += 1
-                elif 4.0 <= grade < 4.5:
-                    count_4_45 += 1
-                elif 4.5 <= grade < 5.0:
-                    count_45_5 += 1
-                elif 5.0 <= grade < 5.5:
-                    count_5_55 += 1
-                elif 5.5 <= grade < 6.0:
-                    count_55_6 += 1
-                elif 6.0 <= grade < 6.5:
-                    count_6_65 += 1
-                elif 6.5 <= grade < 7.0:
-                    count_65_7 += 1
-                elif 7.0 <= grade < 7.5:
-                    count_7_75 += 1
-                elif 7.5 <= grade < 8.0:
-                    count_75_8 += 1
-                elif 8.0 <= grade < 8.5:
-                    count_8_85 += 1
-                elif 8.5 <= grade < 9.0:
-                    count_85_9 += 1
-                elif 9.0 <= grade < 9.5:
-                    count_9_95 += 1
-                elif 9.5 <= grade <= 10:
-                    count_95_10 += 1
+                for i in range(20):
+                    lower_bound = i * 0.5
+                    upper_bound = (i + 1) * 0.5
+                    if lower_bound <= grade < upper_bound:
+                        grade_counts[f"{lower_bound}-{upper_bound}"] += 1
+                        break
 
-            return Response({
-                "0.0-0.5": count_0_05,
-                "0.5-1.0": count_05_1,
-                "1.0-1.5": count_1_15,
-                "1.5-2.0": count_15_2,
-                "2.0-2.5": count_2_25,
-                "2.5-3.0": count_25_3,
-                "3.0-3.5": count_3_35,
-                "3.5-4.0": count_35_4,
-                "4.0-4.5": count_4_45,
-                "4.5-5.0": count_45_5,
-                "5.0-5.5": count_5_55,
-                "5.5-6.0": count_55_6,
-                "6.0-6.5": count_6_65,
-                "6.5-7.0": count_65_7,
-                "7.0-7.5": count_7_75,
-                "7.5-8.0": count_75_8,
-                "8.0-8.5": count_8_85,
-                "8.5-9.0": count_85_9,
-                "9.0-9.5": count_9_95,
-                "9.5-10.0": count_95_10
-            }, status=status.HTTP_200_OK)
+            return Response(grade_counts, status=status.HTTP_200_OK)
 
         except Room.DoesNotExist:
             return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
-        
-#-----------------------------------------------------------------------------------------------
+
 
 
 class PlannedLessonViewSet(viewsets.ModelViewSet):
