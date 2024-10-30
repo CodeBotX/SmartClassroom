@@ -7,7 +7,7 @@
     "simpleTable": "Simple Table",
     "totalShipments": "Thống kê học sinh",
     "chartCategories": ["Tài khoản", "Lượt truy cập", "Phiên làm việc"],
-    "accountSetting": ["Reset password", "Đăng ký tài khoản", "Cập nhật trạng thái"],
+    "accountSetting": ["Reset password", "Đăng ký tài khoản"],
     "userSetting": ["Học sinh", "Giáo viên", "Phụ huynh", "Admin"],
     "curriculum": ["Học kỳ", "Lớp học", "Bài giảng", "Thiết bị điểm danh"],
     "administration": ["Quản trị tài khoản", "Quản trị người dùng", "Chương trình đào tạo"],

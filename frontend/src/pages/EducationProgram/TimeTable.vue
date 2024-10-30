@@ -111,7 +111,7 @@
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1" >
                                         <base-input label="Môn" >
-                                          <select class="form-control" v-model="lessonDetail.subject">
+                                          <select class="form-control" v-model="lessonDetail.subject" @change="getTeacherAssignment(lessonDetail.subject)">
                                             <option class="text-info" v-for="(subject, index) in subjects" :key="index">{{subject}}</option>
                                           </select>
                                         </base-input>
@@ -122,10 +122,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1">
-                                        <base-input label="Giáo viên (chưa dùng đc)" >
+                                        <base-input label="Giáo viên" >
                                           <select class="form-control" v-model="lessonDetail.teacher">
-                                            <option class="text-info">giao viên1</option>
-                                            <option class="text-info">giao viên2</option>
+                                            <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.teacher">{{teacher.teacher}}</option>
                                           </select>
                                         </base-input>
                                     </div>
@@ -177,14 +176,6 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 pr-md-1">
-                                        <base-input label="Giáo viên (chưa dùng đc)">
-                                          <select class="form-control" v-model="lessonCreate.teacher">
-                                            <option class="text-info">giao viên1</option>
-                                            <option class="text-info">giao viên2</option>
-                                          </select>
-                                        </base-input>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
                                         <base-input disabled label="Tiết" v-model="lessonCreate.period"></base-input>
                                     </div>
                                 </div>
@@ -229,6 +220,7 @@ export default {
           createModal: false,
 
           teacherOption: null,
+          teachers: null,
 
           lessonDetail: null,
           lessonCreate: {
@@ -257,6 +249,31 @@ export default {
         };
     },
     methods: {
+      getTeacherAssignment(subject){
+        const token = localStorage.getItem("access_token");
+        axios
+        .get(API_URL+`/adminpanel/assignments/?room=${this.roomSelected.name}&subject=${subject}&semester=${this.semesterSelected.name}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.teachers = response.data
+        })
+        .catch((error) => {
+          console.error("Error get lesson data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Thông tin phân công giáo viên môn "+subject+ " lớp "+this.roomSelected+ " chưa tồn tại",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
+      },
       async initializeData() {
         try {
           await this.getApiUrl();
@@ -285,7 +302,7 @@ export default {
         })
         .then((response) => {
           this.lessonDetail = response.data
-
+          this.teachers = this.getTeacherAssignment(this.lessonDetail.subject)
         })
         .catch((error) => {
           console.error("Error get lesson data :", error);
@@ -350,15 +367,15 @@ export default {
       createLesson(){
 
         const date = new Date(this.lessonCreate.day)
+        console.log(this.lessonCreate.day)
         const weekday = date.getDay();    
 
         let data = {
           "subject": this.lessonCreate.subject,
-          "weekday": weekday-1,      
+          "weekday": weekday - 1 ,      
           "semester": this.lessonCreate.semester,
           "room": this.lessonCreate.room,
           "period": this.lessonCreate.period,
-          "teacher": this.lessonCreate.teacher
         }
         console.log(data)
 

@@ -28,9 +28,11 @@
     "vue-router-prefetch": "1.6.3",
     "vue-spinner": "^1.0.4",
     "vue-sse": "^2.5.2",
+    "vue-xlsx": "^0.2.1",
     "vue2-transitions": "0.3.0",
     "vue3-spinners": "^1.2.2",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^2.24.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.21.8",

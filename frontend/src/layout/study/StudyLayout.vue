@@ -48,10 +48,10 @@
             @click="scoringAndEnroll(seat)"
             class="btn btn-simple student"
             draggable
-            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': (getAttendanceStatus(seat) === 3) || (!getAttendanceStatus(seat)) , 'btn-warning': getAttendanceStatus(seat) === 2,}"
+            :class="{'btn-success': getAttendanceStatus(seat.user) === 1, 'btn-danger': (getAttendanceStatus(seat.user) === 3) || (!getAttendanceStatus(seat.user)) , 'btn-warning': getAttendanceStatus(seat.user) === 2,}"
             
           >
-            {{ seat }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
+            {{ shortenName(seat.full_name) }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
           </base-button>
         </div>
       </div>
@@ -350,8 +350,15 @@ export default {
     delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
+    shortenName(fullName) {
+      const nameParts = fullName.trim().split(' '); // Tách tên thành các phần
+      if (nameParts.length == 3) return nameParts.slice(1).join(' '); // Nếu chỉ có một phần, trả về tên gốc
+      if (nameParts.length == 4) return nameParts.slice(2).join(' '); // Lấy các phần sau họ và ghép lại
+      return fullName
+    },
     scoringAndEnroll(index){
-      this.studentDetail.id = index
+      this.studentDetail.id = index.user
+      this.studentDetail.full_name = index.full_name
       this.studentDetail.subject = this.lessonData.subject
       this.studentDetail.semester = this.lessonData.semester
 
@@ -605,7 +612,7 @@ export default {
           this.desks[rowIndex][columnIndex] = this.draggedStudent; // Đặt học sinh kéo tới vị trí mới
           this.desks[this.draggedRow][this.draggedCol] = null; // vị trí trước đó là null
           //Cập nhật vị trí mới cho học sinh
-          this.updatePosition(this.draggedStudent, rowIndex, columnIndex);
+          this.updatePosition(this.draggedStudent.user, rowIndex, columnIndex);
         }
         else {
           this.desks[rowIndex][columnIndex] = this.draggedStudent;
@@ -631,7 +638,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi vị trí học sinh "+ response.data.student + " thành công",
+                message: "Đổi vị trí học sinh "+ response.data.student.full_name + " thành công",
                 timeout: 1500,
                 verticalAlign: "bottom",
                 horizontalAlign: "left",
@@ -653,8 +660,8 @@ export default {
     swapPosition(student1, student2){
       const token = localStorage.getItem("access_token");
       const data = {
-        "user_id_1": student1,
-        "user_id_2": student2
+        "user_id_1": student1.user,
+        "user_id_2": student2.user
       }
         axios
         .post(API_URL+"/rooms/seating-positions/swap_seats/", data, {
@@ -667,7 +674,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi vị trí học sinh "+student1+" và "+student2 + " thành công",
+                message: "Đổi vị trí học sinh "+student1.full_name+" và "+student2.full_name + " thành công",
                 timeout: 1500,
                 verticalAlign: "bottom",
                 horizontalAlign: "left",
