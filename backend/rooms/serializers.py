@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from accounts.serializers import StudentSerializer
+from accounts.serializers import StudentSerializer, TeacherSerializer
 from .models import Room, SeatingPosition
 
 class RoomSerializer(serializers.ModelSerializer):
+    homeroom_teacher= TeacherSerializer()
     class Meta:
         model = Room
         fields = '__all__'
