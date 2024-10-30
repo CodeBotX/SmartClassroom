@@ -30,10 +30,10 @@
     </div>
           
     <div class="col-md-12" v-if="bigLineChart.activeIndex === 0">
-      <score-statistic></score-statistic>
+      <score-detail></score-detail>
     </div>
     <div class="col-md-12" v-if="bigLineChart.activeIndex === 1">
-      <score-detail></score-detail>
+      <!-- <score-statistic></score-statistic> -->
     </div>
     <div class="col-md-12" v-if="bigLineChart.activeIndex === 2">
       

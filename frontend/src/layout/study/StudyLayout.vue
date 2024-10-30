@@ -48,7 +48,7 @@
             @click="scoringAndEnroll(seat)"
             class="btn btn-simple student"
             draggable
-            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': getAttendanceStatus(seat) === 3 , 'btn-warning': getAttendanceStatus(seat) === 2}"
+            :class="{'btn-success': getAttendanceStatus(seat) === 1, 'btn-danger': (getAttendanceStatus(seat) === 3) || (!getAttendanceStatus(seat)) , 'btn-warning': getAttendanceStatus(seat) === 2,}"
             
           >
             {{ seat }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
@@ -745,7 +745,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .study {
   text-align: center;
   position: relative;

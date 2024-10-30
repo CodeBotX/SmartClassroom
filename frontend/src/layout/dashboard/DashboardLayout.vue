@@ -17,6 +17,11 @@
           :name="$t('sidebar.learningManagement')"
           icon="tim-icons icon-pencil"
         />
+        <sidebar-link v-if="userData && userData.is_teacher"
+          to="/homeroom_teacher"
+          :name="$t('sidebar.homeroomTeacher')"
+          icon="tim-icons icon-components"
+        />
         <sidebar-link v-if="userData && (userData.is_student || userData.is_parent)"
           to="/learning_outcome"
           :name="$t('sidebar.learningOutcome')"

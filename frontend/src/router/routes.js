@@ -15,6 +15,8 @@ const LearingManagement = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/LearningManagement.vue");
 const LearningOutcome = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/LearningOutcome.vue");
+const HomeroomTeacher = () =>
+  import(/* webpackChunkName: "dashboard" */ "@/pages/HomeroomTeacher.vue");
 const CompetitionResult = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/CompetitionResult.vue");
 const Dashboard = () =>
@@ -67,6 +69,11 @@ const routes = [
         path: "learning_outcome",
         name: "Kết quả học tập",
         component: LearningOutcome,
+      },
+      {
+        path: "homeroom_teacher",
+        name: "Quản lý lớp",
+        component: HomeroomTeacher,
       },
       {
         path: "competition_result",
