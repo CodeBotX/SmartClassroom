@@ -57,14 +57,13 @@
         </div>
 
         <!-- Lớp học -->
-        <div v-if="bigLineChart.activeIndex === 1">
+        <!-- <div v-if="bigLineChart.activeIndex === 1">
           <base-table :data="roomData" :columns="room_columns">
             <template slot="columns">
               <th>Lớp học</th>
               <th>Sĩ số lớp</th>
               <th>Giáo viên chủ nhiệm</th>
               <th class="text-right">Actions</th>
-              <!-- <th class="text-right">Actions</th> -->
             </template>
             <template slot-scope="{ row }">
               <td>{{ row.name }}</td>
@@ -77,7 +76,7 @@
               </td> 
             </template>
           </base-table>
-        </div>
+        </div> -->
 
         <!-- Create Modal -->
         <modal :show.sync="modals.createModal"
@@ -120,7 +119,7 @@
             <card type="secondary"
                   header-classes="bg-white pb-5"
                   body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 2">
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 1">
                 <template>
                     <div class="text-muted text-center mb-3">
                         <h4 class="text-success">Thêm bài giảng</h4>
@@ -208,7 +207,7 @@
             <card type="secondary"
                   header-classes="bg-white pb-5"
                   body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 2">
+                  class="border-0 mb-0" v-if="this.bigLineChart.activeIndex === 1">
                 <template>
                     <div class="text-muted text-center mb-3">
                         <h4 class="text-success">Cập nhật bài giảng</h4>
@@ -258,7 +257,7 @@
         <!-- Remove Modal -->
         <modal :show.sync="modals.removeModal">
             <h4 slot="header" class="modal-title" id="modal-title-default" v-if="this.bigLineChart.activeIndex === 0">Xóa nhận xóa học kỳ này </h4>
-            <h4 slot="header" class="modal-title" id="modal-title-default" v-if="this.bigLineChart.activeIndex === 2">Xóa nhận xóa bài giảng này </h4>
+            <h4 slot="header" class="modal-title" id="modal-title-default" v-if="this.bigLineChart.activeIndex === 1">Xóa nhận xóa bài giảng này </h4>
             <template slot="footer">
                 <base-button type="secondary" @click="removeObject">Xác nhận</base-button>
                 <base-button type="danger" class="ml-auto" @click="modals.removeModal = false">Hủy
@@ -300,7 +299,7 @@
         </modal>
 
         <!-- BÀI GIẢNG -->
-        <div v-if="bigLineChart.activeIndex === 2">
+        <div v-if="bigLineChart.activeIndex === 1">
           <base-table :data="plannedlessonData" :columns="plannedlesson_columns">
             <template slot="columns">
               <th>ID</th>
@@ -388,7 +387,7 @@ export default {
     seatingData: null,
     rooms: null,
     seating_columns: ["student", "row", "column"],
-    subjects: ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
+    subjects: ['TOAN', 'VAN', 'ANH', 'KHTN_HOA', 'KHTN_LY', 'KHTN_SINH', 'KHXH_DIA', 'KHXH_SU', 'KHXH_GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'],
     subjects_2: ['Toán', 'Ngữ Văn', 'Tiếng Anh', 'Hóa', 'Sinh học', 'Địa lý', 'Lịch sử', 'GDCD', 'Thể dục', 'Mỹ thuật', 'Âm nhạc', 'Tin học', 'Mỹ thuật'],
     semester_columns: ["semester", "day_begin", "number_of_weeks"],
     room_columns: ["name", "students", "homeroom_teacher"],
@@ -541,7 +540,7 @@ export default {
         let apiUrl = ""; // API URL sẽ thay đổi dựa trên loại đăng ký
         if (this.bigLineChart.activeIndex === 0) {
           apiUrl = API_URL + "/adminpanel/semesters/" + this.modals.idRemove + "/";
-        } else if (this.bigLineChart.activeIndex === 2) {
+        } else if (this.bigLineChart.activeIndex === 1) {
           apiUrl = API_URL + "/adminpanel/planned-lessons/" + this.modals.idRemove + "/";
         }
 
@@ -557,7 +556,7 @@ export default {
 
           if (this.bigLineChart.activeIndex === 0) {
             message = "Xóa học kỳ thành công"
-          } else if (this.bigLineChart.activeIndex === 2) {
+          } else if (this.bigLineChart.activeIndex === 1) {
             message = "Xóa bài giảng thành công"
           }
             this.$notify({
@@ -589,7 +588,7 @@ export default {
         if(this.bigLineChart.activeIndex ===0 ){
           apiUrl = API_URL + `/adminpanel/semesters/`
           data = this.modals.semesterCreate
-        } else if (this.bigLineChart.activeIndex === 2) {
+        } else if (this.bigLineChart.activeIndex === 1) {
           apiUrl = API_URL + "/adminpanel/planned-lessons/";
           data = this.modals.plannedLessonCreate
         }
@@ -607,7 +606,7 @@ export default {
           let message = "";
           if (this.bigLineChart.activeIndex === 0) {
             message = "Thêm học kỳ thành công"
-          } else if (this.bigLineChart.activeIndex === 2) {
+          } else if (this.bigLineChart.activeIndex === 1) {
             message = "Thêm bài giảng thành công"
           }
 
@@ -625,14 +624,24 @@ export default {
         })
         .catch((error) => {
           console.error("Error create data :", error);
-
-          this.$notify({
+          if(error.response.status === 400 && this.bigLineChart.activeIndex === 0){
+            this.$notify({
+                type: "warning",
+                message: "Ngày bắt đầu của học kỳ phải là thứ hai",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+          }
+          else {
+            this.$notify({
                 type: "warning",
                 message: "Thêm dữ liệu thất bại. Vui lòng thử lại",
                 timeout: 3000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
               });
+          }
         });
     },
     updateObject(){
@@ -643,10 +652,8 @@ export default {
         if(this.bigLineChart.activeIndex ===0 ){
           apiUrl = API_URL + `/adminpanel/semesters/${this.modals.semesterDetail.name}/`
           data = this.modals.semesterDetail
-        } else if (this.bigLineChart.activeIndex === 1) {
-          apiUrl = API_URL + "/accounts/teachers/" + this.modals.teacherDetail.user + "/";
-          data = this.modals.teacherDetail
-        } else if (this.bigLineChart.activeIndex === 2) {
+        }
+         else if (this.bigLineChart.activeIndex === 1) {
           apiUrl = API_URL + "/adminpanel/planned-lessons/" + this.modals.plannedLessonDetail.id + "/";
           data = this.modals.plannedLessonDetail
         }
@@ -663,10 +670,8 @@ export default {
           if (this.bigLineChart.activeIndex === 0) {
             this.modals.semesterDetail = response.data
             message = "Cập nhật thông tin học kỳ thành công"
+        
           } else if (this.bigLineChart.activeIndex === 1) {
-            this.modals.teacherDetail = response.data
-            message = "Cập nhật thông tin giáo viên thành công"
-          } else if (this.bigLineChart.activeIndex === 2) {
             this.modals.plannedLessonDetail = response.data
             message = "Cập nhật thông tin bài giảng thành công"
           }
@@ -708,9 +713,7 @@ export default {
         let apiUrl = ""; // API URL sẽ thay đổi dựa trên loại đăng ký
         if (this.bigLineChart.activeIndex === 0) {
           apiUrl = API_URL + "/adminpanel/semesters/" + index + "/";
-        } else if (this.bigLineChart.activeIndex === 1) {
-          apiUrl = API_URL + "/accounts/teachers/" + index + "/";
-        } else if (this.bigLineChart.activeIndex === 2) {
+        }  else if (this.bigLineChart.activeIndex === 1) {
           apiUrl = API_URL + "/adminpanel/planned-lessons/" + index + "/";
         }
 
@@ -726,9 +729,7 @@ export default {
 
           if (this.bigLineChart.activeIndex === 0) {
             this.modals.semesterDetail = response.data
-          } else if (this.bigLineChart.activeIndex === 1) {
-            this.modals.teacherDetail = response.data
-          } else if (this.bigLineChart.activeIndex === 2) {
+          }  else if (this.bigLineChart.activeIndex === 1) {
             this.modals.plannedLessonDetail = response.data
           }
         })
@@ -790,8 +791,6 @@ export default {
       if (this.bigLineChart.activeIndex === 0) {
         apiUrl = API_URL + "/adminpanel/semesters/";
       } else if (this.bigLineChart.activeIndex === 1) {
-        apiUrl = API_URL + "/rooms/roomset/";
-      } else if (this.bigLineChart.activeIndex === 2) {
         apiUrl = API_URL + "/adminpanel/planned-lessons/";
       } else if (this.bigLineChart.activeIndex === 3) {
         apiUrl = API_URL + "/adminpanel/lessons/";
@@ -810,9 +809,8 @@ export default {
         })
         .then((response) => {
           if(this.bigLineChart.activeIndex === 0) this.semesterData = response.data
-          else if(this.bigLineChart.activeIndex === 1) this.roomData = response.data
-          else if(this.bigLineChart.activeIndex === 2) this.plannedlessonData = response.data
-          else if(this.bigLineChart.activeIndex === 3) this.deviceData = response.data
+          else if(this.bigLineChart.activeIndex === 1) this.plannedlessonData = response.data
+          else if(this.bigLineChart.activeIndex === 2) this.deviceData = response.data
           
         })
         .catch((error) => {

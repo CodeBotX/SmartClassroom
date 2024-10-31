@@ -1,65 +1,71 @@
 <template>
-  <div class="wrapper study">
-    <div>
-      <div class="title">
-        <h1 class="font-weight-bold">Quản lý chỗ ngồi lớp {{room.name}}</h1>
-      </div>
-      <base-button @click="toggleSeatingModal" class="dashboard-button btn-info" simple>
-          <i class="tim-icons icon-components"></i> Xếp chỗ
-        </base-button>
-    </div>
-    <!-- Seating Modal -->
-        <modal :show.sync="seatingModal"
-                body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-md">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0">
-                <template>
-                    <div class="text-muted mb-3">
-                        <h4 class="text-success">Danh sách học sinh chưa có chỗ ngồi</h4>
-                    </div>
-                </template>
-                <template>
-                        <ul>
-                            <li v-for="student in unassignedStudents" :key="student.user">
-                                <base-button @click="assignStudent(student.user)" class="dashboard-button btn-info" simple>
-                                     {{ shortenName(student.full_name) }}
-                                </base-button>
-                            </li>
-                        </ul>
-                </template>
-            </card>
-        </modal>
-    
-    <div class="classroom-layout mt-3">
-      <div v-for="(row, rowIndex) in desks" :key="rowIndex" class="classroom-row">
-        <div v-for="(seat, columnIndex) in row" :key="columnIndex"
-         :class="['classroom-seat', 
-                      { 'classroom-spacer': columnIndex === 1 || columnIndex === 3 || columnIndex === 5 || columnIndex === 7}]"  
-         @dragover.prevent @drop="dropStudent(rowIndex, columnIndex)" @dragstart="dragStart(seat,rowIndex,columnIndex)">
-          <base-button
-            v-if="seat"
-            class="btn-info btn-simple classroom-student"
-            draggable
-          >
-            {{ shortenName(seat.full_name) }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
-          </base-button>
-          <base-button
-            v-if="!seat && seatingPermission"
-            class="btn-success btn-simple classroom-student"
-            draggable
-            @click="createPosition(rowIndex,columnIndex)"
-          >
-            <i class="tim-icons icon-simple-add"></i>
-          </base-button>
+  <div class="row">
+    <div class="col-12">
+      <!-- <div class="wrapper study"> -->
+      <card class="wrapper study">
+        <div>
+          <div class="title">
+            <h1 class="font-weight-bold">Quản lý chỗ ngồi lớp {{room.name}}</h1>
+          </div>
+          <base-button @click="toggleSeatingModal" class="dashboard-button btn-info" simple>
+              <i class="tim-icons icon-components"></i> Xếp chỗ
+            </base-button>
         </div>
-      </div>
+        <!-- Seating Modal -->
+            <modal :show.sync="seatingModal"
+                    body-classes="p-0"
+                  modal-classes="modal-dialog-centered modal-md">
+                <card type="secondary"
+                      header-classes="bg-white pb-5"
+                      body-classes="px-lg-5 py-lg-5"
+                      class="border-0 mb-0">
+                    <template>
+                        <div class="text-muted mb-3">
+                            <h4 class="text-success">Danh sách học sinh chưa có chỗ ngồi</h4>
+                        </div>
+                    </template>
+                    <template>
+                            <ul>
+                                <li v-for="student in unassignedStudents" :key="student.user">
+                                    <base-button v-if="student" @click="assignStudent(student.user)" class="dashboard-button btn-info" simple>
+                                        {{ student? shortenName( student.full_name) : "" }}
+                                    </base-button>
+                                </li>
+                            </ul>
+                    </template>
+                </card>
+            </modal>
+        
+        <div class="classroom-layout mt-3">
+          <div v-for="(row, rowIndex) in desks" :key="rowIndex" class="classroom-row">
+            <div v-for="(seat, columnIndex) in row" :key="columnIndex"
+            :class="['classroom-seat', 
+                          { 'classroom-spacer': columnIndex === 1 || columnIndex === 3 || columnIndex === 5 || columnIndex === 7}]"  
+            @dragover.prevent @drop="dropStudent(rowIndex, columnIndex)" @dragstart="dragStart(seat,rowIndex,columnIndex)">
+              <base-button
+                v-if="seat"
+                class="btn-info btn-simple classroom-student"
+                draggable
+              >
+                {{seat ? shortenName(seat.full_name) : ""}} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
+              </base-button>
+              <base-button
+                v-if="!seat && seatingPermission"
+                class="btn-success btn-simple classroom-student"
+                draggable
+                @click="createPosition(rowIndex,columnIndex)"
+              >
+                <i class="tim-icons icon-simple-add"></i>
+              </base-button>
+            </div>
+          </div>
 
-      <div class="classroom-teacher-desk">
-        <h3>Bàn giáo viên</h3>
-      </div>
+          <div class="classroom-teacher-desk">
+            <h3>Bàn giáo viên</h3>
+          </div>
+        </div>
+      </card>
+      <!-- </div> -->
     </div>
   </div>
   
@@ -67,6 +73,7 @@
 
 <script>
 import axios from "../../services/axios";
+import Card from "../../components/Cards/Card.vue";
 import Modal from '../../components/Modal.vue';
 
 let API_URL = ""
@@ -183,12 +190,23 @@ export default {
       this.seatingPermission = true
     },
     toggleSeatingModal(){
-        this.seatingModal = true;
+        
         this.unassignedStudents = this.students.filter(studentId => {
             // Kiểm tra nếu học sinh không có trong danh sách positions
             return !this.positions.some(position => position.student.user === studentId.user);
         });
-        console.log(this.unassignedStudents)
+        if(this.unassignedStudents.length ==0){
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Không có học sinh nào chưa có chỗ",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+              return
+        }
+        this.seatingModal = true;
     },
     getStudents(roomName){
       const token = localStorage.getItem("access_token");
@@ -331,7 +349,7 @@ export default {
       positions.forEach(position => {
         const columnIndex = position.column - 1; 
         const rowIndex = position.row - 1; 
-        this.$set(this.desks[rowIndex], columnIndex, position.student); 
+        this.$set(this.desks[rowIndex], columnIndex, position.student_details); 
       });
       return this.desks;
     },

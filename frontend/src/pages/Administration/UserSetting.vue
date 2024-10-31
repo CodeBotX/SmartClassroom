@@ -744,7 +744,7 @@ export default {
     createRoomName(){
       const token = localStorage.getItem("access_token");
       axios
-        .post(API_URL+`/rooms/roomset`, { "name": this.roomCreateName }, {
+        .post(API_URL+`/rooms/roomset/`, { "name": this.roomCreateName }, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",
@@ -1250,6 +1250,7 @@ export default {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
+          timeout: 30000,
         })
         .then((response) => {
           this.$notify({
@@ -1277,12 +1278,12 @@ export default {
                   horizontalAlign: "right",
                 });
               } else {
-                const errorMessage =
-                  "Vui lòng kiểm tra lại cấu trúc file và loại đối tượng đăng ký ";
+                // const errorMessage =
+                //   "Vui lòng kiểm tra lại cấu trúc file và loại đối tượng đăng ký ";
                 this.$notify({
                   type: "danger",
                   icon: 'tim-icons icon-bell-55',
-                  message: errorMessage,
+                  message: error.response.data,
                   timeout: 3000,
                   verticalAlign: "top",
                   horizontalAlign: "right",

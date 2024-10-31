@@ -59,9 +59,9 @@
             <div class="col-md-6 pr-md-1">
               <label for="registrationType">Loại đăng ký</label>
               <select v-model="registrationType" class="form-control" id="registrationType">
-                <option value="teacher">Giáo viên</option>
-                <option value="student">Học sinh</option>
-                <option value="parent">Phụ huynh</option>
+                <option class="text-info" value="teacher">Giáo viên</option>
+                <option class="text-info" value="student">Học sinh</option>
+                <option class="text-info" value="parent">Phụ huynh</option>
               </select>
             </div>
           </div>
@@ -292,6 +292,7 @@ export default {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
+          timeout: 100000,
         })
         .then((response) => {
           this.$notify({
@@ -320,10 +321,11 @@ export default {
             });
           } else {
             const errorMessage = "Vui lòng kiểm tra lại cấu trúc file và loại đối tượng đăng ký ";
+            console.error("Error registering accounts:", error);
             this.$notify({
               type: "danger",
               icon: 'tim-icons icon-bell-55',
-              message: errorMessage,
+              message: error.response.data,
               timeout: 3000,
               verticalAlign: "top",
               horizontalAlign: "right",

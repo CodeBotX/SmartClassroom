@@ -697,7 +697,7 @@ export default {
       positions.forEach(position => {
         const columnIndex = position.column - 1; 
         const rowIndex = position.row - 1; 
-        this.$set(this.desks[rowIndex], columnIndex, position.student); 
+        this.$set(this.desks[rowIndex], columnIndex, position.student_details); 
       });
       return this.desks;
     },

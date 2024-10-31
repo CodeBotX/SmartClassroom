@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
-    <div v-if="isHomeroomTeacher" class="col-12">
+  <!-- <div class="row"> -->
+    <div  v-if="isHomeroomTeacher" class="row">
       <!-- Hiển thị quản lý lớp học nếu là giáo viên chủ nhiệm -->
-      <div class="row align-items-center mb-3">
+      <div class="row ml-2">
         <div class="col-md-6">
-          <h3>Quản lý lớp học</h3>
+          <h3 class="font-weight-bold">Quản lý lớp học</h3>
         </div>
         <div class="col-md-6">
           <div
@@ -14,7 +14,7 @@
             <label
               v-for="(option, index) in adminstrationOption"
               :key="option"
-              class="btn btn-sm btn-primary btn-simple"
+              class="btn btn-sm btn-success btn-simple"
               :class="{ active: bigLineChart.activeIndex === index }"
               :id="index"
             >
@@ -47,7 +47,7 @@
         <span v-for="teacher in homeroomTeachers" :key="teacher.id">{{ teacher }} | </span>
       </p>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
