@@ -196,7 +196,7 @@ export default {
     },
     methods: {
       initializeDivisionData() {
-        const subjects = ['TOAN', 'VAN', 'ANH', 'HOA', 'LY', 'SINH', 'DIA', 'SU', 'GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN'];
+        const subjects = ['TOAN', 'VAN', 'ANH', 'KHTN_HOA', 'KHTN_LY', 'KHTN_SINH', 'KHXH_DIA', 'KHXH_SU', 'KHXH_GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN']
         return Array.from({ length: 15 }, (_, index) => ({
           subject: subjects[index],
           teacher: null,

@@ -27,8 +27,8 @@
                     <template>
                             <ul>
                                 <li v-for="student in unassignedStudents" :key="student.user">
-                                    <base-button @click="assignStudent(student.user)" class="dashboard-button btn-info" simple>
-                                        {{shortenName( student.full_name) }}
+                                    <base-button v-if="student" @click="assignStudent(student.user)" class="dashboard-button btn-info" simple>
+                                        {{ student? shortenName( student.full_name) : "" }}
                                     </base-button>
                                 </li>
                             </ul>
@@ -47,7 +47,7 @@
                 class="btn-info btn-simple classroom-student"
                 draggable
               >
-                {{ shortenName(seat.full_name) }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
+                {{seat ? shortenName(seat.full_name) : ""}} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
               </base-button>
               <base-button
                 v-if="!seat && seatingPermission"
@@ -190,12 +190,23 @@ export default {
       this.seatingPermission = true
     },
     toggleSeatingModal(){
-        this.seatingModal = true;
+        
         this.unassignedStudents = this.students.filter(studentId => {
             // Kiểm tra nếu học sinh không có trong danh sách positions
-            return !this.positions.some(position => position.student.user === studentId.user);
+            return !this.positions.some(position => position.student === studentId.user);
         });
-        console.log(this.unassignedStudents)
+        if(this.unassignedStudents.length ==0){
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Không có học sinh nào chưa có chỗ",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+              return
+        }
+        this.seatingModal = true;
     },
     getStudents(roomName){
       const token = localStorage.getItem("access_token");
@@ -278,7 +289,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi vị trí học sinh "+ response.data.student.full_name + " thành công",
+                message: "Đổi vị trí học sinh "+ response.data.student_details.full_name + " thành công",
                 timeout: 1500,
                 verticalAlign: "bottom",
                 horizontalAlign: "left",
@@ -338,7 +349,7 @@ export default {
       positions.forEach(position => {
         const columnIndex = position.column - 1; 
         const rowIndex = position.row - 1; 
-        this.$set(this.desks[rowIndex], columnIndex, position.student); 
+        this.$set(this.desks[rowIndex], columnIndex, position.student_details); 
       });
       return this.desks;
     },
