@@ -151,6 +151,7 @@ export default {
           if (room.homeroom_teacher && String(room.homeroom_teacher) === String(this.userData.user_id)) {
             this.isHomeroomTeacher = true;
             this.room = room; // Lưu phòng phù hợp vào this.room
+            console.log(this.room)
             break; // Thoát khỏi vòng lặp sau khi tìm thấy phòng phù hợp
           }
         }

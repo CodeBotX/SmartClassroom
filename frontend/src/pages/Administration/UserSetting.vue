@@ -744,7 +744,7 @@ export default {
     createRoomName(){
       const token = localStorage.getItem("access_token");
       axios
-        .post(API_URL+`/rooms/roomset`, { "name": this.roomCreateName }, {
+        .post(API_URL+`/rooms/roomset/`, { "name": this.roomCreateName }, {
           headers: {
             Authorization: `Bearer ${token}`, // Đính kèm token vào headers
             "Content-Type": "application/json",

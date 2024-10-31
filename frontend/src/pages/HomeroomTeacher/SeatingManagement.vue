@@ -26,9 +26,9 @@
                     </template>
                     <template>
                             <ul>
-                                <li v-for="student in unassignedStudents" :key="student">
-                                    <base-button @click="assignStudent(student)" class="dashboard-button btn-info" simple>
-                                        {{ student }}
+                                <li v-for="student in unassignedStudents" :key="student.user">
+                                    <base-button @click="assignStudent(student.user)" class="dashboard-button btn-info" simple>
+                                        {{shortenName( student.full_name) }}
                                     </base-button>
                                 </li>
                             </ul>
@@ -103,6 +103,8 @@ export default {
       attendance: null,
       scoreModal : false,
       evaluateModal: false,
+
+      students: null,
 
       lessonDetail: {
         semester: null,
@@ -189,16 +191,43 @@ export default {
     },
     toggleSeatingModal(){
         this.seatingModal = true;
-        this.unassignedStudents = this.room.students.filter(studentId => {
+        this.unassignedStudents = this.students.filter(studentId => {
             // Kiểm tra nếu học sinh không có trong danh sách positions
-            return !this.positions.some(position => position.student.user === studentId);
+            return !this.positions.some(position => position.student.user === studentId.user);
         });
         console.log(this.unassignedStudents)
+    },
+    getStudents(roomName){
+      const token = localStorage.getItem("access_token");
+      
+        axios
+        .get(API_URL+`/rooms/roomset/${roomName}/students/`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+            this.students = response.data
+        })
+        .catch((error) => {
+          console.error("Error get lesson data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: "Lấy chi tiết danh sách học sinh thất bại",
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
     },
     async initializeData() {
       try {
         await this.getApiUrl();
         await this.getPositionData();
+        await this.getStudents(this.room.name);
       } catch (error) {
         console.error('Error initializing data:', error);
       }
