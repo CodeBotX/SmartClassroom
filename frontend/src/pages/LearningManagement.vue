@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-     <div class="row ml-2">
+    <div class="row ml-2">
       <div class="col-md-6">
         <h3 class="font-weight-bold">Quản lý học tập</h3>
       </div>

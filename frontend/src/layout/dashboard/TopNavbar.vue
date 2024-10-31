@@ -87,9 +87,6 @@
                   <a href="#" class="nav-item dropdown-item">Thông tin tài khoản</a>
                 </router-link>
               </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Settings</a>
-              </li>
               <div class="dropdown-divider"></div>
               <li class="nav-link">
                 <a @click="logout" href="#" class="nav-item dropdown-item">Đăng xuất</a>

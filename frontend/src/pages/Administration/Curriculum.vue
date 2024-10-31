@@ -3,7 +3,6 @@
     <div class="col-12">
       <card>
         <template slot="header">
-          <h3>Chương trình đào tạo</h3>
           <div class="col-sm-12">
             <div
               class="btn-group btn-group-toggle float-right"
@@ -75,7 +74,7 @@
                 <base-button @click="toggleSeatingDetail(row.name)" class="dashboard-button btn-info" simple>
                   <i class="tim-icons icon-notes"></i>Quản lý chỗ ngồi
                 </base-button>
-              </td> -->
+              </td> 
             </template>
           </base-table>
         </div>

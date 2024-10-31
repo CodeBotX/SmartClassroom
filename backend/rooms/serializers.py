@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from accounts.serializers import StudentSerializer
 from .models import Room, SeatingPosition
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -14,6 +15,7 @@ class RoomSerializer(serializers.ModelSerializer):
         return instance
 
 class SeatingPositionSerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
     class Meta:
         model = SeatingPosition
         fields = '__all__'
