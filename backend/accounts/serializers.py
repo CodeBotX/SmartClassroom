@@ -21,19 +21,19 @@ class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin
         fields = '__all__'
-        
-# Serializer cho Parent
-class ParentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Parent
-        fields = '__all__'
-        
 # Serializer cho Student
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
-
+        
+# Serializer cho Parent
+class ParentSerializer(serializers.ModelSerializer):
+    children = StudentSerializer(source='students', many=True)
+    class Meta:
+        model = Parent
+        fields = '__all__'
+        
 #up file excel
 class ExcelUploadSerializer(serializers.Serializer):
     file = serializers.FileField()

@@ -123,6 +123,8 @@ class Parent(models.Model):
         return self.user.user_id
     def __str__(self):
         return f"{self.full_name} - {self.user.user_id}"
+    def get_children(self):
+        return self.students.all()
     class Meta:
         db_table = 'Parent'
         verbose_name = 'Parent'

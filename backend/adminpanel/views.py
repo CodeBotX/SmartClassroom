@@ -1,6 +1,4 @@
 
-# -----------------------------------------------sử dụng viewset-----------------------------------------------
-
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .models import *
@@ -9,7 +7,6 @@ from rest_framework.decorators import action
 from django.db import transaction
 from datetime import timedelta
 from .filters import *
-
 from accounts.models import Student,Teacher
 from django.db.models import Avg
 from collections import defaultdict
@@ -463,6 +460,23 @@ class GradesViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Room không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
         except Semester.DoesNotExist:
             return Response({'error': 'Học kỳ không tồn tại.'}, status=status.HTTP_404_NOT_FOUND)
+        
+    # @action(detail=False, methods=['get'], url_path='average-scores')
+    # def get_average_scores(self, request):
+    #     student_id = request.query_params.get('student_id')
+    #     semester_name = request.query_params.get('semester_id')
+
+    #     if not student_id or not semester_name:
+    #         return Response({'error': 'Thiếu tham số: student_id hoặc semester_id.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    #     subjects = Grades.objects.filter(student__user_id=student_id, semester__name=semester_name).values_list('subject', flat=True).distinct()
+
+    #     averages = {}
+    #     for subject in subjects:
+    #         average_score = Grades.calculate_average(student_id, subject, semester_name)
+    #         averages[subject] = average_score
+
+    #     return Response(averages, status=status.HTTP_200_OK)
 
 
 

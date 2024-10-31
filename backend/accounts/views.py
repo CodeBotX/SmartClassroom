@@ -12,6 +12,9 @@ from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import *
+
 
 
 # API đăng nhập
@@ -386,22 +389,32 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'user_id'
 
-class TeacherViewSet(viewsets.ModelViewSet):
+class TeacherViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-    lookup_field = 'user_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TeacherFilter
 
-class AdminViewSet(viewsets.ModelViewSet):
+class AdminViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AdminFilter
 
-class ParentViewSet(viewsets.ModelViewSet):
+
+class ParentViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = []  # JWTAuthentication 
+    permission_classes = []  # IsAuthenticated, IsAdmin
     queryset = Parent.objects.all()
     serializer_class = ParentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ParentFilter
 
-class StudentViewSet(viewsets.ModelViewSet):
+class StudentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = StudentFilter
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -458,3 +471,5 @@ class AdminPasswordResetView(APIView):
             except CustomUser.DoesNotExist:
                 return Response({"error": "Người dùng không tồn tại."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
