@@ -201,7 +201,7 @@ export default {
 
         axios
         // .get(API_URL + `/grades?student=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
-          .get(API_URL + `/adminpanel/grades?user_id=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
+          .get(API_URL + `/adminpanel/grades?student=${this.userData.user_id}&semester_name=${this.semesterSelected.name}`, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",

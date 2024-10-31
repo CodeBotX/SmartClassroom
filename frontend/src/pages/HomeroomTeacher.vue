@@ -35,7 +35,10 @@
         <seating-management v-if="room" :room="room"></seating-management>
       </div>
       <div v-if="bigLineChart.activeIndex === 1" class="col-12">
-        <teacher-division></teacher-division>
+        
+      </div>
+      <div v-if="bigLineChart.activeIndex === 2" class="col-12">
+        <weekly-report v-if="room" :room="room"></weekly-report>
       </div>
     </div>
 
@@ -57,6 +60,8 @@ import axios from "../services/axios";
 import config from "@/config";
 import TimeTable from './EducationProgram/TimeTable.vue';
 import TeacherDivision from './EducationProgram/TeacherDivision.vue';
+import WeeklyReport from './HomeroomTeacher/WeeklyReport.vue';
+
 let API_URL = "";
 
 
@@ -68,7 +73,8 @@ export default {
     UserSetting,
     TimeTable,
     TeacherDivision,
-    SeatingManagement
+    SeatingManagement,
+    WeeklyReport
   },
   computed: {
     adminstrationOption() {

@@ -12,7 +12,7 @@
     "curriculum": ["Học kỳ", "Bài giảng", "Thiết bị điểm danh"],
     "administration": ["Quản trị tài khoản", "Quản trị người dùng", "Chương trình đào tạo"],
     "educationProgram": ["Thời khóa biểu", "Phân công giáo viên"],
-    "homeroomTeacher": ["Sơ đồ lớp","Danh sách học sinh","Thông tin tuần học"],
+    "homeroomTeacher": ["Sơ đồ lớp","Danh sách học sinh","Kết quả tuần học"],
     "learningManagement": ["Thống kê điểm", "Quản lý điểm"],
     "learningOutcome": ["Xem điểm"],
     "tasks": "Tasks({count})",

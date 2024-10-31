@@ -735,11 +735,23 @@ export default {
       this.createRoom()
 
     },
-    async createRoom(){
-      await this.createRoomName()
-      await this.addStudent()
-      this.initBigChart(this.bigLineChart.activeIndex)
-      this.modals.roomCreateModal = false
+    async createRoom() {
+      try {
+        // Tạo tên lớp học
+        await this.createRoomName();
+
+        // Thêm học sinh vào lớp học
+        await this.addStudent();
+
+        // Khởi tạo biểu đồ lớn
+        this.initBigChart(this.bigLineChart.activeIndex);
+
+        // Đóng modal tạo lớp học
+        this.modals.roomCreateModal = false;
+      } catch (error) {
+        console.error("Error creating room:", error);
+        // Xử lý lỗi, ví dụ: hiển thị thông báo lỗi cho người dùng
+      }
     },
     createRoomName(){
       const token = localStorage.getItem("access_token");

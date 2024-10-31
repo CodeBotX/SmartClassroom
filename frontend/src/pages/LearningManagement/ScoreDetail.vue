@@ -55,9 +55,12 @@
               <td>{{ row.student.full_name }}</td>
               <td>{{ row.grade.join( ", ") }}</td>
               <td class="td-actions text-right">
-                <base-button v-if="scoreTypeSelected !== 'TX'" type="info" class="btn-simple" size="md" icon @click="toggleDetailScore(row)">
+                <base-button v-if="(scoreTypeSelected !== 'TX') && row.grade.length === 0" type="info" class="btn-simple" size="md" icon @click="toggleDetailScore(row)">
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
+                <!-- <base-button v-if="(scoreTypeSelected !== 'TX') && row.grade.length !== 0" type="info" class="btn-simple" size="md" icon @click="toggleUpdateScore(row)">
+                  <i class="tim-icons icon-refresh-02"></i>
+                </base-button> -->
               </td>
             </template>
           </base-table>
@@ -76,7 +79,7 @@
                   
                 <template>
                     <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Thông tin điểm {{this.scoreTypeSelected}} học sinh {{ scoreDetail.student.full_name }}</h4>
+                        <h4 class="text-success">Nhập điểm {{this.scoreTypeSelected}} học sinh {{ scoreDetail.student.full_name }}</h4>
                     </div>
                 </template>
                 <template>
@@ -84,11 +87,11 @@
                             <div class="col-12">
                                 <div class="row">
                                   <div class="col-md-12 pr-md-1 text-center">          
-                                        <base-input label="Diem" v-model="formattedGrade"></base-input>
+                                        <base-input label="Điểm" v-model="createScore"></base-input>
                                   </div>
                                 </div>
 
-                                <base-button @click="updateScore" type="secondary" fill>Luu</base-button>
+                                <base-button @click="createGrade" type="secondary" fill>Luu</base-button>
                             </div>
                         </div>
                 </template>
@@ -129,6 +132,7 @@ export default {
     },
     data() {
         return {
+          createScore: null,
           scoreDetailModal: false,
           scoreDetail: null,
           score_columns: ["student", "grade"],
@@ -252,59 +256,17 @@ export default {
           });
       },
       initializeScoreData() {
-        // const students = [
-        //   "181635895",
-        //   "3581635860",
-        //   "3581635861",
-        //   "3581635862",
-        //   "3581635894",
-        //   "3581635896",
-        //   "3581635904",
-        //   "3681635897"
-        // ]
         return Array.from({ length: this.students.length }, (_, index) => ({
           student: this.students[index],
           grade: [],
         }));
       },
-      // initializeScoreData() {
-      //   //Lấy danh sách lớp học
-      //   const token = localStorage.getItem("access_token");
-      //   let students = [];
-
-      //   axios
-      //     .get(API_URL + "/rooms/roomset/"+this.roomSelected.name, {
-      //       headers: {
-      //         Authorization: `Bearer ${token}`,
-      //         "Content-Type": "application/json",
-      //       },
-      //     })
-      //     .then((response) => {
-      //        students = response.data.students;
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error getting room data:", error);
-      //       this.$notify({
-      //         type: "warning",
-      //         icon: 'tim-icons icon-bell-55',
-      //         message: "Lấy danh sách lớp học thất bại",
-      //         timeout: 3000,
-      //         verticalAlign: "top",
-      //         horizontalAlign: "right",
-      //       });
-      //     });
-
-      //   return Array.from({ length: students.length }, (_, index) => ({
-      //     student: students[index],
-      //     grade: [],
-      //   }));
-      // },
       formatScoreData(data) {
           const groupedScores = {};
 
           // Khởi tạo với tất cả các môn để đảm bảo mỗi môn đều có một dòng trong bảng
           this.initializeScoreData().forEach(item => {
-            groupedScores[item.student] = {
+            groupedScores[item.student.user] = {
               student: item.student,
               grade: [],
             };
@@ -316,26 +278,34 @@ export default {
                 groupedScores[item.student].grade = item.grade;
             }
           });
+          console.log(groupedScores)
 
           // Chuyển đổi đối tượng groupedScores thành mảng để dễ hiển thị trong bảng
           return Object.values(groupedScores);
       },
-      // getScoreData(){
-      //   const data = [
-      //       {
-      //           "subject": "TOAN",
-      //           "score_type": "TX",
-      //           "grade": [
-      //               7.0,
-      //               8.0,
-      //               5.0
-      //           ],
-      //           "student": "3581635862",
-      //           "semester": 20241
-      //       }
-      //   ]
-      //     this.scoreData = this.formatScoreData(data);
-      // },
+      getScoreData(){
+        const data = [
+    {
+        "subject": "TOAN",
+        "score_type": "TX",
+        "grade": [
+            8.0
+        ],
+        "student": "3581635860",
+        "semester": 20241
+    },
+    {
+        "subject": "TOAN",
+        "score_type": "TX",
+        "grade": [
+            7.0
+        ],
+        "student": "3581635904",
+        "semester": 20241
+    }
+]
+          this.scoreData = this.formatScoreData(data);
+      },
       getSubject(subjectName){
         switch(subjectName){
           case "Toán": return "TOAN";
@@ -355,14 +325,56 @@ export default {
           case "Hoạt động trại nghiệm, hướng nghiệp": return "HDTN-HN"
         }
       },
-      getScoreData(){
-        const subject = this.getSubject(this.userData.subjects)
-        console.log(subject)
+      // getScoreData(){
+      //   const subject = this.getSubject(this.userData.subjects)
+        
+      //   const token = localStorage.getItem("access_token");
+      //   this.scoreData = this.initializeScoreData()
+
+      //   axios
+      //     .get(API_URL + `/adminpanel/grades?semester_name=${this.semesterSelected.name}&score_type=${this.scoreTypeSelected}&subject=${subject}`, {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //         "Content-Type": "application/json",
+      //       },
+      //     })
+      //     .then((response) => {
+      //       // Xử lý dữ liệu để sắp xếp theo từng môn
+      //       this.$notify({
+      //         type: "success",
+      //         icon: 'tim-icons icon-bell-55',
+      //         message: "Lấy bảng điểm thành công",
+      //         timeout: 3000,
+      //         verticalAlign: "top",
+      //         horizontalAlign: "right",
+      //       });
+      //       this.scoreData = this.formatScoreData(response.data);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error getting score data:", error);
+      //       this.$notify({
+      //         type: "warning",
+      //         icon: 'tim-icons icon-bell-55',
+      //         message: "Lấy danh sách điểm thất bại",
+      //         timeout: 3000,
+      //         verticalAlign: "top",
+      //         horizontalAlign: "right",
+      //       });
+      //     });
+      // },
+      createGrade() {
+        //update diem
         const token = localStorage.getItem("access_token");
-        this.scoreData = this.initializeScoreData()
+        const data = {
+        "student": this.scoreDetail.student.user,
+        "subject": this.getSubject(this.userData.subjects),
+        "semester": 20241,
+        "score_type": this.scoreTypeSelected,
+        "grade": this.createScore
+    }
 
         axios
-          .get(API_URL + `/adminpanel/grades?semester_name=${this.semesterSelected.name}&score_type=${this.scoreTypeSelected}&subject=${subject}`, {
+          .post(API_URL + `/adminpanel/grades/`,data, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -373,31 +385,23 @@ export default {
             this.$notify({
               type: "success",
               icon: 'tim-icons icon-bell-55',
-              message: "Lấy bảng điểm thành công",
+              message: "Nhập điểm thành công",
               timeout: 3000,
               verticalAlign: "top",
               horizontalAlign: "right",
             });
-            this.scoreData = this.formatScoreData(response.data);
           })
           .catch((error) => {
             console.error("Error getting score data:", error);
             this.$notify({
               type: "warning",
               icon: 'tim-icons icon-bell-55',
-              message: "Lấy danh sách điểm thất bại",
+              message: "Nhập điểm thất bại",
               timeout: 3000,
               verticalAlign: "top",
               horizontalAlign: "right",
             });
           });
-      },
-      updateScore() {
-        // Chuyển đổi các giá trị từ chuỗi thành số nguyên
-        this.scoreDetail.grade = this.scoreDetail.grade.map(Number);
-        console.log(this.scoreDetail.grade);
-
-        //update diem
       },
       toggleDetailScore(index){
         this.scoreDetail = index
