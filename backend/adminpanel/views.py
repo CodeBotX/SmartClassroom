@@ -11,7 +11,7 @@ from accounts.models import Student,Teacher
 from django.db.models import Avg
 from collections import defaultdict
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework.exceptions import ValidationError
 
 class SemesterViewSet(viewsets.ModelViewSet):
     authentication_classes = []
@@ -487,7 +487,6 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
     serializer_class = PlannedLessonSerializer
     def get_queryset(self):
         queryset = super().get_queryset()
-        
         semester = self.request.query_params.get('semester')
         room = self.request.query_params.get('room')
         subject = self.request.query_params.get('subject')
@@ -501,7 +500,6 @@ class PlannedLessonViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(subject=subject)
         if teacher_user_id:
             queryset = queryset.filter(teacher__user_id=teacher_user_id)
-
         return queryset
     
 #lesson
@@ -645,7 +643,16 @@ class TeacherAssignmentViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Phòng học không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
         if not Teacher.objects.filter(user_id=teacher_id).exists():
             return Response({'error': 'Giáo viên không tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
-        return super().create(request, *args, **kwargs)
+        try:
+            # Thực hiện tạo phân công nếu dữ liệu hợp lệ
+            return super().create(request, *args, **kwargs)
+        
+        except ValidationError as e:
+            # Kiểm tra lỗi có phải là vi phạm unique constraint không
+            if 'unique' in str(e):
+                return Response({'error': 'Phân công đã tồn tại.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # có thể đặt filter.py ở đây thay vì hàm lọc 
     def get_queryset(self):

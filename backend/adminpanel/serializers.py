@@ -39,10 +39,11 @@ class GradesSerializer(serializers.ModelSerializer):
 #             lessons.append(lesson)
 #         return lessons
 
+# kế hoạch bài giảng
 class PlannedLessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlannedLesson
-        fields = '__all__'  # Hoặc bạn có thể chỉ định các trường cụ thể
+        fields = '__all__'  
     
 #bảng phân công giáo viên
 class TeacherAssignmentSerializer(serializers.ModelSerializer):

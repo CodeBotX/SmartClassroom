@@ -14,7 +14,8 @@ from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser, FormParser
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import *
-
+from django.db.models import Q
+from unidecode import unidecode
 
 
 # API đăng nhập
@@ -396,6 +397,24 @@ class TeacherViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeacherSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TeacherFilter
+    def get_queryset(self):
+        queryset = self.queryset
+        full_name = self.request.query_params.get('full_name', '').strip()
+        user_id = self.request.query_params.get('user_id', '').strip()
+
+        if full_name:
+            # Chuyển `full_name` sang dạng không dấu, không khoảng trắng
+            full_name_no_space = full_name.replace(" ", "")
+            full_name_no_accent = unidecode(full_name_no_space)
+
+            queryset = queryset.filter(
+                Q(full_name__icontains=full_name_no_space) | Q(full_name__icontains=full_name_no_accent)
+            )
+
+        if user_id:
+            queryset = queryset.filter(user__user_id__icontains=user_id)
+
+        return queryset
 
 class AdminViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = []  
