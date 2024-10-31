@@ -100,7 +100,7 @@
                                 <div class="row">
                                   <div class="col-md-12 pr-md-1 text-center">          
                                         <select class="btn btn-simple btn-lg btn-success" v-model="teacherDivisionDetail.teacher">
-                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.user }}</option>
+                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.full_name }}</option>
                                         </select>
                                   </div>
                                 </div>
@@ -133,7 +133,7 @@
                                 <div class="row">
                                   <div class="col-md-12 pr-md-1 text-center">          
                                         <select class="btn btn-simple btn-lg btn-success" v-model="teacherDivisionDetail.teacher">
-                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.user }}</option>
+                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.full_name }}</option>
                                         </select>
                                   </div>
                                 </div>

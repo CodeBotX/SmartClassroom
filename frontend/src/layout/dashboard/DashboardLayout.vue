@@ -27,11 +27,12 @@
           :name="$t('sidebar.learningOutcome')"
           icon="tim-icons icon-paper"
         />
-        <sidebar-link 
+         <sidebar-link 
           to="/competition_result"
           :name="$t('sidebar.competitionResult')"
           icon="tim-icons icon-chart-bar-32"
         />
+        <!--
         <sidebar-link
           to="/dashboard"
           :name="$t('sidebar.dashboard')"
@@ -51,7 +52,7 @@
           to="/notifications"
           :name="$t('sidebar.notifications')"
           icon="tim-icons icon-bell-55"
-        />
+        /> -->
         <!-- <sidebar-link
           to="/profile"
           :name="$t('sidebar.userProfile')"

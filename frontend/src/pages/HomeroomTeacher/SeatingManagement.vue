@@ -193,7 +193,7 @@ export default {
         
         this.unassignedStudents = this.students.filter(studentId => {
             // Kiểm tra nếu học sinh không có trong danh sách positions
-            return !this.positions.some(position => position.student.user === studentId.user);
+            return !this.positions.some(position => position.student === studentId.user);
         });
         if(this.unassignedStudents.length ==0){
           this.$notify({
@@ -289,7 +289,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi vị trí học sinh "+ response.data.student.full_name + " thành công",
+                message: "Đổi vị trí học sinh "+ response.data.student_details.full_name + " thành công",
                 timeout: 1500,
                 verticalAlign: "bottom",
                 horizontalAlign: "left",

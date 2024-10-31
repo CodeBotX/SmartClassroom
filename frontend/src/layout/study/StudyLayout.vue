@@ -308,15 +308,15 @@ export default {
           if (differences.length !== newAttendance.length) {
             differences.forEach(difference => {
               if (difference.status === 1 && difference.lesson == this.lessonData.id) {
-                this.$notify({
-                  type: "success",
-                  icon: 'tim-icons icon-badge',
-                  title: "Điểm danh thành công",
-                  message: `Học sinh ${difference.user}`,
-                  timeout: 1000,
-                  verticalAlign: "bottom",
-                  horizontalAlign: "left",
-                });
+                // this.$notify({
+                //   type: "success",
+                //   icon: 'tim-icons icon-badge',
+                //   title: "Điểm danh thành công",
+                //   message: `Học sinh ${difference.user}`,
+                //   timeout: 1000,
+                //   verticalAlign: "bottom",
+                //   horizontalAlign: "left",
+                // });
               }
             });
           }
@@ -362,7 +362,7 @@ export default {
       this.studentDetail.subject = this.lessonData.subject
       this.studentDetail.semester = this.lessonData.semester
 
-      this.currentStatus = this.getAttendanceStatus(index);
+      this.currentStatus = this.getAttendanceStatus(index.user);
       this.newStatus = this.currentStatus;
       console.log("current and new"+this.currentStatus)
 
@@ -395,7 +395,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi trạng thái học sinh " + this.studentDetail.id+ " thành công",
+                message: "Đổi trạng thái học sinh " + this.studentDetail.full_name+ " thành công",
                 timeout: 1000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
@@ -638,7 +638,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Đổi vị trí học sinh "+ response.data.student.full_name + " thành công",
+                message: "Đổi vị trí học sinh "+ response.data.student_details.full_name + " thành công",
                 timeout: 1500,
                 verticalAlign: "bottom",
                 horizontalAlign: "left",
