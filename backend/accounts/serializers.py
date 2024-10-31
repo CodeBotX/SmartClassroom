@@ -30,6 +30,8 @@ class StudentSerializer(serializers.ModelSerializer):
 # Serializer cho Parent
 class ParentSerializer(serializers.ModelSerializer):
     children = StudentSerializer(source='students', many=True)
+    def get_children(self, obj):
+        return StudentSerializer(obj.get_children(), many=True).data
     class Meta:
         model = Parent
         fields = '__all__'

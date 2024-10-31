@@ -390,27 +390,32 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     lookup_field = 'user_id'
 
 class TeacherViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = []  
+    permission_classes = [] 
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = TeacherFilter
 
 class AdminViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = []  
+    permission_classes = [] 
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = AdminFilter
 
-
 class ParentViewSet(viewsets.ReadOnlyModelViewSet):
-    authentication_classes = []  # JWTAuthentication 
-    permission_classes = []  # IsAuthenticated, IsAdmin
+    authentication_classes = []  
+    permission_classes = [] 
     queryset = Parent.objects.all()
     serializer_class = ParentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ParentFilter
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = []  
+    permission_classes = [] 
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     filter_backends = [DjangoFilterBackend]
