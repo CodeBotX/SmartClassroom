@@ -67,74 +67,31 @@
 
                         <td class="text-center">{{ row.teacher }}</td>
                         <td class="td-actions text-right">
-                          <base-button v-if="!row.teacher" type="info" class="btn-simple" size="md" icon @click="toggleCreateDivision(row)">
+                          <base-button v-if="!row.teacher" type="success" class="btn-simple" size="md" icon @click="toggleCreateDivision(row)">
                             <i class="tim-icons icon-simple-add"></i>
                           </base-button>
-                          <base-button v-else type="danger" class="btn-simple" size="md" icon @click="toggleDeleteDivision(row)">
-                            <i class="tim-icons icon-simple-remove"></i>
-                          </base-button>
+                          <!-- <base-button v-else type="info" class="btn-simple" size="md" icon @click="toggleUpdateDivision(row)">
+                            <i class="tim-icons icon-refresh-02"></i>
+                          </base-button> -->
                         </td>
                       </template>
                     </base-table>
                 </template>
             </card>
-        <!-- Chi tiet phan cong lop -->
-        <!-- <modal :show.sync="divisionDetailModal"
-               body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-lg" @close="closeDivisionDetailModal">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0" v-if="this.roomSelected">
-                <template>
-                    <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Chi tiết phân công giáo viên lớp {{roomSelected.name}}</h4>
-                        <base-input label="Học kỳ">
-                          <select class="btn btn-simple btn-sm btn-success" v-model="semesterSelected" @change="getRoomDivision">
-                            <option class="text-info" v-for="(semester, index) in semesters" :key="index" :value="semester.name">{{ semester.name }}</option>
-                          </select>
-                        </base-input>
-                    </div>
-                </template>
-                <template>
-                    <base-table :data="teacherDivisionData" :columns="division_columns">
-                      <template slot="columns">
-                        <th>Môn</th>
-                        <th class="text-center">Giáo viên</th>
-                        <th class="text-center">Actions</th>
-                      </template>
-                      <template slot-scope="{ row }">
-                        <td> <div class="text-info"> {{ row.subject }}</div></td>
-
-                        <td class="text-center">{{ row.teacher }}</td>
-                        <td class="td-actions text-right">
-                          <base-button type="info" class="btn-simple" size="md" icon @click="toggleCreateDivision(row)">
-                            <i class="tim-icons icon-simple-add"></i>
-                          </base-button>
-                          <base-button type="danger" class="btn-simple" size="md" icon @click="toggleDeleteDivision(row)">
-                            <i class="tim-icons icon-simple-remove"></i>
-                          </base-button>
-                        </td>
-                      </template>
-                    </base-table>
-                </template>
-            </card>
-        </modal> -->
+  
         <!-- Thêm phân công Modal -->
         <modal :show.sync="divisionCreateModal"
                body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-sm" @close="closeCreateModal">
+               modal-classes="modal-dialog-centered modal-sm">
             <card type="secondary"
                   header-classes="bg-white pb-5"
                   body-classes="px-lg-5 py-lg-5"
                   class="border-0 mb-0"
-                  v-if="divisionDetail">
+                  v-if="teacherDivisionDetail" >
                   
                 <template>
                     <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Thêm phân công giáo viên</h4>
-                        <h3>{{ divisionDetail.user_id }}</h3>
-                        <h4>Môn {{ divisionDetail.subject }}</h4>
+                        <h4 class="text-success">Thêm phân công giáo viên môn {{this.teacherDivisionDetail.subject}} lớp {{this.roomSelected.name}}</h4>
                     </div>
                 </template>
                 <template>
@@ -142,8 +99,41 @@
                             <div class="col-12">
                                 <div class="row">
                                   <div class="col-md-12 pr-md-1 text-center">          
-                                        <select class="btn btn-simple btn-lg btn-success" v-model="roomSelected">
-                                          <option class="text-info" v-for="(room, index) in roomData" :key="index" :value="room" >{{ room.name }}</option>
+                                        <select class="btn btn-simple btn-lg btn-success" v-model="teacherDivisionDetail.teacher">
+                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.user }}</option>
+                                        </select>
+                                  </div>
+                                </div>
+
+                                <base-button @click="createDivision" type="secondary" fill>Thêm</base-button>
+                            </div>
+                        </div>
+                </template>
+            </card>
+        </modal>
+
+        <!-- Update phân công Modal -->
+        <modal :show.sync="divisionUpdateModal"
+               body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-sm">
+            <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0"
+                  v-if="teacherDivisionDetail" >
+                  
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Cập nhật phân công giáo viên môn {{this.teacherDivisionDetail.subject}} lớp {{this.roomSelected.name}}</h4>
+                    </div>
+                </template>
+                <template>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                  <div class="col-md-12 pr-md-1 text-center">          
+                                        <select class="btn btn-simple btn-lg btn-success" v-model="teacherDivisionDetail.teacher">
+                                          <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.user" >{{ teacher.user }}</option>
                                         </select>
                                   </div>
                                 </div>
@@ -154,41 +144,15 @@
                 </template>
             </card>
         </modal>
-
-        <!-- xóa phân công Modal -->
-        <modal :show.sync="divisionDeleteModal"
-               body-classes="p-0"
-               modal-classes="modal-dialog-centered modal-sm" @close="closeCreateModal">
-            <card type="secondary"
-                  header-classes="bg-white pb-5"
-                  body-classes="px-lg-5 py-lg-5"
-                  class="border-0 mb-0"
-                  v-if="divisionDetail">
-                  
-                <template>
-                    <div class="text-muted text-center mb-3">
-                        <h4 class="text-success">Xóa phân công giáo viên</h4>
-                        <h3>{{ divisionDetail.user_id }}</h3>
-                        <h4>Môn {{ divisionDetail.subject }}</h4>
-                    </div>
-                </template>
-                <template>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                  <div class="col-md-12 pr-md-1 text-center">          
-                                        <select class="btn btn-simple btn-lg btn-success" v-model="roomSelected">
-                                          <option class="text-info" v-for="(room, index) in roomData" :key="index" :value="room" >{{ room.name }}</option>
-                                        </select>
-                                  </div>
-                                </div>
-
-                                <base-button @click="deleteDivision" type="secondary" fill>Xóa</base-button>
-                            </div>
-                        </div>
-                </template>
-            </card>
-        </modal>
+        <!-- <modal :show.sync="divisionDeleteModal">
+            <h4 slot="header" class="modal-title" id="modal-title-default">Xác nhận xóa phân công giáo viên này</h4>
+            <template slot="footer">
+                <base-button type="secondary" @click="deleteDivision">Xác nhận</base-button>
+                <base-button type="danger" class="ml-auto" @click="divisionDeleteModal = false">Hủy
+                </base-button>
+            </template>
+        </modal> -->
+        
       </card>
     </div>
   </div>
@@ -213,12 +177,15 @@ export default {
         return {
             divisionDetailModal: false,
             divisionCreateModal: false,
-            divisionDeleteModal: false,
+            divisionUpdateModal: false,
             divisionDetail: null,
             roomData: [],
             roomSelected: null,
             semesterSelected: null,
 
+            teacherDivisionDetail : null,
+
+            teachers: null,
             semesters: null,
             teacherDivisionData: this.initializeDivisionData(),
             roomDivisionData: null,
@@ -280,13 +247,6 @@ export default {
           data.forEach(item => {
             if (groupedDivisions[item.subject]) {
               groupedDivisions[item.subject].teacher = item.teacher
-              // if (item.score_type === "TX") {
-              //   groupedScores[item.subject].tx = item.grade;
-              // } else if (item.score_type === "GK") {
-              //   groupedScores[item.subject].gk = item.grade;
-              // } else if (item.score_type === "CK") {
-              //   groupedScores[item.subject].ck = item.grade;
-              // }
             }
           });
 
@@ -304,10 +264,36 @@ export default {
           await this.getApiUrl();
           await this.getDivisionData();
           await this.getRoomData();
+          await this.getTeacherData();
           await this.getSemesterData();
         } catch (error) {
           console.error('Error initializing data:', error);
         }
+      },
+      getTeacherData(){
+        const token = localStorage.getItem("access_token");
+
+        axios
+          .get(API_URL + "/accounts/teachers/", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.teachers = response.data;
+          })
+          .catch((error) => {
+            console.error("Error getting teacher data:", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy danh sách giáo viên thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
       },
       getSemesterData() {
         if (this.semesters) return;
@@ -394,30 +380,13 @@ export default {
       },
       toggleCreateDivision(teacher) {
         this.divisionCreateModal = true;
-        this.divisionDetail = teacher;
-        this.roomDivisionData = teacher.rooms
+        this.teacherDivisionDetail = teacher
       },
-      toggleDeleteDivision(teacher){
-        this.divisionDeleteModal = true;
-        this.divisionDetail = teacher;
-        this.roomDivisionData = teacher.rooms
+      toggleUpdateDivision(teacher){
+        this.divisionUpdateModal = true;
+        this.teacherDivisionDetail = teacher
       },
       deleteDivision() {
-        const index = this.roomDivisionData.indexOf(this.roomSelected);
-        if(index == -1){
-          this.$notify({
-              type: "warning",
-              icon: 'tim-icons icon-bell-55',
-              message: "Giáo viên "+ this.divisionDetail.user_id+" không được phân công lớp "+this.roomSelected.name,
-              timeout: 3000,
-              verticalAlign: "top",
-              horizontalAlign: "right",
-            });
-            return
-        }
-        const tempRooms = [...this.roomDivisionData]
-        tempRooms.splice(index, 1);
-
         const token = localStorage.getItem("access_token");
         const data = {
           rooms: tempRooms
@@ -455,20 +424,7 @@ export default {
           });
       },
       updateDivision() {
-        if(this.roomDivisionData.includes(this.roomSelected.name)){
-          this.$notify({
-              type: "warning",
-              icon: 'tim-icons icon-bell-55',
-              message: "Giáo viên "+ this.divisionDetail.user_id+" đã được phân công lớp "+this.roomSelected.name,
-              timeout: 3000,
-              verticalAlign: "top",
-              horizontalAlign: "right",
-            });
-            return
-        }
-        const tempRooms = [...this.roomDivisionData]
-        tempRooms.push(this.roomSelected.name)
-
+        
         const token = localStorage.getItem("access_token");
         const data = {
           rooms: tempRooms
@@ -499,6 +455,45 @@ export default {
               type: "warning",
               icon: 'tim-icons icon-bell-55',
               message: "Phân công giáo viên thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+      },
+      createDivision(){
+        const token = localStorage.getItem("access_token");
+        const data = {
+          "semester": this.semesterSelected,
+          "teacher": this.teacherDivisionDetail.teacher,
+          "room": this.roomSelected.name,
+          "subject": this.teacherDivisionDetail.subject
+        }
+
+        axios
+          .post(API_URL + "/adminpanel/assignments/",data, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then(() => {
+            this.divisionCreateModal = false;
+            this.$notify({
+              type: "success",
+              icon: 'tim-icons icon-bell-55',
+              message: "Thêm phân công giáo viên thành công",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          })
+          .catch((error) => {
+            console.error("Error :", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Thêm Phân công giáo viên thất bại",
               timeout: 3000,
               verticalAlign: "top",
               horizontalAlign: "right",
