@@ -38,9 +38,9 @@
                 </div>
             </template>
             <div style="display: flex; justify-content: center; align-items: center;">
-                <div id="pdf-content" v-if="timetableData">
-                    <p>Tuần thứ: {{weekData}}</p>
-                    <table class="table-bordered" style="width: 863px">
+                <!-- <div id="pdf-content" v-if="timetableData">
+                    <p id="topDiv">Tuần thứ: {{weekData}}</p>
+                    <table class="table-bordered" id="tableDiv" style="width: 863px">
                         <tbody>
                             <tr style="height: 62px;">
                                 <td style="width: 82px; height: 62px;">Thứ<br />Ngày/Tháng: </td>
@@ -538,7 +538,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row" style="width: 863px">
+                    <div class="row" id="bottomDiv" style="width: 863px">
                         <div class="col-md-6">
                             <p>Nhận xét của giáo viên chủ nhiệm lớp:</p>
                             <p>.....................................................................................................................</p>
@@ -551,11 +551,557 @@
                             <p style="text-align: center; font-style: italic;">(Ký, ghi rõ họ tên)</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
+               
+                <!-- <div id="tableDiv">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in dynamicData" :key="index">
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.age }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div> -->
 
+
+                <div>
+                    <p id="topDiv">Tuần thứ: </p>
+                    <div   id="tableDiv">
+                    <table class="table-bordered" style="width: 970px">
+                        <tbody>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;">Thứ</td>
+                                <td style="width: 29px; height: 62px;">Tiết</td>
+                                <td style="width: 81px; height: 62px;">Môn học</td>
+                                <td style="width: 10px; height: 62px;">Tiết theo PPCT</td>
+                                <td style="width: 125px; height: 62px;">Tên học sinh nghỉ</td>
+                                <td style="width: 173px; height: 62px;">Tên bài, nội dung công việc</td>
+                                <td style="width: 226px; height: 62px;">Nhận xét của giáo viên</td>
+                                <td style="width: 53px; height: 62px;">Xếp loại tiết học</td>
+                                <td style="width: 58px; height: 62px;">Ký tên</td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 310.333px;" rowspan="6">
+                                    <p>Thứ Hai</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;">{{this.dynamicData[0].name}}</td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62.3333px;">
+                                <td style="width: 29px; height: 62.3333px;">2</td>
+                                <td style="width: 81px; height: 62.3333px;"></td>
+                                <td style="width: 10px; height: 62.3333px;"></td>
+                                <td style="width: 125px; height: 62.3333px;"></td>
+                                <td style="width: 173px; height: 62.3333px;"></td>
+                                <td style="width: 226px; height: 62.3333px;"></td>
+                                <td style="width: 53px; height: 62.3333px;"></td>
+                                <td style="width: 58px; height: 62.3333px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Thứ Ba</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Thứ Tư</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Thứ Năm</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Thứ S&aacute;u</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Thứ Bảy</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 82px; height: 62px;" rowspan="6">
+                                    <p>Chủ Nhật</p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                    <p></p>
+                                </td>
+                                <td style="width: 29px; height: 62px;">1</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">2</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">3</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">4</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">5</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                            <tr style="height: 62px;">
+                                <td style="width: 29px; height: 62px;">6</td>
+                                <td style="width: 81px; height: 62px;"></td>
+                                <td style="width: 10px; height: 62px;"></td>
+                                <td style="width: 125px; height: 62px;"></td>
+                                <td style="width: 173px; height: 62px;"></td>
+                                <td style="width: 226px; height: 62px;"></td>
+                                <td style="width: 53px; height: 62px;"></td>
+                                <td style="width: 58px; height: 62px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+<!-- 
+                    <div class="row" id="bottomDiv" style="width: 863px">
+                        <div class="col-md-6">
+                            <p>Nhận xét của giáo viên chủ nhiệm lớp:</p>
+                            <p>............................................................................................................</p>
+                            <p>............................................................................................................</p>
+                            <p>............................................................................................................</p>
+                            <p>............................................................................................................</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="text-align: center;">Giáo viên chủ nhiệm lớp</p>
+                            <p style="text-align: center; font-style: italic;">(Ký, ghi rõ họ tên)</p>
+                        </div>
+                    </div> -->
+                    </div>
                 
             </div>
-            <base-button class="mt-5 mb-5" @click="exportToPdf">Export to pdf</base-button>
+
+            <!-- <input type="text" id="fileNameInput" placeholder="Enter file name" /> -->
+            <div class="mt-5 mb-5" style="margin-left: 150px;">
+                <base-input id="fileNameInput"
+                    type="email"
+                    placeholder="Nhập tên file" 
+                    style="width: 300px">
+                <small slot="helperText" id="emailHelp" class="form-text text-muted">Nhập theo mẫu: Tuan6_12A1</small>
+                </base-input>
+
+                <base-button class="btn-success" @click="ExportToExcel">Xuất ra file xlsx</base-button>
+            </div>
         </card>
         
       </div>
@@ -568,6 +1114,7 @@ import Card from "../../components/Cards/Card.vue";
 import axios from "../../services/axios";
 import Modal from '../../components/Modal.vue';
 import html2pdf from 'html2pdf.js';
+import * as XLSX from 'xlsx';
 
 let API_URL = ""
 
@@ -590,6 +1137,8 @@ let API_URL = ""
             weekData: null,
 
             timetableData: null,
+            dynamicData: [ { name: 'John Doe', age: 30 },
+            { name: 'Jane Smith', age: 25 },],
         }
     },
     mounted() {
@@ -795,18 +1344,41 @@ let API_URL = ""
             });
           });
       },
-      exportToPdf() {
-        const element = document.getElementById('pdf-content');
-        const options = {
-          margin: 1,
-          filename: 'lesson_table.pdf',
-          html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-  
-        // Generate PDF
-        html2pdf().set(options).from(element).save();
-      }
+    //   ExportToExcel(type, fn, dl) {
+    //   const wb = XLSX.utils.book_new();
+
+    //   // 1. Capture top content
+    //   const topDiv = document.getElementById('topDiv').innerText;
+    //   const topContent = [[topDiv]];
+    //   const wsTop = XLSX.utils.aoa_to_sheet(topContent);
+    //   XLSX.utils.book_append_sheet(wb, wsTop, "Top Content");
+
+    //   // 2. Capture table content
+    //   const elt = document.getElementById('tableDiv');
+    //   const wsTable = XLSX.utils.table_to_sheet(elt);
+    //   XLSX.utils.book_append_sheet(wb, wsTable, "Table Content");
+
+    //   // 3. Capture bottom content
+    //   const bottomDiv = document.getElementById('bottomDiv').innerText;
+    //   const bottomContent = [[bottomDiv]];
+    //   const wsBottom = XLSX.utils.aoa_to_sheet(bottomContent);
+    //   XLSX.utils.book_append_sheet(wb, wsBottom, "Bottom Content");
+
+    //   return dl ?
+    //       XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+    //       XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+    // }
+
+    ExportToExcel() {
+      const fileName = document.getElementById('fileNameInput').value || 'DynamicData';
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.table_to_sheet(document.getElementById('tableDiv').querySelector('table'));
+      XLSX.utils.book_append_sheet(wb, ws, 'Dynamic Data');
+    //   XLSX.writeFile(wb, 'DynamicData.xlsx');
+      XLSX.writeFile(wb, `${fileName}.xlsx`);
+    },
+
+
     }
   };
 
