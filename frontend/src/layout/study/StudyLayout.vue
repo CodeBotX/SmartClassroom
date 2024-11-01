@@ -424,6 +424,7 @@ export default {
           "student_id": this.studentDetail.id,  
           "device_id": "as7dchu8d"
         }
+        console.log(data)
         const token = localStorage.getItem("access_token");
         
         console.log(data)
@@ -439,7 +440,7 @@ export default {
           this.currentStatus = response.data.status
           this.newStatus = this.currentStatus
           this.$notify({
-                type: "succees",
+                type: "success",
                 icon: 'tim-icons icon-bell-55',
                 message: "Thêm trạng thái điểm danh thành công",
                 timeout: 3000,
