@@ -28,33 +28,19 @@
           </div>
         </template>
 
-        <!-- HỌC KỲ -->
-        <div v-if="bigLineChart.activeIndex === 2">
-          <base-table :data="semesterData" :columns="semester_columns">
+        <!-- Device -->
+        <!-- <div v-if="bigLineChart.activeIndex === 2">
+          <base-table :data="deviceData" :columns="device_columns">
             <template slot="columns">
-              <th>Học kỳ</th>
-              <th>Ngày bắt đầu</th>
-              <th>Số tuần học</th>
-              <th class="text-right">Actions</th>
+              <th>ID thiết bị</th>
+              <th>Phòng học</th>
             </template>
             <template slot-scope="{ row }">
-              <td>{{ row.name }}</td>
-              <td>{{ row.day_begin }}</td>
-              <td>{{ row.number_of_weeks }}</td>
-              <td class="td-actions text-right">
-                <base-button type="success" size="sm" icon @click="toggleUpdate(row.name)">
-                  <i class="tim-icons icon-settings"></i>
-                </base-button>
-                <base-button type="danger" size="sm" icon @click="toggleRemove(row.name)">
-                  <i class="tim-icons icon-simple-remove"></i>
-                </base-button>
-              </td>
+              <td>{{ row.device_id }}</td>
+              <td>{{ row.room }}</td>
             </template>
           </base-table>
-          <base-button type="default" size="sm" icon @click="toggleCreate()">
-                  <i class="tim-icons icon-simple-add"></i>
-          </base-button>
-        </div>
+        </div> -->
 
         <div v-if="bigLineChart.activeIndex === 0">
           <base-table :data="semesterData" :columns="semester_columns">
