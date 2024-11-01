@@ -743,6 +743,8 @@ export default {
         // Thêm học sinh vào lớp học
         await this.addStudent();
 
+        await this.addHomeRoomTeacher();
+
         // Khởi tạo biểu đồ lớn
         this.initBigChart(this.bigLineChart.activeIndex);
 
@@ -752,6 +754,38 @@ export default {
         console.error("Error creating room:", error);
         // Xử lý lỗi, ví dụ: hiển thị thông báo lỗi cho người dùng
       }
+    },
+    addHomeRoomTeacher(){
+      const token = localStorage.getItem("access_token");
+      axios
+        .patch(API_URL+`/rooms/roomset/${this.roomCreateName}/`, { "homeroom_teacher": this.homeRoomTeacherId }, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Đính kèm token vào headers
+            "Content-Type": "application/json",
+          },
+        })
+        .then(() => {
+           this.$notify({
+                type: "success",
+                icon: 'tim-icons icon-bell-55',
+                message: `Thêm giáo viên chủ nhiệm vào lớp thành công`,
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        })
+        .catch((error) => {
+          console.error("Error create data :", error);
+
+          this.$notify({
+                type: "warning",
+                icon: 'tim-icons icon-bell-55',
+                message: `Thêm giáo viên chủ nhiệm vào lớp không thành công`,
+                timeout: 3000,
+                verticalAlign: "top",
+                horizontalAlign: "right",
+              });
+        });
     },
     createRoomName(){
       const token = localStorage.getItem("access_token");
