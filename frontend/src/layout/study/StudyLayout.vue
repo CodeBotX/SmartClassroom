@@ -509,7 +509,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Chấm điểm cho học sinh " + this.studentDetail.id+ " thành công",
+                message: "Chấm điểm cho học sinh " + this.studentDetail.full_name+ " thành công",
                 timeout: 1000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
