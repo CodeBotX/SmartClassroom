@@ -124,7 +124,7 @@
                                     <div class="col-md-6 pr-md-1">
                                         <base-input label="Giáo viên" >
                                           <select class="form-control" v-model="lessonDetail.teacher">
-                                            <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.teacher">{{teacher.teacher}}</option>
+                                            <option class="text-info" v-for="(teacher, index) in teachers" :key="index" :value="teacher.teacher">{{ teacher.teacher}}</option>
                                           </select>
                                         </base-input>
                                     </div>
@@ -206,6 +206,7 @@ export default {
         return {
           checkTimeTable: false,
 
+          teacherName: null,
           semesterSelected: null,
           roomSelected: null,
           weekSelected: null,
@@ -249,6 +250,33 @@ export default {
         };
     },
     methods: {
+      getTeacherDetail(teacherId){
+        const token = localStorage.getItem("access_token");
+
+        axios
+          .get(API_URL + `/accounts/teachers/?user_id=${teacherId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            console.log(response.data[0].full_name)
+            this.teacherName = response.data[0].full_name
+          })
+          .catch((error) => {
+            console.error("Error getting teacher data:", error);
+            
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy chi tiết giáo viên thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+      },
       getTeacherAssignment(subject){
         const token = localStorage.getItem("access_token");
         axios
@@ -260,6 +288,7 @@ export default {
         })
         .then((response) => {
           this.teachers = response.data
+          // this.getTeacherDetail(this.teachers[0].teacher)
         })
         .catch((error) => {
           console.error("Error get lesson data :", error);
