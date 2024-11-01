@@ -1,24 +1,4 @@
 <template>
-  
-
-  <!-- <div class="wrapper study" style="background-color: ">
-      <div class="navbar">
-          <div>
-            <base-button @click="goToDashboard" class="dashboard-button btn-success" simple>
-              <i class="tim-icons icon-minimal-left"></i> Trang chủ
-            </base-button>
-          </div>
-          <div class="title">
-            <h1 class="font-weight-bold">Dạy học</h1>
-          </div>
-
-          <div class="current-time" style=" width: 180px">{{ currentTime }}</div>
-      </div>
-    
-      <div class="classroom-layout mt-3"></div>
-   -->
-  
-  
   <div class="wrapper study">
     <div class="navbar">
       <div>
@@ -54,6 +34,27 @@
             {{ shortenName(seat.full_name) }} <!-- Assuming 'seat' is an object with 'student' having a 'name' property -->
           </base-button>
         </div>
+      </div>
+
+      <div class="class-info">
+        <table class="table table-bordered class-info-table">
+          <thead>
+            <tr>
+              <th>Lớp</th>
+              <th>Tiết</th>
+              <th>Môn</th>
+              <th>Sỹ số</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{this.lessonData.room}}</td>
+              <td>{{this.lessonData.period}}</td>
+              <td>{{this.lessonData.subject}}</td>
+              <td> {{ this.attendances ? this.countUsersWithStatus12(attendances)+"/" : "" }}<strong>{{this.positions.length }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="teacher-desk">
@@ -213,6 +214,7 @@ export default {
   },
   data() {
     return {
+      attendances: null,
       currentStatus: null,
       newStatus: null,
       attendanceStatus: 1,
@@ -225,6 +227,7 @@ export default {
       polling: false,
 
       lessonData: null,
+      rooms: null,
 
       lessonDetail: {
         semester: null,
@@ -257,6 +260,13 @@ export default {
     };
   },
   methods: {
+    countUsersWithStatus12(attendances) {
+        // Lọc các đối tượng có status là 1 hoặc 2
+        const filteredUsers = attendances.filter(item => item.status === 1 || item.status === 2);
+        
+        // Đếm số lượng các user có status = 1 hoặc 2
+        return filteredUsers.length;
+    },
     
     demo(){
       return true;
@@ -297,6 +307,7 @@ export default {
         },
       });
 
+      this.attendances = response.data;
       const newAttendance = response.data || [];
 
       if (JSON.stringify(newAttendance) !== JSON.stringify(lastAttendance)) {
@@ -498,7 +509,7 @@ export default {
           this.$notify({
                 type: "success",
                 icon: 'tim-icons icon-bell-55',
-                message: "Chấm điểm cho học sinh " + this.studentDetail.id+ " thành công",
+                message: "Chấm điểm cho học sinh " + this.studentDetail.full_name+ " thành công",
                 timeout: 1000,
                 verticalAlign: "top",
                 horizontalAlign: "right",
@@ -896,5 +907,48 @@ export default {
 /* Tùy chọn cho trạng thái checked */
 .switch-input:checked + .switch-label i {
     font-size: 28px; /* Kích thước lớn hơn khi được chọn */
+}
+
+.class-info {
+  position: absolute;
+  bottom: 35px; /* Adjust vertical position */
+  left: 120px;   /* Adjust horizontal position */
+}
+.class-info-table {
+  width: 240px; /* Điều chỉnh kích thước */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+.class-info-table th {
+  background-color: #007bff; /* Màu nền phần header */
+  color: white;
+  font-weight: bold;
+  padding: 10px; /* Tạo khoảng cách trong ô */
+  text-align: center;
+  position: relative;
+}
+
+.class-info-table th:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2px;
+  background-color: #f2f2f21f; /* Màu sắc đường ngăn cách */
+}
+
+.class-info-table td {
+  padding: 8px;
+  text-align: center;
+  color: #333;
+}
+
+.class-info-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Màu nền so le */
 }
 </style>

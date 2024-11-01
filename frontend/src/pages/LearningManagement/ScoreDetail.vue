@@ -55,7 +55,7 @@
               <td>{{ row.student.full_name }}</td>
               <td>{{ row.grade.join( ", ") }}</td>
               <td class="td-actions text-right">
-                <base-button v-if="(scoreTypeSelected !== 'TX') && row.grade.length === 0" type="info" class="btn-simple" size="md" icon @click="toggleDetailScore(row)">
+                <base-button v-if="(currentScoreType !== 'TX') && row.grade.length === 0" type="info" class="btn-simple" size="md" icon @click="toggleDetailScore(row)">
                   <i class="tim-icons icon-pencil"></i>
                 </base-button>
                 <!-- <base-button v-if="(scoreTypeSelected !== 'TX') && row.grade.length !== 0" type="info" class="btn-simple" size="md" icon @click="toggleUpdateScore(row)">
@@ -132,6 +132,8 @@ export default {
     },
     data() {
         return {
+          currentScoreType: null,
+
           createScore: null,
           scoreDetailModal: false,
           scoreDetail: null,
@@ -327,6 +329,7 @@ export default {
       },
       getScoreData(){
         const subject = this.getSubject(this.userData.subjects)
+        this.currentScoreType = this.scoreTypeSelected;
         
         const token = localStorage.getItem("access_token");
         this.scoreData = this.initializeScoreData()
@@ -368,7 +371,8 @@ export default {
         const data = {
         "student": this.scoreDetail.student.user,
         "subject": this.getSubject(this.userData.subjects),
-        "semester": 20241,
+        "semester": this.semesterSelected.name,
+        // "semester":20241,
         "score_type": this.scoreTypeSelected,
         "grade": parseFloat(this.createScore)
     }
@@ -391,6 +395,8 @@ export default {
               verticalAlign: "top",
               horizontalAlign: "right",
             });
+            this.scoreDetailModal = false
+            this.getScoreData()
           })
           .catch((error) => {
             console.error("Error getting score data:", error);
