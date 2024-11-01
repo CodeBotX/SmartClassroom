@@ -70,9 +70,9 @@
                           <base-button v-if="!row.teacher" type="success" class="btn-simple" size="md" icon @click="toggleCreateDivision(row)">
                             <i class="tim-icons icon-simple-add"></i>
                           </base-button>
-                          <!-- <base-button v-else type="info" class="btn-simple" size="md" icon @click="toggleUpdateDivision(row)">
-                            <i class="tim-icons icon-refresh-02"></i>
-                          </base-button> -->
+                          <base-button v-else type="info" class="btn-simple" size="md" icon @click="toggleDetailDivision(row)">
+                            <i class="tim-icons icon-single-02"></i>
+                          </base-button>
                         </td>
                       </template>
                     </base-table>
@@ -152,6 +152,62 @@
                 </base-button>
             </template>
         </modal> -->
+        <modal :show.sync="teacherDetailModal"
+               body-classes="p-0"
+               modal-classes="modal-dialog-centered modal-sm">
+          <card type="secondary"
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 mb-0">
+                <template>
+                    <div class="text-muted text-center mb-3">
+                        <h4 class="text-success">Thông tin giáo viên</h4>
+                    </div>
+                </template>
+                <template v-if="teacherDetail">
+                    <fieldset disabled>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="ID" v-model="teacherDetail.user"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Họ và tên" v-model="teacherDetail.full_name"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Môn dạy" v-model="teacherDetail.subjects"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Giới tính" v-model="teacherDetail.sex"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Ngày sinh" v-model="teacherDetail.day_of_birth"></base-input>
+                                    </div>
+                                    <div class="col-md-6 pl-md-1">
+                                        <base-input label="Dân tộc" v-model="teacherDetail.nation"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1">
+                                        <base-input label="Học vấn" v-model="teacherDetail.expertise_levels"></base-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 pr-md-1">
+                                        <base-input label="Chức vụ" v-model="teacherDetail.contract_types"></base-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>  
+                </template>
+            </card>
+        </modal> 
         
       </card>
     </div>
@@ -178,11 +234,14 @@ export default {
             divisionDetailModal: false,
             divisionCreateModal: false,
             divisionUpdateModal: false,
+            teacherDetailModal: false,
+            teacherDetail: null,
             divisionDetail: null,
             roomData: [],
             roomSelected: null,
             semesterSelected: null,
 
+            teacherNames: {},
             teacherDivisionDetail : null,
 
             teachers: null,
@@ -195,6 +254,10 @@ export default {
         };
     },
     methods: {
+      toggleDetailDivision(row){
+        this.teacherDetailModal = true;
+        this.getTeacherDetail(row.teacher);
+      },
       initializeDivisionData() {
         const subjects = ['TOAN', 'VAN', 'ANH', 'KHTN_HOA', 'KHTN_LY', 'KHTN_SINH', 'KHXH_DIA', 'KHXH_SU', 'KHXH_GDCD', 'TD', 'MT', 'AN', 'TH', 'CN', 'HDTN-HN']
         return Array.from({ length: 15 }, (_, index) => ({
@@ -202,7 +265,7 @@ export default {
           teacher: null,
         }));
       },
-      getRoomDivision(){
+       getRoomDivision(){
         const token = localStorage.getItem("access_token");
         this.teacherDivisionData = this.initializeDivisionData()
 
@@ -232,7 +295,7 @@ export default {
         this.semesterSelected = null
         this.teacherDivisionData = null
       },
-      formatDivisionData(data) {
+       formatDivisionData(data) {
           const groupedDivisions = {};
 
           // Khởi tạo với tất cả các môn để đảm bảo mỗi môn đều có một dòng trong bảng
@@ -246,6 +309,7 @@ export default {
           // Cập nhật dữ liệu điểm thực tế từ API
           data.forEach(item => {
             if (groupedDivisions[item.subject]) {
+              
               groupedDivisions[item.subject].teacher = item.teacher
             }
           });
@@ -270,6 +334,35 @@ export default {
           console.error('Error initializing data:', error);
         }
       },
+       delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      },
+      getTeacherDetail(teacherId) {
+        const token = localStorage.getItem("access_token");
+
+        axios
+          .get(API_URL + `/accounts/teachers/?user_id=${teacherId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.teacherDetail = response.data[0];
+            console.log(this.teacherDetail)
+          })
+          .catch((error) => {
+            console.error("Error getting teacher data:", error);
+            this.$notify({
+              type: "warning",
+              icon: 'tim-icons icon-bell-55',
+              message: "Lấy chi tiết giáo viên thất bại",
+              timeout: 3000,
+              verticalAlign: "top",
+              horizontalAlign: "right",
+            });
+          });
+    },
       getTeacherData(){
         const token = localStorage.getItem("access_token");
 

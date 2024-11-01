@@ -29,7 +29,7 @@
         </template>
 
         <!-- HỌC KỲ -->
-        <div v-if="bigLineChart.activeIndex === 0">
+        <div v-if="bigLineChart.activeIndex === 2">
           <base-table :data="semesterData" :columns="semester_columns">
             <template slot="columns">
               <th>Học kỳ</th>
@@ -56,27 +56,32 @@
           </base-button>
         </div>
 
-        <!-- Lớp học -->
-        <!-- <div v-if="bigLineChart.activeIndex === 1">
-          <base-table :data="roomData" :columns="room_columns">
+        <div v-if="bigLineChart.activeIndex === 0">
+          <base-table :data="semesterData" :columns="semester_columns">
             <template slot="columns">
-              <th>Lớp học</th>
-              <th>Sĩ số lớp</th>
-              <th>Giáo viên chủ nhiệm</th>
+              <th>Học kỳ</th>
+              <th>Ngày bắt đầu</th>
+              <th>Số tuần học</th>
               <th class="text-right">Actions</th>
             </template>
             <template slot-scope="{ row }">
               <td>{{ row.name }}</td>
-              <td>{{ row.students.length }}</td>
-              <td>{{ row.homeroom_teacher }}</td>
+              <td>{{ row.day_begin }}</td>
+              <td>{{ row.number_of_weeks }}</td>
               <td class="td-actions text-right">
-                <base-button @click="toggleSeatingDetail(row.name)" class="dashboard-button btn-info" simple>
-                  <i class="tim-icons icon-notes"></i>Quản lý chỗ ngồi
+                <base-button type="success" size="sm" icon @click="toggleUpdate(row.name)">
+                  <i class="tim-icons icon-settings"></i>
                 </base-button>
-              </td> 
+                <base-button type="danger" size="sm" icon @click="toggleRemove(row.name)">
+                  <i class="tim-icons icon-simple-remove"></i>
+                </base-button>
+              </td>
             </template>
           </base-table>
-        </div> -->
+          <base-button type="default" size="sm" icon @click="toggleCreate()">
+                  <i class="tim-icons icon-simple-add"></i>
+          </base-button>
+        </div>
 
         <!-- Create Modal -->
         <modal :show.sync="modals.createModal"

@@ -35,7 +35,7 @@
         <seating-management v-if="room" :room="room"></seating-management>
       </div>
       <div v-if="bigLineChart.activeIndex === 1" class="col-12">
-        
+        <room-detail v-if="room" :room="room"></room-detail>
       </div>
       <div v-if="bigLineChart.activeIndex === 2" class="col-12">
         <weekly-report v-if="room" :room="room"></weekly-report>
@@ -61,8 +61,10 @@ import config from "@/config";
 import TimeTable from './EducationProgram/TimeTable.vue';
 import TeacherDivision from './EducationProgram/TeacherDivision.vue';
 import WeeklyReport from './HomeroomTeacher/WeeklyReport.vue';
+import RoomDetail from './HomeroomTeacher/RoomDetail.vue';
 
 let API_URL = "";
+ 
 
 
 export default {
@@ -74,7 +76,8 @@ export default {
     TimeTable,
     TeacherDivision,
     SeatingManagement,
-    WeeklyReport
+    WeeklyReport,
+    RoomDetail
   },
   computed: {
     adminstrationOption() {
