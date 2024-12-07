@@ -718,7 +718,7 @@ export default {
     },
     goToDashboard() {
       this.polling = false
-      this.$router.push('/dashboard');  
+      this.$router.push('/profile');  
     },
     async getPositionData() {
       this.lessonData = JSON.parse(localStorage.getItem("lesson_data"));

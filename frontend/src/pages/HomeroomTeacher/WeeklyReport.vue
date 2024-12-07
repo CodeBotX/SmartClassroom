@@ -38,524 +38,521 @@
                 </div>
             </template>
             <div style="display: flex; justify-content: center; align-items: center;">
-                <div id="pdf-content" v-if="timetableData">
-                    <p>Tuần thứ: {{weekData}}</p>
-                    <table class="table-bordered" style="width: 863px">
-                        <tbody>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;">Thứ<br />Ngày/Tháng: </td>
-                                <td style="width: 29px; height: 62px;">Tiết</td>
-                                <td style="width: 81px; height: 62px;">Môn học</td>
-                                <td style="width: 10px; height: 62px;">Tiết theo PPCT</td>
-                                <td style="width: 125px; height: 62px;">Tên học sinh nghỉ</td>
-                                <td style="width: 173px; height: 62px;">Tên bài, nội dung công việc</td>
-                                <td style="width: 226px; height: 62px;">Nhận xét của giáo viên</td>
-                                <td style="width: 53px; height: 62px;">Xếp loại tiết học</td>
-                                <td style="width: 58px; height: 62px;">Ký tên</td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 310.333px;" rowspan="6">
-                                    <p>Thứ Hai</p>
-                                    <p>Ngày:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62px;">{{ this.timetableData[0].monday? this.getNameSubject(this.timetableData[0].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62px;">{{ this.timetableData[0].monday? this.timetableData[0].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62.3333px;">
-                                <td style="width: 29px; height: 62.3333px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].monday?  this.getNameSubject(this.timetableData[1].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.comment : "" }}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].monday? this.getNameSubject(this.timetableData[2].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].monday? this.getNameSubject(this.timetableData[3].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].monday? this.getNameSubject(this.timetableData[4].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].monday? this.getNameSubject(this.timetableData[5].monday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Thứ Ba</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.getNameSubject(this.timetableData[0].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.getNameSubject(this.timetableData[1].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.lesson_number: "" }}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.getNameSubject(this.timetableData[2].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.getNameSubject(this.timetableData[3].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.getNameSubject(this.timetableData[4].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.name_lesson: "" }}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.getNameSubject(this.timetableData[5].tuesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Thứ Tư</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.getNameSubject(this.timetableData[0].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.getNameSubject(this.timetableData[1].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.getNameSubject(this.timetableData[2].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.lesson_number: ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.getNameSubject(this.timetableData[3].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.getNameSubject(this.timetableData[4].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.getNameSubject(this.timetableData[5].wednesday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Thứ Năm</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].thursday? this.getNameSubject(this.timetableData[0].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].thursday? this.getNameSubject(this.timetableData[1].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].thursday? this.getNameSubject(this.timetableData[2].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].thursday? this.getNameSubject(this.timetableData[3].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].thursday? this.getNameSubject(this.timetableData[4].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].thursday? this.getNameSubject(this.timetableData[5].thursday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Thứ S&aacute;u</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].friday? this.getNameSubject(this.timetableData[0].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].friday? this.getNameSubject(this.timetableData[1].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].friday? this.getNameSubject(this.timetableData[2].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.evaluate: "" }}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].friday? this.getNameSubject(this.timetableData[3].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].friday? this.getNameSubject(this.timetableData[4].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.evaluate: "" }}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].friday? this.getNameSubject(this.timetableData[5].friday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Thứ Bảy</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].saturday? this.getNameSubject(this.timetableData[0].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].saturday? this.getNameSubject(this.timetableData[1].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.comment: "" }}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].saturday? this.getNameSubject(this.timetableData[2].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].saturday? this.getNameSubject(this.timetableData[3].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].saturday? this.getNameSubject(this.timetableData[4].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].saturday? this.getNameSubject(this.timetableData[5].saturday.subject) : ""}}</td>
-                                <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.lesson_number : ""}}</td>
-                                <td style="width: 125px; height: 62.3333px;"></td>
-                                <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.name_lesson : ""}}</td>
-                                <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.comment : ""}}</td>
-                                <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.evaluate : ""}}</td>
-                                <td style="width: 58px; height: 62.3333px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 82px; height: 62px;" rowspan="6">
-                                    <p>Chủ Nhật</p>
-                                    <p>Ng&agrave;y:</p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                    <p></p>
-                                </td>
-                                <td style="width: 29px; height: 62px;">1</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">2</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">3</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">4</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">5</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                            <tr style="height: 62px;">
-                                <td style="width: 29px; height: 62px;">6</td>
-                                <td style="width: 81px; height: 62px;"></td>
-                                <td style="width: 10px; height: 62px;"></td>
-                                <td style="width: 125px; height: 62px;"></td>
-                                <td style="width: 173px; height: 62px;"></td>
-                                <td style="width: 226px; height: 62px;"></td>
-                                <td style="width: 53px; height: 62px;"></td>
-                                <td style="width: 58px; height: 62px;"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="row" style="width: 863px">
-                        <div class="col-md-6">
-                            <p>Nhận xét của giáo viên chủ nhiệm lớp:</p>
-                            <p>.....................................................................................................................</p>
-                            <p>.....................................................................................................................</p>
-                            <p>.....................................................................................................................</p>
-                            <p>.....................................................................................................................</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p style="text-align: center;">Giáo viên chủ nhiệm lớp</p>
-                            <p style="text-align: center; font-style: italic;">(Ký, ghi rõ họ tên)</p>
-                        </div>
+                <div v-if="timetableData">
+                    <h4 id="topDiv" class="font-weight-bold mb-5">Tuần thứ: {{weekData}}</h4>
+
+                    <div  id="tableDiv">
+                        <table class="table-bordered" style="width: 863px">
+                            <tbody>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;">Thứ</td>
+                                    <td style="width: 29px; height: 62px;">Tiết</td>
+                                    <td style="width: 81px; height: 62px;">Môn học</td>
+                                    <td style="width: 10px; height: 62px;">Tiết theo PPCT</td>
+                                    <td style="width: 125px; height: 62px;">Tên học sinh nghỉ</td>
+                                    <td style="width: 173px; height: 62px;">Tên bài, nội dung công việc</td>
+                                    <td style="width: 226px; height: 62px;">Nhận xét của giáo viên</td>
+                                    <td style="width: 53px; height: 62px;">Xếp loại tiết học</td>
+                                    <td style="width: 58px; height: 62px;">Ký tên</td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 310.333px;" rowspan="6">
+                                        <p>Thứ Hai</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62px;">{{ this.timetableData[0].monday? this.getNameSubject(this.timetableData[0].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62px;">{{ this.timetableData[0].monday? this.timetableData[0].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62px;">{{this.timetableData[0].monday? this.timetableData[0].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62.3333px;">
+                                    <td style="width: 29px; height: 62.3333px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].monday?  this.getNameSubject(this.timetableData[1].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.comment : "" }}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].monday? this.timetableData[1].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].monday? this.getNameSubject(this.timetableData[2].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].monday? this.timetableData[2].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].monday? this.getNameSubject(this.timetableData[3].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].monday? this.timetableData[3].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].monday? this.getNameSubject(this.timetableData[4].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].monday? this.timetableData[4].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].monday? this.getNameSubject(this.timetableData[5].monday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].monday? this.timetableData[5].monday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Thứ Ba</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.getNameSubject(this.timetableData[0].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].tuesday? this.timetableData[0].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.getNameSubject(this.timetableData[1].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.lesson_number: "" }}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].tuesday? this.timetableData[1].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.getNameSubject(this.timetableData[2].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].tuesday? this.timetableData[2].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.getNameSubject(this.timetableData[3].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].tuesday? this.timetableData[3].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.getNameSubject(this.timetableData[4].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.name_lesson: "" }}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].tuesday? this.timetableData[4].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.getNameSubject(this.timetableData[5].tuesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].tuesday? this.timetableData[5].tuesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Thứ Tư</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.getNameSubject(this.timetableData[0].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].wednesday? this.timetableData[0].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.getNameSubject(this.timetableData[1].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].wednesday? this.timetableData[1].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.getNameSubject(this.timetableData[2].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.lesson_number: ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].wednesday? this.timetableData[2].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.getNameSubject(this.timetableData[3].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].wednesday? this.timetableData[3].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.getNameSubject(this.timetableData[4].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].wednesday? this.timetableData[4].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.getNameSubject(this.timetableData[5].wednesday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].wednesday? this.timetableData[5].wednesday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Thứ Năm</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].thursday? this.getNameSubject(this.timetableData[0].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].thursday? this.timetableData[0].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].thursday? this.getNameSubject(this.timetableData[1].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].thursday? this.timetableData[1].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].thursday? this.getNameSubject(this.timetableData[2].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].thursday? this.timetableData[2].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].thursday? this.getNameSubject(this.timetableData[3].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].thursday? this.timetableData[3].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].thursday? this.getNameSubject(this.timetableData[4].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].thursday? this.timetableData[4].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].thursday? this.getNameSubject(this.timetableData[5].thursday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].thursday? this.timetableData[5].thursday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Thứ S&aacute;u</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].friday? this.getNameSubject(this.timetableData[0].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].friday? this.timetableData[0].friday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].friday? this.getNameSubject(this.timetableData[1].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].friday? this.timetableData[1].friday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].friday? this.getNameSubject(this.timetableData[2].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].friday? this.timetableData[2].friday.evaluate: "" }}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].friday? this.getNameSubject(this.timetableData[3].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].friday? this.timetableData[3].friday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].friday? this.getNameSubject(this.timetableData[4].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].friday? this.timetableData[4].friday.evaluate: "" }}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].friday? this.getNameSubject(this.timetableData[5].friday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].friday? this.timetableData[5].friday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Thứ Bảy</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[0].saturday? this.getNameSubject(this.timetableData[0].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[0].saturday? this.timetableData[0].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[1].saturday? this.getNameSubject(this.timetableData[1].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.comment: "" }}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[1].saturday? this.timetableData[1].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[2].saturday? this.getNameSubject(this.timetableData[2].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[2].saturday? this.timetableData[2].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[3].saturday? this.getNameSubject(this.timetableData[3].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[3].saturday? this.timetableData[3].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[4].saturday? this.getNameSubject(this.timetableData[4].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[4].saturday? this.timetableData[4].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62.3333px;">{{this.timetableData[5].saturday? this.getNameSubject(this.timetableData[5].saturday.subject) : ""}}</td>
+                                    <td style="width: 10px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.lesson_number : ""}}</td>
+                                    <td style="width: 125px; height: 62.3333px;"></td>
+                                    <td style="width: 173px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.name_lesson : ""}}</td>
+                                    <td style="width: 226px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.comment : ""}}</td>
+                                    <td style="width: 53px; height: 62.3333px;">{{this.timetableData[5].saturday? this.timetableData[5].saturday.evaluate : ""}}</td>
+                                    <td style="width: 58px; height: 62.3333px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 82px; height: 62px;" rowspan="6">
+                                        <p>Chủ Nhật</p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                    </td>
+                                    <td style="width: 29px; height: 62px;">1</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">2</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">3</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">4</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">5</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                                <tr style="height: 62px;">
+                                    <td style="width: 29px; height: 62px;">6</td>
+                                    <td style="width: 81px; height: 62px;"></td>
+                                    <td style="width: 10px; height: 62px;"></td>
+                                    <td style="width: 125px; height: 62px;"></td>
+                                    <td style="width: 173px; height: 62px;"></td>
+                                    <td style="width: 226px; height: 62px;"></td>
+                                    <td style="width: 53px; height: 62px;"></td>
+                                    <td style="width: 58px; height: 62px;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-5 mb-5">
+
+                        <input type="text" class="form-control" id="fileNameInput" placeholder="Nhập tên file" style="width: 300px; border-radius: 5px; border-color: aqua;">
+                        <small slot="helperText" id="emailHelp" class="form-text text-muted">Nhập theo mẫu: Tuan6_12A1</small>
+
+                        <base-button class="btn-success" @click="ExportToExcel">Xuất ra file xlsx</base-button>
                     </div>
                 </div>
-
                 
             </div>
-            <!-- <base-button class="mt-5 mb-5" @click="exportToPdf">Export to pdf</base-button> -->
+
         </card>
         
       </div>
@@ -567,7 +564,7 @@
 import Card from "../../components/Cards/Card.vue";
 import axios from "../../services/axios";
 import Modal from '../../components/Modal.vue';
-import html2pdf from 'html2pdf.js';
+import * as XLSX from 'xlsx';
 
 let API_URL = ""
 
@@ -591,6 +588,8 @@ let API_URL = ""
             checkTimeTable: false,
 
             timetableData: null,
+            dynamicData: [ { name: 'John Doe', age: 30 },
+            { name: 'Jane Smith', age: 25 },],
         }
     },
     mounted() {
@@ -816,18 +815,16 @@ let API_URL = ""
             });
           });
       },
-      exportToPdf() {
-        const element = document.getElementById('pdf-content');
-        const options = {
-          margin: 1,
-          filename: 'lesson_table.pdf',
-          html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-  
-        // Generate PDF
-        html2pdf().set(options).from(element).save();
-      }
+
+
+    ExportToExcel() {
+      const fileName = document.getElementById('fileNameInput').value || 'DynamicData';
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.table_to_sheet(document.getElementById('tableDiv').querySelector('table'));
+      XLSX.utils.book_append_sheet(wb, ws, 'Dynamic Data');
+      XLSX.writeFile(wb, `${fileName}.xlsx`);
+    },
+
     }
   };
 

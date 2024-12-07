@@ -8,14 +8,14 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: "/profile",
+      path: "/",
       name: "home",
-      redirect: "/dashboard",
+      redirect: "/profile",
       component: DashboardLayout,
       children: [
         {
-          path: "dashboard",
-          name: "dashboard",
+          path: "profile",
+          name: "profile",
           components: { default: Starter },
         },
       ],

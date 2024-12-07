@@ -111,12 +111,12 @@ import BaseButton from '../../components/BaseButton.vue';
 let API_URL = ""
 
 const classPeriods = [
-  { period: 1, start: { hour: 7, minute: 0 }, end: { hour: 7, minute: 45 } },   // Tiết 1
-  { period: 2, start: { hour: 8, minute: 0 }, end: { hour: 8, minute: 45 } },   // Tiết 2
-  { period: 3, start: { hour: 9, minute: 0 }, end: { hour: 9, minute: 45 } },  // Tiết 3
-  { period: 4, start: { hour: 10, minute: 0 }, end: { hour: 10, minute: 45 } },  // Tiết 4
-  { period: 5, start: { hour: 11, minute: 0 }, end: { hour: 11, minute: 45 } },  // Tiết 5
-  { period: 6, start: { hour: 0, minute: 0 }, end: { hour: 23, minute: 59 } },  // Tiết 5
+  { period: 1, start: { hour: 7, minute: 0 }, end: { hour: 7, minute: 59 } },   // Tiết 1
+  { period: 2, start: { hour: 8, minute: 0 }, end: { hour: 8, minute: 59 } },   // Tiết 2
+  { period: 3, start: { hour: 9, minute: 0 }, end: { hour: 9, minute: 59 } },  // Tiết 3
+  { period: 4, start: { hour: 10, minute: 0 }, end: { hour: 10, minute: 59 } },  // Tiết 4
+  { period: 5, start: { hour: 11, minute: 0 }, end: { hour: 11, minute: 59 } },  // Tiết 5
+  { period: 6, start: { hour: 12, minute: 0 }, end: { hour: 23, minute: 59 } },  // Tiết 6
 ];
 
 export default {
